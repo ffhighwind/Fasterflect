@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using Fasterflect.Extensions;
 
 #pragma warning disable 1591
 namespace Fasterflect.Common
@@ -12,10 +13,10 @@ namespace Fasterflect.Common
 	public class InfoFactory
 	{
 		public Type Type { get; private set; }
-		public Items<PropertyInfo> Properties { get { return new PropertyItems( Type ); } }
-		public Items<MethodInfo> Methods { get { return new MethodItems( Type ); } }
+		public Items<PropertyInfo> Properties => new PropertyItems(Type);
+		public Items<MethodInfo> Methods => new MethodItems(Type);
 
-		public InfoFactory( Type type )
+		public InfoFactory(Type type)
 		{
 			Type = type;
 		}
@@ -25,7 +26,7 @@ namespace Fasterflect.Common
 	{
 		public Type Type { get; private set; }
 
-		public Items( Type type )
+		public Items(Type type)
 		{
 			Type = type;
 		}
@@ -40,7 +41,7 @@ namespace Fasterflect.Common
 		#endregion
 
 		#region Linq
-		public FilteredItems<T> Where( Expression<Func<T,bool>> predicate )
+		public FilteredItems<T> Where(Expression<Func<T, bool>> predicate)
 		{
 			return null;
 		}
@@ -51,7 +52,7 @@ namespace Fasterflect.Common
 		#region Implementation of IEnumerable
 		public IEnumerator<T> GetEnumerator()
 		{
-		    return null;
+			return null;
 		}
 
 		//IEnumerator IEnumerable.GetEnumerator()
@@ -60,11 +61,11 @@ namespace Fasterflect.Common
 		//}
 		#endregion
 
-		public ProjectedItems<T> Select<R>( Expression<Func<T,R>> projector )
+		public ProjectedItems<T> Select<R>(Expression<Func<T, R>> projector)
 		{
 			return null;
 		}
-		public ProjectedItems<T> OrderBy<TKey>( Expression<Func<T,TKey>> keySelector )
+		public ProjectedItems<T> OrderBy<TKey>(Expression<Func<T, TKey>> keySelector)
 		{
 			return null;
 		}
@@ -74,40 +75,40 @@ namespace Fasterflect.Common
 		#region Implementation of IEnumerable
 		public IEnumerator<R> GetEnumerator()
 		{
-		    return null;
+			return null;
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-		    return GetEnumerator();
+			return GetEnumerator();
 		}
 		#endregion
 	}
 
 	public class PropertyItems : Items<PropertyInfo>
 	{
-		public PropertyItems( Type type ) : base( type )
+		public PropertyItems(Type type) : base(type)
 		{
 		}
 
 		#region Implementation of IEnumerable
 		public override IEnumerator<PropertyInfo> GetEnumerator()
 		{
-			return Type.Properties( Flags.StaticInstanceAnyVisibility ).GetEnumerator();
+			return Type.Properties(Flags.StaticInstanceAnyVisibility).GetEnumerator();
 		}
 		#endregion
 	}
 
 	public class MethodItems : Items<MethodInfo>
 	{
-		public MethodItems( Type type ) : base( type )
+		public MethodItems(Type type) : base(type)
 		{
 		}
 
 		#region Implementation of IEnumerable
 		public override IEnumerator<MethodInfo> GetEnumerator()
 		{
-			return Type.Methods( Flags.StaticInstanceAnyVisibility ).GetEnumerator();
+			return Type.Methods(Flags.StaticInstanceAnyVisibility).GetEnumerator();
 		}
 		#endregion
 	}
@@ -117,14 +118,14 @@ namespace Fasterflect.Common
 	{
 		public void TestPropertyLookup()
 		{
-			var type = typeof(InfoFactory);
-			var info = new InfoFactory( type );
-			var properties = from p in info.Properties
-			                 where p.Name == "Type"
-							 orderby p.Name
-			                 select p;
-			var list = properties.ToList();
-			var x = list.Count;
+			Type type = typeof(InfoFactory);
+			InfoFactory info = new InfoFactory(type);
+			ProjectedItems<PropertyInfo> properties = from p in info.Properties
+													  where p.Name == "Type"
+													  orderby p.Name
+													  select p;
+			List<PropertyInfo> list = properties.ToList();
+			int x = list.Count;
 		}
 	}
 }

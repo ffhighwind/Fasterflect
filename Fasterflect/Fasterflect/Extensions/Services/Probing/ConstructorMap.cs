@@ -20,6 +20,7 @@
 
 using System;
 using System.Reflection;
+using Fasterflect.Extensions;
 
 namespace Fasterflect.Probing
 {
@@ -27,31 +28,28 @@ namespace Fasterflect.Probing
 	{
 		private ConstructorInvoker invoker;
 
-		public ConstructorMap( ConstructorInfo constructor, string[] paramNames, Type[] parameterTypes, 
-			                   object[] sampleParamValues, bool mustUseAllParameters )
-            : base(constructor, paramNames, parameterTypes, sampleParamValues, mustUseAllParameters)
+		public ConstructorMap(ConstructorInfo constructor, string[] paramNames, Type[] parameterTypes,
+							   object[] sampleParamValues, bool mustUseAllParameters)
+			: base(constructor, paramNames, parameterTypes, sampleParamValues, mustUseAllParameters)
 		{
 		}
 
 		#region UpdateMembers Private Helper Method
 		private void UpdateMembers(object target, object[] row)
 		{
-			for( int i = 0; i < row.Length; i++ )
-			{
-				if( parameterReflectionMask[ i ] )
-				{
-					MemberInfo member = members[ i ];
-					if( member != null )
-					{
-						object value = parameterTypeConvertMask[ i ] ? TypeConverter.Get( member.Type(), row[ i ] ) : row[ i ];
-						member.Set( target, value );
+			for (int i = 0; i < row.Length; i++) {
+				if (parameterReflectionMask[i]) {
+					MemberInfo member = members[i];
+					if (member != null) {
+						object value = parameterTypeConvertMask[i] ? TypeConverter.Get(member.Type(), row[i]) : row[i];
+						member.Set(target, value);
 					}
 				}
 			}
 		}
 		#endregion
 
-		public override object Invoke( object[] row )
+		public override object Invoke(object[] row)
 		{
 			object[] methodParameters = isPerfectMatch ? row : PrepareParameters(row);
 			object result = invoker.Invoke(methodParameters);
@@ -62,7 +60,7 @@ namespace Fasterflect.Probing
 
 		internal override void InitializeInvoker()
 		{
-			invoker = type.DelegateForCreateInstance( GetParamTypes() );
+			invoker = type.DelegateForCreateInstance(GetParamTypes());
 		}
 	}
 }

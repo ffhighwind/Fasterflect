@@ -22,7 +22,7 @@ using System.Linq;
 using System.Reflection;
 using Fasterflect.Probing;
 
-namespace Fasterflect
+namespace Fasterflect.Extensions.Services
 {
 	/// <summary>
 	/// A converter used to convert <paramref name="value"/> to <paramref name="parameterType"/>
@@ -78,14 +78,12 @@ namespace Fasterflect
 		/// <returns>The result of the invocation.</returns>
 		public static object TryCreateInstanceWithValues(this Type type, ParameterConverter converter, BindingFlags flags, params object[] parameterValues)
 		{
-			var ctors = type.Constructors();
-			try
-			{
+			IList<ConstructorInfo> ctors = type.Constructors();
+			try {
 				return TryCall(converter, ctors.Cast<MethodBase>(), type, parameterValues);
 			}
-			catch (MissingMemberException)
-			{
-				var values = parameterValues ?? new object[0];
+			catch (MissingMemberException) {
+				object[] values = parameterValues ?? new object[0];
 				throw new MissingMemberException(string.Format("Unable to locate a matching constructor on type {0} for parameters: {1}",
 																 type.Name, string.Join(", ", values.Select(v => v == null ? "null" : v.ToString()).ToArray())));
 			}
@@ -106,7 +104,7 @@ namespace Fasterflect
 		/// <returns>The result of the invocation.</returns>
 		public static object TryCallMethodWithValues(this object obj, string methodName, params object[] parameterValues)
 		{
-			return TryCallMethodWithValues(obj, null, methodName, 
+			return TryCallMethodWithValues(obj, null, methodName,
 				obj is Type ? Flags.StaticAnyVisibility : Flags.InstanceAnyVisibility, parameterValues);
 		}
 
@@ -130,7 +128,7 @@ namespace Fasterflect
 		/// <returns>The result of the invocation.</returns>
 		public static object TryCallMethodWithValues(this object obj, ParameterConverter converter, string methodName, BindingFlags flags, params object[] parameterValues)
 		{
-			return TryCallMethodWithValues(obj, converter, methodName,Type.EmptyTypes, flags, parameterValues);
+			return TryCallMethodWithValues(obj, converter, methodName, Type.EmptyTypes, flags, parameterValues);
 		}
 
 
@@ -156,16 +154,14 @@ namespace Fasterflect
 		public static object TryCallMethodWithValues(this object obj, ParameterConverter converter, string methodName,
 			Type[] genericTypes, BindingFlags flags, params object[] parameterValues)
 		{
-			var type = obj is Type ? (Type)obj : obj.GetType();
-			var methods = type.Methods(genericTypes, null, flags, methodName)
+			Type type = obj is Type ? (Type) obj : obj.GetType();
+			IEnumerable<MethodInfo> methods = type.Methods(genericTypes, null, flags, methodName)
 							  .Select(m => m.IsGenericMethodDefinition ? m.MakeGeneric(genericTypes) : m);
-			try
-			{
+			try {
 				return TryCall(converter, methods.Cast<MethodBase>(), obj, parameterValues);
 			}
-			catch (MissingMemberException)
-			{
-				var values = parameterValues ?? new object[0];
+			catch (MissingMemberException) {
+				object[] values = parameterValues ?? new object[0];
 				throw new MissingMethodException(string.Format("Unable to locate a matching method {0} on type {1} for parameters: {2}",
 																 methodName, type.Name,
 																 string.Join(", ", values.Select(v => v == null ? "null" : v.ToString()).ToArray())));
@@ -186,51 +182,41 @@ namespace Fasterflect
 		///   
 		/// TODO How to fix it? a deep clone?
 		/// </summary>
-		public static object TryCall(ParameterConverter converter, IEnumerable<MethodBase> methodBases, 
+		public static object TryCall(ParameterConverter converter, IEnumerable<MethodBase> methodBases,
 			object obj, object[] parameterValues)
 		{
 			converter = converter ?? new ParameterConverter(StandardConvert);
-			if (parameterValues == null)
-			{
+			if (parameterValues == null) {
 				parameterValues = new object[0];
 			}
-			foreach (var mb in GetCandidates(parameterValues, methodBases))
-			{
-				var convertedArgs = new List<object>();
-				var parameters = mb.GetParameters();
+			foreach (MethodBase mb in GetCandidates(parameterValues, methodBases)) {
+				List<object> convertedArgs = new List<object>();
+				ParameterInfo[] parameters = mb.GetParameters();
 				bool isMatch = true;
-				for (int paramIndex = 0; paramIndex < parameters.Length; paramIndex++)
-				{
-					var parameter = parameters[paramIndex];
-					if (paramIndex == parameters.Length - 1 && IsParams(parameter))
-					{
+				for (int paramIndex = 0; paramIndex < parameters.Length; paramIndex++) {
+					ParameterInfo parameter = parameters[paramIndex];
+					if (paramIndex == parameters.Length - 1 && IsParams(parameter)) {
 						object paramArg;
-						if (parameters.Length - 1 == parameterValues.Length)
-						{
+						if (parameters.Length - 1 == parameterValues.Length) {
 							paramArg = parameter.ParameterType.CreateInstance(0);
 						}
-						else
-						{
+						else {
 							paramArg = parameter.ParameterType.CreateInstance(parameterValues.Length - parameters.Length + 1);
-							var elementType = parameter.ParameterType.GetElementType();
-							for (int argIndex = paramIndex; argIndex < parameterValues.Length; argIndex++)
-							{
-								var value = parameterValues[argIndex];
-								if (!converter(elementType, obj, ref value))
-								{
+							Type elementType = parameter.ParameterType.GetElementType();
+							for (int argIndex = paramIndex; argIndex < parameterValues.Length; argIndex++) {
+								object value = parameterValues[argIndex];
+								if (!converter(elementType, obj, ref value)) {
 									isMatch = false;
 									goto end_of_loop;
 								}
-								((Array)paramArg).SetValue( value, argIndex - paramIndex );
+								((Array) paramArg).SetValue(value, argIndex - paramIndex);
 							}
 						}
 						convertedArgs.Add(paramArg);
 					}
-					else
-					{
-						var value = parameterValues[paramIndex];
-						if (!converter(parameter.ParameterType, obj, ref value))
-						{
+					else {
+						object value = parameterValues[paramIndex];
+						if (!converter(parameter.ParameterType, obj, ref value)) {
 							isMatch = false;
 							goto end_of_loop;
 						}
@@ -239,8 +225,7 @@ namespace Fasterflect
 				}
 
 			end_of_loop:
-				if (isMatch)
-				{
+				if (isMatch) {
 					parameterValues = convertedArgs.Count == 0 ? null : convertedArgs.ToArray();
 					return mb is ConstructorInfo
 							   ? ((ConstructorInfo) mb).Invoke(parameterValues)
@@ -255,7 +240,7 @@ namespace Fasterflect
 			return (from methodBase in methodBases
 					let parameters = methodBase.GetParameters()
 					where parameters.Length == parameterValues.Length ||
-						  (parameters.Length > 0 && 
+						  (parameters.Length > 0 &&
 						   IsParams(parameters[parameters.Length - 1]) &&
 						   parameterValues.Length >= (parameters.Length - 1))
 					orderby parameters.Count()
@@ -264,14 +249,12 @@ namespace Fasterflect
 
 		private static bool StandardConvert(Type targetType, object owner, ref object value)
 		{
-			if( value == null )
-				return !typeof(ValueType).IsAssignableFrom( targetType );
-			try
-			{
-				return (value = TypeConverter.Get( targetType, value )) != null;
+			if (value == null)
+				return !typeof(ValueType).IsAssignableFrom(targetType);
+			try {
+				return (value = TypeConverter.Get(targetType, value)) != null;
 			}
-			catch (Exception)
-			{
+			catch (Exception) {
 				return false;
 			}
 		}

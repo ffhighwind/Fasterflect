@@ -41,8 +41,8 @@ namespace Fasterflect.Emitter
 		public MemberInfo MemberInfo { get; internal set; }
 		public Type[] MethodParamTypes { get; internal set; }
 
-		public CallInfo( Type targetType, Type[] genericTypes, Flags bindingFlags, MemberTypes memberTypes, string name,
-			Type[] parameterTypes, MemberInfo memberInfo, bool isReadOperation )
+		public CallInfo(Type targetType, Type[] genericTypes, Flags bindingFlags, MemberTypes memberTypes, string name,
+			Type[] parameterTypes, MemberInfo memberInfo, bool isReadOperation)
 		{
 			TargetType = targetType;
 			GenericTypes = genericTypes == null || genericTypes.Length == 0
@@ -57,7 +57,7 @@ namespace Fasterflect.Emitter
 			MemberInfo = memberInfo;
 			IsReadOperation = isReadOperation;
 			// TODO why do we set this here? it is overwritten in MethodInvocationEmitter
-			IsStatic = BindingFlags.IsSet( Flags.Static );
+			IsStatic = BindingFlags.IsSet(Flags.Static);
 		}
 
 		#region Helper Properties
@@ -67,30 +67,15 @@ namespace Fasterflect.Emitter
 		/// must also be executed in the non-static context since static 
 		/// context doesn't need to handle inner struct case.
 		/// </summary>
-		public bool ShouldHandleInnerStruct
-		{
-			get { return IsTargetTypeStruct && !IsStatic; }
-		}
+		public bool ShouldHandleInnerStruct => IsTargetTypeStruct && !IsStatic;
 
-		public bool IsTargetTypeStruct
-		{
-			get { return TargetType.IsValueType; }
-		}
+		public bool IsTargetTypeStruct => TargetType.IsValueType;
 
-		public bool HasNoParam
-		{
-			get { return ParamTypes == Type.EmptyTypes; }
-		}
+		public bool HasNoParam => ParamTypes == Type.EmptyTypes;
 
-		public bool IsGeneric
-		{
-			get { return GenericTypes != Type.EmptyTypes; }
-		}
+		public bool IsGeneric => GenericTypes != Type.EmptyTypes;
 
-		public bool HasRefParam
-		{
-			get { return ParamTypes.Any( t => t.IsByRef ); }
-		}
+		public bool HasRefParam => ParamTypes.Any(t => t.IsByRef);
 		#endregion
 
 		#region Equality Methods
@@ -99,40 +84,33 @@ namespace Fasterflect.Emitter
 		/// are equaled: <c>TargetType</c>, <c>Flags</c>, <c>IsStatic</c>, <c>MemberTypes</c>, <c>Name</c>,
 		/// <c>ParamTypes</c> and <c>GenericTypes</c>.
 		/// </summary>
-		public bool Equals( CallInfo other )
+		public bool Equals(CallInfo other)
 		{
-			if( ReferenceEquals( other, null ) )
-			{
+			if (ReferenceEquals(other, null)) {
 				return false;
 			}
-			if( ReferenceEquals( other, this ) )
-			{
+			if (ReferenceEquals(other, this)) {
 				return true;
 			}
 
-			if( other.TargetType != TargetType ||
-			    other.Name != Name ||
-			    other.MemberTypes != MemberTypes ||
-			    other.BindingFlags != BindingFlags ||
-			    other.IsReadOperation != IsReadOperation ||
-			    other.ParamTypes.Length != ParamTypes.Length ||
-			    other.GenericTypes.Length != GenericTypes.Length )
-			{
+			if (other.TargetType != TargetType ||
+				other.Name != Name ||
+				other.MemberTypes != MemberTypes ||
+				other.BindingFlags != BindingFlags ||
+				other.IsReadOperation != IsReadOperation ||
+				other.ParamTypes.Length != ParamTypes.Length ||
+				other.GenericTypes.Length != GenericTypes.Length) {
 				return false;
 			}
 
-			for( int i = 0; i < ParamTypes.Length; i++ )
-			{
-				if( ParamTypes[ i ] != other.ParamTypes[ i ] )
-				{
+			for (int i = 0; i < ParamTypes.Length; i++) {
+				if (ParamTypes[i] != other.ParamTypes[i]) {
 					return false;
 				}
 			}
 
-			for( int i = 0; i < GenericTypes.Length; i++ )
-			{
-				if( GenericTypes[ i ] != other.GenericTypes[ i ] )
-				{
+			for (int i = 0; i < GenericTypes.Length; i++) {
+				if (GenericTypes[i] != other.GenericTypes[i]) {
 					return false;
 				}
 			}
@@ -144,41 +122,37 @@ namespace Fasterflect.Emitter
 		/// are equaled: <c>TargetType</c>, <c>Flags</c>, <c>MemberTypes</c>, <c>Name</c>,
 		/// <c>ParamTypes</c> and <c>GenericTypes</c>.
 		/// </summary>
-		public override bool Equals( object obj )
+		public override bool Equals(object obj)
 		{
-			return Equals( obj as CallInfo );
+			return Equals(obj as CallInfo);
 		}
 
 		public override int GetHashCode()
 		{
 			int hash = TargetType.GetHashCode() + (int) MemberTypes * Name.GetHashCode() + BindingFlags.GetHashCode() + IsReadOperation.GetHashCode();
-			for( int i = 0; i < ParamTypes.Length; i++ )
-			{
-				hash += ParamTypes[ i ].GetHashCode() * (i + 1);
+			for (int i = 0; i < ParamTypes.Length; i++) {
+				hash += ParamTypes[i].GetHashCode() * (i + 1);
 			}
-			for( int i = 0; i < GenericTypes.Length; i++ )
-			{
-				hash += GenericTypes[ i ].GetHashCode() * (i + 1);
+			for (int i = 0; i < GenericTypes.Length; i++) {
+				hash += GenericTypes[i].GetHashCode() * (i + 1);
 			}
 			return hash;
 		}
 
-		public static bool operator ==( CallInfo left, CallInfo right )
+		public static bool operator ==(CallInfo left, CallInfo right)
 		{
-			if( ReferenceEquals( null, left ) )
-			{
-				return ReferenceEquals( null, right );
+			if (ReferenceEquals(null, left)) {
+				return ReferenceEquals(null, right);
 			}
-			return left.Equals( right );
+			return left.Equals(right);
 		}
 
-		public static bool operator !=( CallInfo left, CallInfo right )
+		public static bool operator !=(CallInfo left, CallInfo right)
 		{
-			if( ReferenceEquals( null, left ) )
-			{
-				return !ReferenceEquals( null, right );
+			if (ReferenceEquals(null, left)) {
+				return !ReferenceEquals(null, right);
 			}
-			return !left.Equals( right );
+			return !left.Equals(right);
 		}
 		#endregion
 	}

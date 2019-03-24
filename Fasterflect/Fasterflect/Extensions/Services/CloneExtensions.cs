@@ -23,7 +23,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 
-namespace Fasterflect
+namespace Fasterflect.Extensions.Services
 {
 	/// <summary>
 	/// Extension methods for deep cloning of objects.
@@ -38,9 +38,9 @@ namespace Fasterflect
 		/// <typeparam name="T">The type of the object to clone.</typeparam>
 		/// <param name="source">The object to clone.</param>
 		/// <returns>A deep clone of the source object.</returns>
-		public static T DeepClone<T>( this T source ) where T : class, new()
+		public static T DeepClone<T>(this T source) where T : class, new()
 		{
-			return source.DeepClone( new Dictionary<object, object>() );
+			return source.DeepClone(new Dictionary<object, object>());
 		}
 
 		#region Private Helpers
@@ -48,25 +48,24 @@ namespace Fasterflect
 		/// Returns a clone of the given <paramref name="source"/> object. The <paramref name="map"/> is used as
 		/// a cache during recursive calls to ensure that a single object is only cloned once.
 		/// </summary>
-		private static T DeepClone<T>( this T source, Dictionary<object, object> map ) where T : class, new()
+		private static T DeepClone<T>(this T source, Dictionary<object, object> map) where T : class, new()
 		{
 			Type type = source.GetType();
-			return type.IsArray ? source.CloneArray( map ) : source.CloneObject( map );
+			return type.IsArray ? source.CloneArray(map) : source.CloneObject(map);
 		}
 
 		/// <summary>
 		/// Returns a clone of the given <paramref name="source"/> object.
 		/// </summary>
-		private static T CloneObject<T>( this T source, Dictionary<object, object> map ) where T : class, new()
+		private static T CloneObject<T>(this T source, Dictionary<object, object> map) where T : class, new()
 		{
 			Type type = source.GetType();
-			var clone = type.CreateInstance() as T;
-			map[ source ] = clone;
-			IList<FieldInfo> fields = type.Fields( Flags.StaticInstanceAnyVisibility ).Where( f => !f.IsLiteral && !f.IsCalculated( type ) ).ToList();
-			object[] values = fields.Select( f => CloneField( f, source, map ) ).ToArray();
-			for( int i = 0; i < fields.Count; i++ )
-			{
-				fields[ i ].Set( clone, values[ i ] );
+			T clone = type.CreateInstance() as T;
+			map[source] = clone;
+			IList<FieldInfo> fields = type.Fields(Flags.StaticInstanceAnyVisibility).Where(f => !f.IsLiteral && !f.IsCalculated(type)).ToList();
+			object[] values = fields.Select(f => CloneField(f, source, map)).ToArray();
+			for (int i = 0; i < fields.Count; i++) {
+				fields[i].Set(clone, values[i]);
 			}
 			return clone;
 		}
@@ -74,17 +73,16 @@ namespace Fasterflect
 		/// <summary>
 		/// Returns a clone of the given <paramref name="source"/> array.
 		/// </summary>
-		private static T CloneArray<T>( this T source, Dictionary<object, object> map ) where T : class, new()
+		private static T CloneArray<T>(this T source, Dictionary<object, object> map) where T : class, new()
 		{
 			Type type = source.GetType();
-			var clone = Activator.CreateInstance( type, ((ICollection) source).Count ) as T;
-			map[ source ] = clone;
-			var sourceList = (IList) source;
-			var cloneList = (IList) clone;
-			for( int i = 0; i < sourceList.Count; i++ )
-			{
-				object element = sourceList[ i ];
-				cloneList[ i ] = element.ShouldClone() ? element.DeepClone( map ) : element;
+			T clone = Activator.CreateInstance(type, ((ICollection) source).Count) as T;
+			map[source] = clone;
+			IList sourceList = (IList) source;
+			IList cloneList = (IList) clone;
+			for (int i = 0; i < sourceList.Count; i++) {
+				object element = sourceList[i];
+				cloneList[i] = element.ShouldClone() ? element.DeepClone(map) : element;
 			}
 			return clone;
 		}
@@ -94,32 +92,30 @@ namespace Fasterflect
 		/// cloned (because it is immutable, constant or literal) the value is returned, and otherwise
 		/// a clone of the value will be returned (if not found in the map, a new clone is created).
 		/// </summary>
-		private static object CloneField( FieldInfo field, object source, Dictionary<object, object> map )
+		private static object CloneField(FieldInfo field, object source, Dictionary<object, object> map)
 		{
-			object result = field.IsLiteral ? field.GetRawConstantValue() : field.Get( source );
-			if( result == null || ! result.ShouldClone() )
-			{
+			object result = field.IsLiteral ? field.GetRawConstantValue() : field.Get(source);
+			if (result == null || !result.ShouldClone()) {
 				return result;
 			}
 			object clone;
-			if( map.TryGetValue( result, out clone ) )
-			{
+			if (map.TryGetValue(result, out clone)) {
 				return clone;
 			}
-			return result.DeepClone( map );
+			return result.DeepClone(map);
 		}
 
 		/// <summary>
 		/// Returns true if the <paramref name="obj"/> parameter needs cloning.
 		/// </summary>
-		private static bool ShouldClone( this object obj )
+		private static bool ShouldClone(this object obj)
 		{
-			if( obj == null )
+			if (obj == null)
 				return false;
 			Type type = obj.GetType();
-			if( type.IsValueType || type == typeof(string) )
+			if (type.IsValueType || type == typeof(string))
 				return false;
-			if( type.IsGenericTypeDefinition || obj is Type || obj is Delegate )
+			if (type.IsGenericTypeDefinition || obj is Type || obj is Delegate)
 				return false;
 			return true;
 		}
@@ -129,11 +125,11 @@ namespace Fasterflect
 		/// this relies on knowing implementation details for types, and may thus break if the BCL changes or
 		/// has been implemented differently. Currently only used to make dictionaries clonable.
 		/// </summary>
-		private static bool IsCalculated( this FieldInfo field, Type ownerType )
+		private static bool IsCalculated(this FieldInfo field, Type ownerType)
 		{
-			var dictionaryFields = new[] { "keys", "values" };
-			if( field.DeclaringType.IsFrameworkType() && ownerType.Implements<IDictionary>() )
-				return dictionaryFields.Contains( field.Name );
+			string[] dictionaryFields = new[] { "keys", "values" };
+			if (field.DeclaringType.IsFrameworkType() && ownerType.Implements<IDictionary>())
+				return dictionaryFields.Contains(field.Name);
 			return false;
 		}
 		#endregion

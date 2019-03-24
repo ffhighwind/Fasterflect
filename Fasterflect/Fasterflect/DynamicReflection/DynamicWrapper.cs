@@ -21,19 +21,21 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using Fasterflect.Extensions;
+using Fasterflect.Extensions.Utilities;
 
-namespace Fasterflect
+namespace Fasterflect.Dynamic
 {
 	internal sealed class DynamicWrapper : DynamicObject
 	{
 		private readonly object target;
 
 		#region Constructors
-		public DynamicWrapper( object target )
+		public DynamicWrapper(object target)
 		{
 			this.target = target;
 		}
-		public DynamicWrapper( ref ValueType target )
+		public DynamicWrapper(ref ValueType target)
 		{
 			this.target = target.WrapIfValueType();
 		}
@@ -44,18 +46,18 @@ namespace Fasterflect
 		/// Sets the member on the target to the given value. Returns true if the value was
 		/// actually written to the underlying member.
 		/// </summary>     
-		public override bool TrySetMember( SetMemberBinder binder, object value )
+		public override bool TrySetMember(SetMemberBinder binder, object value)
 		{
-			return target.TrySetValue( binder.Name, value );
+			return target.TrySetValue(binder.Name, value);
 		}
 
 		/// <summary>
 		/// Gets the member on the target and assigns it to the result parameter. Returns
 		/// true if a value other than null was found and false otherwise.
 		/// </summary>      
-		public override bool TryGetMember( GetMemberBinder binder, out object result )
+		public override bool TryGetMember(GetMemberBinder binder, out object result)
 		{
-			result = target.TryGetValue( binder.Name );
+			result = target.TryGetValue(binder.Name);
 			return result != null;
 		}
 
@@ -63,11 +65,11 @@ namespace Fasterflect
 		/// Invokes the method specified and assigns the result to the result parameter. Returns
 		/// true if a method to invoke was found and false otherwise.
 		/// </summary>     
-		public override bool TryInvokeMember( InvokeMemberBinder binder, object[] args, out object result )
+		public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
 		{
-			var bindingFlags = Flags.InstanceAnyVisibility | Flags.IgnoreParameterModifiers;
-			var method = target.GetType().Method( binder.Name, args.ToTypeArray(), bindingFlags );
-			result = method == null ? null : method.Call( target, args );
+			Flags bindingFlags = Flags.InstanceAnyVisibility | Flags.IgnoreParameterModifiers;
+			System.Reflection.MethodInfo method = target.GetType().Method(binder.Name, args.ToTypeArray(), bindingFlags);
+			result = method?.Call(target, args);
 			return method != null;
 		}
 
@@ -76,7 +78,7 @@ namespace Fasterflect
 		/// </summary>
 		public override IEnumerable<string> GetDynamicMemberNames()
 		{
-			return target.GetType().Members().Select( m => m.Name );
+			return target.GetType().Members().Select(m => m.Name);
 		}
 		#endregion
 	}

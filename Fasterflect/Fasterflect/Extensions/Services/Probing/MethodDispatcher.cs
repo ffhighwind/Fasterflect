@@ -21,6 +21,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Fasterflect.Caching;
+using Fasterflect.Extensions;
+using Fasterflect.Extensions.Utilities;
 
 namespace Fasterflect.Probing
 {
@@ -51,9 +53,9 @@ namespace Fasterflect.Probing
 		/// Use this constructor to automatically populate the pool of available methods with all instance methods 
 		/// found on the given type.
 		/// </summary>
-		public MethodDispatcher( Type type )
+		public MethodDispatcher(Type type)
 		{
-			type.Methods().ForEach( methodPool.Add );
+			type.Methods().ForEach(methodPool.Add);
 		}
 		#endregion
 
@@ -61,19 +63,18 @@ namespace Fasterflect.Probing
 		/// Add a method to the list of available methods for this method dispatcher.
 		/// </summary>
 		/// <param name="method">The method to add to the pool of invocation candidates.</param>
-		public void AddMethod( MethodInfo method )
+		public void AddMethod(MethodInfo method)
 		{
-			//if( method.IsStatic )
+			//if(method.IsStatic)
 			//{
-			//	throw new ArgumentException( "Method dispatching currently only supports instance methods.", method.Name );
+			//	throw new ArgumentException("Method dispatching currently only supports instance methods.", method.Name);
 			//}
-			if( method.IsAbstract )
-			{
-				throw new ArgumentException( "Method dispatching does not support abstract methods.", method.Name );
+			if (method.IsAbstract) {
+				throw new ArgumentException("Method dispatching does not support abstract methods.", method.Name);
 			}
-			methodPool.Add( method );
+			methodPool.Add(method);
 		}
-			
+
 		/// <summary>
 		/// Invoke the best available match for the supplied parameters. If no method can be called 
 		/// using the supplied parameters, an exception is thrown.
@@ -83,30 +84,27 @@ namespace Fasterflect.Probing
 		/// invocation. Unless you know what you are doing you should pass true for this parameter.</param>
 		/// <param name="sample">The object whose public properties will be used as parameters.</param>
 		/// <returns>The return value of the invocation.</returns>
-		public object Invoke( object obj, bool mustUseAllParameters, object sample )
+		public object Invoke(object obj, bool mustUseAllParameters, object sample)
 		{
-			if( obj == null || sample == null )
-			{
-				throw new ArgumentException( "Missing or invalid argument: " + (obj == null ? "obj" : "sample") );
+			if (obj == null || sample == null) {
+				throw new ArgumentException("Missing or invalid argument: " + (obj == null ? "obj" : "sample"));
 			}
-			var sourceInfo = SourceInfo.CreateFromType( sample.GetType() );
+			SourceInfo sourceInfo = SourceInfo.CreateFromType(sample.GetType());
 
 			// check to see if we already have a map for best match
-			MethodMap map = mapCache.Get( sourceInfo );
-			object[] values = sourceInfo.GetParameterValues( sample );
-			if( map == null )
-			{
+			MethodMap map = mapCache.Get(sourceInfo);
+			object[] values = sourceInfo.GetParameterValues(sample);
+			if (map == null) {
 				string[] names = sourceInfo.ParamNames;
 				Type[] types = sourceInfo.ParamTypes;
-				if( names.Length != values.Length || names.Length != types.Length )
-				{
-					throw new ArgumentException( "Mismatching name, type and value arrays (must be of identical length)." );
+				if (names.Length != values.Length || names.Length != types.Length) {
+					throw new ArgumentException("Mismatching name, type and value arrays (must be of identical length).");
 				}
-				map = MapFactory.DetermineBestMethodMatch( methodPool, mustUseAllParameters, names, types, values );
-				mapCache.Insert( sourceInfo, map );
+				map = MapFactory.DetermineBestMethodMatch(methodPool, mustUseAllParameters, names, types, values);
+				mapCache.Insert(sourceInfo, map);
 			}
 			bool isStatic = obj is Type;
-			return isStatic ? map.Invoke( values ) : map.Invoke( obj, values );
+			return isStatic ? map.Invoke(values) : map.Invoke(obj, values);
 		}
 
 		/// <summary>
@@ -118,26 +116,24 @@ namespace Fasterflect.Probing
 		/// invocation. Unless you know what you are doing you should pass true for this parameter.</param>
 		/// <param name="parameters">A dictionary of parameter name/value pairs.</param>
 		/// <returns>The return value of the invocation.</returns>
-		public object Invoke( object obj, bool mustUseAllParameters, Dictionary<string, object> parameters )
+		public object Invoke(object obj, bool mustUseAllParameters, Dictionary<string, object> parameters)
 		{
-			if( obj == null || parameters == null )
-			{
-				throw new ArgumentException( "Missing or invalid argument: " + (obj == null ? "obj" : "parameters") );
+			if (obj == null || parameters == null) {
+				throw new ArgumentException("Missing or invalid argument: " + (obj == null ? "obj" : "parameters"));
 			}
 			string[] names = parameters.Keys.ToArray() ?? new string[0];
 			object[] values = parameters.Values.ToArray() ?? new object[0];
 			Type[] types = values.ToTypeArray() ?? new Type[0];
 			bool isStatic = obj is Type;
-			var type = isStatic ? obj as Type : obj.GetType();
-			var sourceInfo = new SourceInfo( type, names, types );
+			Type type = isStatic ? obj as Type : obj.GetType();
+			SourceInfo sourceInfo = new SourceInfo(type, names, types);
 			// check to see if we already have a map for best match
-			MethodMap map = mapCache.Get( sourceInfo );
-			if( map == null )
-			{
-				map = MapFactory.DetermineBestMethodMatch( methodPool, mustUseAllParameters, names, types, values );
-				mapCache.Insert( sourceInfo, map );
+			MethodMap map = mapCache.Get(sourceInfo);
+			if (map == null) {
+				map = MapFactory.DetermineBestMethodMatch(methodPool, mustUseAllParameters, names, types, values);
+				mapCache.Insert(sourceInfo, map);
 			}
-			return isStatic ? map.Invoke( values ) : map.Invoke( obj, values );
+			return isStatic ? map.Invoke(values) : map.Invoke(obj, values);
 		}
 	}
 }
