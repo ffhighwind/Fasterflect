@@ -1,0 +1,10 @@
+E:\Github\fasterflect\fasterflect\Fasterflect\FasterflectTest\bin\Debug\FasterflectTest.dll
+E:\Github\fasterflect\fasterflect\Fasterflect\FasterflectTest\bin\Debug\FasterflectTest.pdb
+E:\Github\fasterflect\fasterflect\Fasterflect\FasterflectTest\bin\Debug\Fasterflect.dll
+E:\Github\fasterflect\fasterflect\Fasterflect\FasterflectTest\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+E:\Github\fasterflect\fasterflect\Fasterflect\FasterflectTest\bin\Debug\Fasterflect.pdb
+E:\Github\fasterflect\fasterflect\Fasterflect\FasterflectTest\obj\Debug\FasterflectTest.csprojAssemblyReference.cache
+E:\Github\fasterflect\fasterflect\Fasterflect\FasterflectTest\obj\Debug\FasterflectTest.csproj.CoreCompileInputs.cache
+E:\Github\fasterflect\fasterflect\Fasterflect\FasterflectTest\obj\Debug\FasterflectTest.csproj.CopyComplete
+E:\Github\fasterflect\fasterflect\Fasterflect\FasterflectTest\obj\Debug\FasterflectTest.dll
+E:\Github\fasterflect\fasterflect\Fasterflect\FasterflectTest\obj\Debug\FasterflectTest.pdb
