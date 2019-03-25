@@ -20,6 +20,7 @@ using System;
 using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
+using Fasterflect.Extensions.Objects;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

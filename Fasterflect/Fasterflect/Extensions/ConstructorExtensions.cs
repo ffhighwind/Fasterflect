@@ -44,7 +44,7 @@ namespace Fasterflect.Extensions
 		/// <seealso cref="CreateInstance(Type, Type[], object[])"/>
 		public static object CreateInstance(this Type type, params object[] parameters)
 		{
-			return DelegateForCreateInstance(type, parameters.ToTypeArray())(parameters);
+			return Reflect.Constructor(type, parameters.ToTypeArray())(parameters);
 		}
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object CreateInstance(this Type type, Type[] parameterTypes, params object[] parameters)
 		{
-			return DelegateForCreateInstance(type, parameterTypes)(parameters);
+			return Reflect.Constructor(type, parameterTypes)(parameters);
 		}
 
 		/// <summary>
@@ -70,7 +70,7 @@ namespace Fasterflect.Extensions
 		/// <seealso cref="CreateInstance(System.Type,System.Type[],Fasterflect.Flags,object[])"/>
 		public static object CreateInstance(this Type type, Flags bindingFlags, params object[] parameters)
 		{
-			return DelegateForCreateInstance(type, bindingFlags, parameters.ToTypeArray())(parameters);
+			return Reflect.Constructor(type, bindingFlags, parameters.ToTypeArray())(parameters);
 		}
 
 		/// <summary>
@@ -80,7 +80,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object CreateInstance(this Type type, Type[] parameterTypes, Flags bindingFlags, params object[] parameters)
 		{
-			return DelegateForCreateInstance(type, bindingFlags, parameterTypes)(parameters);
+			return Reflect.Constructor(type, bindingFlags, parameterTypes)(parameters);
 		}
 
 		/// <summary>
@@ -90,7 +90,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static ConstructorInvoker DelegateForCreateInstance(this Type type, params Type[] parameterTypes)
 		{
-			return DelegateForCreateInstance(type, Flags.InstanceAnyVisibility, parameterTypes);
+			return Reflect.Constructor(type, parameterTypes);
 		}
 
 		/// <summary>
@@ -101,7 +101,7 @@ namespace Fasterflect.Extensions
 		public static ConstructorInvoker DelegateForCreateInstance(this Type type, Flags bindingFlags,
 																	params Type[] parameterTypes)
 		{
-			return (ConstructorInvoker) new CtorInvocationEmitter(type, bindingFlags, parameterTypes).GetDelegate();
+			return Reflect.Constructor(type, bindingFlags, parameterTypes);
 		}
 		#endregion
 
@@ -133,7 +133,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The matching constructor or null if no match was found.</returns>
 		public static ConstructorInfo Constructor(this Type type, params Type[] parameterTypes)
 		{
-			return type.Constructor(Flags.InstanceAnyVisibility, parameterTypes);
+			return Reflect.Lookup.ConstructorInfo(type, parameterTypes);
 		}
 
 		/// <summary>
@@ -146,7 +146,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The matching constructor or null if no match was found.</returns>
 		public static ConstructorInfo Constructor(this Type type, Flags bindingFlags, params Type[] parameterTypes)
 		{
-			return type.GetConstructor(bindingFlags, null, parameterTypes, null);
+			return Reflect.Lookup.ConstructorInfo(type, bindingFlags, parameterTypes);
 		}
 		#endregion
 
@@ -158,7 +158,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of matching constructors. This value will never be null.</returns>
 		public static IList<ConstructorInfo> Constructors(this Type type)
 		{
-			return type.Constructors(Flags.InstanceAnyVisibility);
+			return Reflect.Lookup.Constructors(type);
 		}
 
 		/// <summary>
@@ -170,7 +170,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of matching constructors. This value will never be null.</returns>
 		public static IList<ConstructorInfo> Constructors(this Type type, Flags bindingFlags)
 		{
-			return type.GetConstructors(bindingFlags); //.Where(ci => !ci.IsAbstract).ToList();
+			return Reflect.Lookup.Constructors(type, bindingFlags);
 		}
 		#endregion
 	}

@@ -22,6 +22,7 @@ using System;
 using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
+using Fasterflect.Extensions.Objects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FasterflectTest.Invocation

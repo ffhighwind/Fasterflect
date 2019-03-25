@@ -1,6 +1,7 @@
 ﻿using System;
 using Fasterflect;
 using Fasterflect.Extensions;
+using Fasterflect.Extensions.Objects;
 using Fasterflect.Extensions.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

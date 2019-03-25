@@ -28,29 +28,11 @@ namespace Fasterflect.Extensions
 	{
 		#region Array Access
 		/// <summary>
-		/// Sets <paramref name="value"/> to the element at position <paramref name="index"/> of <paramref name="array"/>.
-		/// </summary>
-		/// <returns><paramref name="array"/>.</returns>
-		public static object SetElement(this object array, long index, object value)
-		{
-			((Array) array).SetValue(value, index);
-			return array;
-		}
-
-		/// <summary>
-		/// Gets the element at position <paramref name="index"/> of <paramref name="array"/>.
-		/// </summary>
-		public static object GetElement(this object array, long index)
-		{
-			return ((Array) array).GetValue(index);
-		}
-
-		/// <summary>
 		/// Creates a delegate which can set element of <paramref name="arrayType"/>.
 		/// </summary>
 		public static ArrayElementSetter DelegateForSetElement(this Type arrayType)
 		{
-			return (ArrayElementSetter) new ArraySetEmitter(arrayType).GetDelegate();
+			return Reflect.ArraySetter(arrayType);
 		}
 
 		/// <summary>
@@ -58,7 +40,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static ArrayElementGetter DelegateForGetElement(this Type arrayType)
 		{
-			return (ArrayElementGetter) new ArrayGetEmitter(arrayType).GetDelegate();
+			return Reflect.ArrayGetter(arrayType);
 		}
 		#endregion
 	}

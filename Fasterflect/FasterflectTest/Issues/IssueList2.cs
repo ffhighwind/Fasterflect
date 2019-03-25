@@ -2,6 +2,7 @@
 using System.Collections;
 using Fasterflect;
 using Fasterflect.Extensions;
+using Fasterflect.Extensions.Objects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FasterflectTest.Issues

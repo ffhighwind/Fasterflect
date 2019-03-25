@@ -24,7 +24,7 @@ namespace Fasterflect.Extensions.Services
 	/// This enumeration allows you to customize the XML output of the ToXml extensions.
 	/// </summary>
 	[Flags]
-	public enum FormatOptions
+	public enum XmlFormatOptions
 	{
 		/// <summary>
 		/// This option specifies the empty set of options and does not affect the output.

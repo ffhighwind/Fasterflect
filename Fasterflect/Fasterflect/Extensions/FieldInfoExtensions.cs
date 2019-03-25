@@ -31,7 +31,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static void Set(this FieldInfo fieldInfo, object value)
 		{
-			fieldInfo.DelegateForSetFieldValue()(null, value);
+			Reflect.Setter(fieldInfo)(null, value);
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static void Set(this FieldInfo fieldInfo, object obj, object value)
 		{
-			fieldInfo.DelegateForSetFieldValue()(obj, value);
+			Reflect.Setter(fieldInfo)(obj, value);
 		}
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object Get(this FieldInfo fieldInfo)
 		{
-			return fieldInfo.DelegateForGetFieldValue()(null);
+			return Reflect.Getter(fieldInfo)(null);
 		}
 
 		/// <summary>
@@ -56,7 +56,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object Get(this FieldInfo fieldInfo, object obj)
 		{
-			return fieldInfo.DelegateForGetFieldValue()(obj);
+			return Reflect.Getter(fieldInfo)(obj);
 		}
 
 		/// <summary>
@@ -64,8 +64,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static MemberSetter DelegateForSetFieldValue(this FieldInfo fieldInfo)
 		{
-			Flags flags = fieldInfo.IsStatic ? Flags.StaticAnyVisibility : Flags.InstanceAnyVisibility;
-			return (MemberSetter) new MemberSetEmitter(fieldInfo, flags).GetDelegate();
+			return Reflect.Setter(fieldInfo);
 		}
 
 		/// <summary>
@@ -73,8 +72,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static MemberGetter DelegateForGetFieldValue(this FieldInfo fieldInfo)
 		{
-			Flags flags = fieldInfo.IsStatic ? Flags.StaticAnyVisibility : Flags.InstanceAnyVisibility;
-			return (MemberGetter) new MemberGetEmitter(fieldInfo, flags).GetDelegate();
+			return Reflect.Getter(fieldInfo);
 		}
 	}
 }

@@ -28,6 +28,7 @@ using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using Fasterflect.Extensions.Utilities;
+using Fasterflect.Extensions.Objects;
 
 namespace FasterflectTest.Invocation
 {

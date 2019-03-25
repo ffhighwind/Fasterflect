@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using Fasterflect.Extensions;
+using Fasterflect.Extensions.Objects;
 using Fasterflect.Extensions.Utilities;
 
 namespace Fasterflect.Dynamic

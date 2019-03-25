@@ -20,6 +20,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Fasterflect.Extensions.Objects;
 
 namespace Fasterflect.Extensions.Services
 {
@@ -117,7 +118,7 @@ namespace Fasterflect.Extensions.Services
 			if (eventInfo != null) {
 				delegateType = eventInfo.EventHandlerType;
 				Delegate dynamicHandler = BuildDynamicHandler(delegateType, func);
-				eventInfo.GetAddMethod(true).Invoke(target, new Object[] { dynamicHandler });
+				eventInfo.GetAddMethod(true).Invoke(target, new object[] { dynamicHandler });
 			}
 			else {
 				FieldInfo fieldInfo = targetType.Field(fieldName,

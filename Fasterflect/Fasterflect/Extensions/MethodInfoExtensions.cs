@@ -38,7 +38,7 @@ namespace Fasterflect.Extensions
 		/// <remarks>If the method has no return type, <c>null</c> is returned.</remarks>
 		public static object Call(this MethodInfo methodInfo, params object[] parameters)
 		{
-			return methodInfo.DelegateForCallMethod()(null, parameters);
+			return Reflect.Method(methodInfo)(null, parameters);
 		}
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace Fasterflect.Extensions
 		/// <remarks>If the method has no return type, <c>null</c> is returned.</remarks>
 		public static object Call(this MethodInfo methodInfo, object obj, params object[] parameters)
 		{
-			return methodInfo.DelegateForCallMethod()(obj, parameters);
+			return Reflect.Method(methodInfo)(obj, parameters);
 		}
 
 		/// <summary>
@@ -58,8 +58,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static MethodInvoker DelegateForCallMethod(this MethodInfo methodInfo)
 		{
-			Flags flags = methodInfo.IsStatic ? Flags.StaticAnyVisibility : Flags.InstanceAnyVisibility;
-			return (MethodInvoker) new MethodInvocationEmitter(methodInfo, flags).GetDelegate();
+			return Reflect.Method(methodInfo);
 		}
 		#endregion
 

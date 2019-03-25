@@ -4,6 +4,7 @@ using System.Reflection;
 using Fasterflect;
 using Fasterflect.Emitter;
 using Fasterflect.Extensions;
+using Fasterflect.Extensions.Objects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FasterflectTest.Invocation

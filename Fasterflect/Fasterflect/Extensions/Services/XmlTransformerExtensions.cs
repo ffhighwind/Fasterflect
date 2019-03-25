@@ -39,7 +39,7 @@ namespace Fasterflect.Extensions.Services
 		/// <returns>A string containing the generated XML data.</returns>
 		public static string ToXml(this object obj)
 		{
-			return ToXml(obj, FormatOptions.Default);
+			return ToXml(obj, XmlFormatOptions.Default);
 		}
 
 		/// <summary>
@@ -52,13 +52,13 @@ namespace Fasterflect.Extensions.Services
 		/// <param name="obj">The object to convert to XML.</param>
 		/// <param name="options"></param>
 		/// <returns>A string containing the generated XML data.</returns>
-		public static string ToXml(this object obj, FormatOptions options)
+		public static string ToXml(this object obj, XmlFormatOptions options)
 		{
-			bool newLineAfterElement = (options & FormatOptions.NewLineAfterElement) == FormatOptions.NewLineAfterElement;
+			bool newLineAfterElement = (options & XmlFormatOptions.NewLineAfterElement) == XmlFormatOptions.NewLineAfterElement;
 			string afterElement = newLineAfterElement ? Environment.NewLine : String.Empty;
-			bool tabIndent = (options & FormatOptions.UseSpaces) != FormatOptions.UseSpaces;
+			bool tabIndent = (options & XmlFormatOptions.UseSpaces) != XmlFormatOptions.UseSpaces;
 			string indent = tabIndent ? "\t" : "    ";
-			bool addHeader = (options & FormatOptions.AddHeader) == FormatOptions.AddHeader;
+			bool addHeader = (options & XmlFormatOptions.AddHeader) == XmlFormatOptions.AddHeader;
 			string header = addHeader ? "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine : string.Empty;
 			return ToXml(obj, header, afterElement, indent, String.Empty);
 		}

@@ -18,6 +18,7 @@
 
 using Fasterflect;
 using Fasterflect.Extensions;
+using Fasterflect.Extensions.Objects;
 using Fasterflect.Extensions.Services;
 using FasterflectTest.Common;
 using FasterflectTest.SampleModel.People;

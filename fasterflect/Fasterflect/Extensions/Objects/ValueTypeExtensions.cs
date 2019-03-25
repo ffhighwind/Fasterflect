@@ -18,7 +18,7 @@
 
 using Fasterflect.Emitter;
 
-namespace Fasterflect.Extensions
+namespace Fasterflect.Extensions.Objects
 {
 	/// <summary>
 	/// Extension methods for working with types.

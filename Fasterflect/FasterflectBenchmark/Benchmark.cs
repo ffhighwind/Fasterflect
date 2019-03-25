@@ -27,6 +27,7 @@ using Fasterflect;
 using Fasterflect.Caching;
 using Fasterflect.Emitter;
 using Fasterflect.Extensions;
+using Fasterflect.Extensions.Objects;
 using Fasterflect.Extensions.Services;
 using Fasterflect.Probing;
 

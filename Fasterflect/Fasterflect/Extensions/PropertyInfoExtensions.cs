@@ -19,7 +19,7 @@
 using System.Reflection;
 using Fasterflect.Emitter;
 
-namespace Fasterflect.Extensions.Core
+namespace Fasterflect.Extensions
 {
 	/// <summary>
 	/// Extension methods for inspecting and working with properties.
@@ -31,7 +31,7 @@ namespace Fasterflect.Extensions.Core
 		/// </summary>
 		public static void Set(this PropertyInfo propInfo, object value)
 		{
-			propInfo.DelegateForSetPropertyValue(Flags.StaticAnyVisibility)(null, value);
+			Reflect.Setter(propInfo, Flags.StaticAnyVisibility)(null, value);
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace Fasterflect.Extensions.Core
 		/// </summary>
 		public static void Set(this PropertyInfo propInfo, object obj, object value)
 		{
-			propInfo.DelegateForSetPropertyValue(Flags.InstanceAnyVisibility)(obj, value);
+			Reflect.Setter(propInfo)(obj, value);
 		}
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace Fasterflect.Extensions.Core
 		/// </summary>
 		public static object Get(this PropertyInfo propInfo)
 		{
-			return propInfo.DelegateForGetPropertyValue(Flags.StaticAnyVisibility)(null);
+			return Reflect.Getter(propInfo)(null);
 		}
 
 		/// <summary>
@@ -56,7 +56,7 @@ namespace Fasterflect.Extensions.Core
 		/// </summary>
 		public static object Get(this PropertyInfo propInfo, object obj)
 		{
-			return propInfo.DelegateForGetPropertyValue(Flags.InstanceAnyVisibility)(obj);
+			return Reflect.Getter(propInfo, Flags.InstanceAnyVisibility)(obj);
 		}
 
 		/// <summary>
@@ -64,8 +64,7 @@ namespace Fasterflect.Extensions.Core
 		/// </summary>
 		public static MemberSetter DelegateForSetPropertyValue(this PropertyInfo propInfo)
 		{
-			Flags flags = propInfo.IsStatic() ? Flags.StaticAnyVisibility : Flags.InstanceAnyVisibility;
-			return (MemberSetter) new MemberSetEmitter(propInfo, flags).GetDelegate();
+			return Reflect.Setter(propInfo);
 		}
 
 		/// <summary>
@@ -74,7 +73,7 @@ namespace Fasterflect.Extensions.Core
 		/// </summary>
 		public static MemberSetter DelegateForSetPropertyValue(this PropertyInfo propInfo, Flags bindingFlags)
 		{
-			return (MemberSetter) new MemberSetEmitter(propInfo, bindingFlags).GetDelegate();
+			return Reflect.Setter(propInfo, bindingFlags);
 		}
 
 		/// <summary>
@@ -82,8 +81,7 @@ namespace Fasterflect.Extensions.Core
 		/// </summary>
 		public static MemberGetter DelegateForGetPropertyValue(this PropertyInfo propInfo)
 		{
-			Flags flags = propInfo.IsStatic() ? Flags.StaticAnyVisibility : Flags.InstanceAnyVisibility;
-			return (MemberGetter) new MemberGetEmitter(propInfo, flags).GetDelegate();
+			return Reflect.Getter(propInfo);
 		}
 
 		/// <summary>
@@ -92,7 +90,7 @@ namespace Fasterflect.Extensions.Core
 		/// </summary>
 		public static MemberGetter DelegateForGetPropertyValue(this PropertyInfo propInfo, Flags bindingFlags)
 		{
-			return (MemberGetter) new MemberGetEmitter(propInfo, bindingFlags).GetDelegate();
+			return Reflect.Getter(propInfo, bindingFlags);
 		}
 	}
 }
