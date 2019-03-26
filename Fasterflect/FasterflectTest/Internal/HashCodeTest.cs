@@ -20,13 +20,10 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Fasterflect;
-using Fasterflect.Caching;
 using Fasterflect.Emitter;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-
 namespace FasterflectTest.Internal
 {
 	[TestClass]
@@ -72,9 +69,9 @@ namespace FasterflectTest.Internal
 		public void TestCallInfoHashCodeUniqueness()
 		{
 			Type[] types = new[] { typeof(A1), typeof(B1), typeof(A2), typeof(B2) };
-			IEnumerable<CallInfo> infos = types.Select(t => new CallInfo(t, Type.EmptyTypes, Flags.InstanceAnyVisibility, MemberTypes.Property, "P1", Type.EmptyTypes, null, true));
+			IEnumerable<CallInfo> infos = types.Select(t => new CallInfo(t, Type.EmptyTypes, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Property, "P1", Type.EmptyTypes, null, true));
 			Assert.AreEqual(types.Length, infos.Select(ci => ci.GetHashCode()).Distinct().Count());
-			infos = types.Select(t => new CallInfo(t, Type.EmptyTypes, Flags.InstanceAnyVisibility, MemberTypes.Property, "P2", Type.EmptyTypes, null, true));
+			infos = types.Select(t => new CallInfo(t, Type.EmptyTypes, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Property, "P2", Type.EmptyTypes, null, true));
 			Assert.AreEqual(types.Length, infos.Select(ci => ci.GetHashCode()).Distinct().Count());
 		}
 
@@ -82,7 +79,7 @@ namespace FasterflectTest.Internal
 		public void TestCallInfoEqualityForProperties()
 		{
 			Type[] types = new[] { typeof(A1), typeof(A1) };
-			List<CallInfo> infos = types.Select(t => new CallInfo(t, null, Flags.StaticInstanceAnyVisibility, MemberTypes.Property, "P1", Type.EmptyTypes, null, true)).ToList();
+			List<CallInfo> infos = types.Select(t => new CallInfo(t, null, FasterflectFlags.StaticInstanceAnyVisibility, MemberTypes.Property, "P1", Type.EmptyTypes, null, true)).ToList();
 			Assert.AreEqual(infos[0].GetHashCode(), infos[1].GetHashCode());
 			Assert.AreEqual(infos[0], infos[1]);
 			Assert.IsTrue(infos[0].Equals(infos[1]));
@@ -94,7 +91,7 @@ namespace FasterflectTest.Internal
 		{
 			A1[] args = new[] { new A1() };
 			Type[] types = new[] { typeof(C), typeof(C) };
-			List<CallInfo> infos = types.Select(t => new CallInfo(t, null, Flags.StaticInstanceAnyVisibility, MemberTypes.Method, "M", args.ToTypeArray(), null, true)).ToList();
+			List<CallInfo> infos = types.Select(t => new CallInfo(t, null, FasterflectFlags.StaticInstanceAnyVisibility, MemberTypes.Method, "M", args.ToTypeArray(), null, true)).ToList();
 			Assert.AreEqual(infos[0].GetHashCode(), infos[1].GetHashCode());
 			Assert.AreEqual(infos[0], infos[1]);
 			Assert.IsTrue(infos[0].Equals(infos[1]));
@@ -105,7 +102,7 @@ namespace FasterflectTest.Internal
 		public void TestCache()
 		{
 			Type[] types = new[] { typeof(A1), typeof(A1) };
-			List<CallInfo> infos = types.Select(t => new CallInfo(t, null, Flags.StaticInstanceAnyVisibility, MemberTypes.Property, "P1", Type.EmptyTypes, null, true)).ToList();
+			List<CallInfo> infos = types.Select(t => new CallInfo(t, null, FasterflectFlags.StaticInstanceAnyVisibility, MemberTypes.Property, "P1", Type.EmptyTypes, null, true)).ToList();
 			Cache<CallInfo, object> cache = new Cache<CallInfo, object>();
 			infos.ForEach(ci => cache.Insert(ci, ci));
 			Assert.AreEqual(1, cache.Count);
@@ -133,7 +130,7 @@ namespace FasterflectTest.Internal
 
 		private static MapCallInfo GetMapCallInfo(Type sourceType, Type targetType, params string[] properties)
 		{
-			return new MapCallInfo(targetType, Type.EmptyTypes, Flags.InstanceAnyVisibility, MemberTypes.Property, "map", Type.EmptyTypes, null,
+			return new MapCallInfo(targetType, Type.EmptyTypes, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Property, "map", Type.EmptyTypes, null,
 									true, sourceType, MemberTypes.Property, MemberTypes.Property, properties);
 		}
 	}

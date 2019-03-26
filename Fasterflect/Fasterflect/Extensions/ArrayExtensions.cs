@@ -24,7 +24,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for working with arrays.
 	/// </summary>
-	public static class ArrayExtensions
+	public static partial class ArrayExtensions
 	{
 		#region Array Access
 		/// <summary>

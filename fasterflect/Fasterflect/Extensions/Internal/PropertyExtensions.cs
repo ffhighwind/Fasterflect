@@ -1,16 +1,32 @@
-﻿using System;
+﻿#region License
+// Copyright 2010 Buu Nguyen, Morten Mertner
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); 
+// you may not use this file except in compliance with the License. 
+// You may obtain a copy of the License at 
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+// See the License for the specific language governing permissions and 
+// limitations under the License.
+// 
+// The latest version of this file can be found at http://fasterflect.codeplex.com/
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using Fasterflect.Extensions.Utilities;
-
-namespace Fasterflect.Extensions.Objects
+namespace Fasterflect.Extensions
 {
 	/// <summary>
 	/// Extension methods for locating and accessing properties.
 	/// </summary>
-	public static class PropertyExtensions
+	public static partial class PropertyExtensions
 	{
 		#region Property Access
 		/// <summary>
@@ -18,7 +34,7 @@ namespace Fasterflect.Extensions.Objects
 		/// specified <param name="value" />.
 		/// </summary>
 		/// <returns><paramref name="obj"/>.</returns>
-		public static object SetPropertyValue(this object obj, string name, object value)
+		internal static object SetPropertyValue(this object obj, string name, object value)
 		{
 			Fasterflect.Extensions.PropertyExtensions.DelegateForSetPropertyValue(obj.GetTypeAdjusted(), name)(obj, value);
 			return obj;
@@ -27,7 +43,7 @@ namespace Fasterflect.Extensions.Objects
 		/// <summary>
 		/// Gets the value of the property specified by <param name="name"/> on the given <param name="obj"/>.
 		/// </summary>
-		public static object GetPropertyValue(this object obj, string name)
+		internal static object GetPropertyValue(this object obj, string name)
 		{
 			return Fasterflect.Extensions.PropertyExtensions.DelegateForGetPropertyValue(obj.GetTypeAdjusted(), name)(obj);
 		}
@@ -37,7 +53,7 @@ namespace Fasterflect.Extensions.Objects
 		/// on the given <param name="obj"/> to the specified <param name="value" />.
 		/// </summary>
 		/// <returns><paramref name="obj"/>.</returns>
-		public static object SetPropertyValue(this object obj, string name, object value, Flags bindingFlags)
+		internal static object SetPropertyValue(this object obj, string name, object value, FasterflectFlags bindingFlags)
 		{
 			Fasterflect.Extensions.PropertyExtensions.DelegateForSetPropertyValue(obj.GetTypeAdjusted(), name, bindingFlags)(obj, value);
 			return obj;
@@ -47,7 +63,7 @@ namespace Fasterflect.Extensions.Objects
 		/// Gets the value of the property specified by <param name="name"/> matching <param name="bindingFlags"/>
 		/// on the given <param name="obj"/>.
 		/// </summary>
-		public static object GetPropertyValue(this object obj, string name, Flags bindingFlags)
+		internal static object GetPropertyValue(this object obj, string name, FasterflectFlags bindingFlags)
 		{
 			return Fasterflect.Extensions.PropertyExtensions.DelegateForGetPropertyValue(obj.GetTypeAdjusted(), name, bindingFlags)(obj);
 		}
@@ -57,11 +73,11 @@ namespace Fasterflect.Extensions.Objects
 		/// specified <param name="value" />.
 		/// </summary>
 		/// <returns><paramref name="obj"/>.</returns>
-		public static object SetPropertyValue(this object obj, Expression<Func<object>> memberExpression, object value)
+		internal static object SetPropertyValue(this object obj, Expression<Func<object>> memberExpression, object value)
 		{
 			MemberExpression body = memberExpression != null ? memberExpression.Body as MemberExpression : null;
 			if (body == null || body.Member == null) {
-				throw new ArgumentNullException("memberExpression");
+				throw new ArgumentNullException(nameof(memberExpression));
 			}
 			return obj.SetPropertyValue(body.Member.Name, value);
 		}
@@ -69,11 +85,11 @@ namespace Fasterflect.Extensions.Objects
 		/// <summary>
 		/// Gets the value of the property specified by <param name="memberExpression"/> on the given <param name="obj"/>.
 		/// </summary>
-		public static object GetPropertyValue(this object obj, Expression<Func<object>> memberExpression)
+		internal static object GetPropertyValue(this object obj, Expression<Func<object>> memberExpression)
 		{
 			MemberExpression body = memberExpression != null ? memberExpression.Body as MemberExpression : null;
 			if (body == null || body.Member == null) {
-				throw new ArgumentNullException("memberExpression");
+				throw new ArgumentNullException(nameof(memberExpression));
 			}
 			return obj.GetPropertyValue(body.Member.Name);
 		}
@@ -96,7 +112,7 @@ namespace Fasterflect.Extensions.Objects
 		/// obj.SetIndexer(new Type[]{typeof(int), typeof(string)}, new object[]{1, "a"});
 		/// </code>
 		/// </example>
-		public static object SetIndexer(this object obj, params object[] parameters)
+		internal static object SetIndexer(this object obj, params object[] parameters)
 		{
 			Fasterflect.Extensions.PropertyExtensions.DelegateForSetIndexer(obj.GetTypeAdjusted(), parameters.ToTypeArray())(obj, parameters);
 			return obj;
@@ -118,7 +134,7 @@ namespace Fasterflect.Extensions.Objects
 		/// obj.SetIndexer(new Type[]{typeof(int), typeof(string)}, new object[]{1, "a"});
 		/// </code>
 		/// </example>
-		public static object SetIndexer(this object obj, Type[] parameterTypes, params object[] parameters)
+		internal static object SetIndexer(this object obj, Type[] parameterTypes, params object[] parameters)
 		{
 			Fasterflect.Extensions.PropertyExtensions.DelegateForSetIndexer(obj.GetTypeAdjusted(), parameterTypes)(obj, parameters);
 			return obj;
@@ -133,7 +149,7 @@ namespace Fasterflect.Extensions.Objects
 		/// If any parameter is <code>null</code> (or you can't be sure of that, i.e. receive from a variable), 
 		/// use a different overload of this method.</param>
 		/// <returns>The value returned by the indexer.</returns>
-		public static object GetIndexer(this object obj, params object[] parameters)
+		internal static object GetIndexer(this object obj, params object[] parameters)
 		{
 			return Fasterflect.Extensions.PropertyExtensions.DelegateForGetIndexer(obj.GetTypeAdjusted(), parameters.ToTypeArray())(obj, parameters);
 		}
@@ -145,7 +161,7 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="parameterTypes">The types of the indexer parameters (must be in the right order).</param>
 		/// <param name="parameters">The list of the indexer parameters.</param>
 		/// <returns>The value returned by the indexer.</returns>
-		public static object GetIndexer(this object obj, Type[] parameterTypes, params object[] parameters)
+		internal static object GetIndexer(this object obj, Type[] parameterTypes, params object[] parameters)
 		{
 			return Fasterflect.Extensions.PropertyExtensions.DelegateForGetIndexer(obj.GetTypeAdjusted(), parameterTypes)(obj, parameters);
 		}
@@ -167,7 +183,7 @@ namespace Fasterflect.Extensions.Objects
 		/// obj.SetIndexer(new Type[]{typeof(int), typeof(string)}, new object[]{1, "a"});
 		/// </code>
 		/// </example>
-		public static object SetIndexer(this object obj, Flags bindingFlags, params object[] parameters)
+		internal static object SetIndexer(this object obj, FasterflectFlags bindingFlags, params object[] parameters)
 		{
 			Fasterflect.Extensions.PropertyExtensions.DelegateForSetIndexer(obj.GetTypeAdjusted(), bindingFlags, parameters.ToTypeArray())(obj,
 																										parameters);
@@ -191,7 +207,7 @@ namespace Fasterflect.Extensions.Objects
 		/// obj.SetIndexer(new Type[]{typeof(int), typeof(string)}, new object[]{1, "a"});
 		/// </code>
 		/// </example>
-		public static object SetIndexer(this object obj, Type[] parameterTypes, Flags bindingFlags, params object[] parameters)
+		internal static object SetIndexer(this object obj, Type[] parameterTypes, FasterflectFlags bindingFlags, params object[] parameters)
 		{
 			Fasterflect.Extensions.PropertyExtensions.DelegateForSetIndexer(obj.GetTypeAdjusted(), bindingFlags, parameterTypes)(obj, parameters);
 			return obj;
@@ -207,7 +223,7 @@ namespace Fasterflect.Extensions.Objects
 		/// If any parameter is <code>null</code> (or you can't be sure of that, i.e. receive from a variable), 
 		/// use a different overload of this method.</param>
 		/// <returns>The value returned by the indexer.</returns>
-		public static object GetIndexer(this object obj, Flags bindingFlags, params object[] parameters)
+		internal static object GetIndexer(this object obj, FasterflectFlags bindingFlags, params object[] parameters)
 		{
 			return Fasterflect.Extensions.PropertyExtensions.DelegateForGetIndexer(obj.GetTypeAdjusted(), bindingFlags, parameters.ToTypeArray())(obj,
 																											   parameters);
@@ -221,7 +237,7 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="bindingFlags">The binding flags used to lookup the indexer.</param>
 		/// <param name="parameters">The list of the indexer parameters.</param>
 		/// <returns>The value returned by the indexer.</returns>
-		public static object GetIndexer(this object obj, Type[] parameterTypes, Flags bindingFlags, params object[] parameters)
+		internal static object GetIndexer(this object obj, Type[] parameterTypes, FasterflectFlags bindingFlags, params object[] parameters)
 		{
 			return Fasterflect.Extensions.PropertyExtensions.DelegateForGetIndexer(obj.GetTypeAdjusted(), bindingFlags, parameterTypes)(obj, parameters);
 		}
@@ -240,9 +256,9 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="obj">The source object on which to find the property</param>
 		/// <param name="name">The name of the property whose value should be retrieved</param>
 		/// <returns>The value of the property or null if no property was found</returns>
-		public static object TryGetPropertyValue(this object obj, string name)
+		internal static object TryGetPropertyValue(this object obj, string name)
 		{
-			return TryGetPropertyValue(obj, name, Flags.InstanceAnyVisibility);
+			return TryGetPropertyValue(obj, name, FasterflectFlags.InstanceAnyVisibility);
 		}
 
 		/// <summary>
@@ -257,7 +273,7 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="name">The name of the property whose value should be retrieved</param>
 		/// <param name="bindingFlags">A combination of Flags that define the scope of the search</param>
 		/// <returns>The value of the property or null if no property was found</returns>
-		public static object TryGetPropertyValue(this object obj, string name, Flags bindingFlags)
+		internal static object TryGetPropertyValue(this object obj, string name, FasterflectFlags bindingFlags)
 		{
 			try {
 				return obj.GetPropertyValue(name, bindingFlags);
@@ -278,9 +294,9 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="name">The name of the property whose value should be retrieved</param>
 		/// <param name="value">The value that should be assigned to the property</param>
 		/// <returns>True if the value was assigned to a property and false otherwise</returns>
-		public static bool TrySetPropertyValue(this object obj, string name, object value)
+		internal static bool TrySetPropertyValue(this object obj, string name, object value)
 		{
-			return TrySetPropertyValue(obj, name, value, Flags.InstanceAnyVisibility);
+			return TrySetPropertyValue(obj, name, value, FasterflectFlags.InstanceAnyVisibility);
 		}
 
 		/// <summary>
@@ -293,7 +309,7 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="value">The value that should be assigned to the property</param>
 		/// <param name="bindingFlags">A combination of Flags that define the scope of the search</param>
 		/// <returns>True if the value was assigned to a property and false otherwise</returns>
-		public static bool TrySetPropertyValue(this object obj, string name, object value, Flags bindingFlags)
+		internal static bool TrySetPropertyValue(this object obj, string name, object value, FasterflectFlags bindingFlags)
 		{
 			try {
 				obj.SetPropertyValue(name, value, bindingFlags);

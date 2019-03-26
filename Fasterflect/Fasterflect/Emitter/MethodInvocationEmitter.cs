@@ -19,23 +19,21 @@
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using Fasterflect.Extensions.Utilities;
-
 namespace Fasterflect.Emitter
 {
 	internal class MethodInvocationEmitter : InvocationEmitter
 	{
-		public MethodInvocationEmitter(MethodInfo methodInfo, Flags bindingFlags)
+		public MethodInvocationEmitter(MethodInfo methodInfo, FasterflectFlags bindingFlags)
 			: this(methodInfo.DeclaringType, bindingFlags, methodInfo.Name, methodInfo.GetParameters().ToTypeArray(), methodInfo)
 		{
 		}
 
-		public MethodInvocationEmitter(Type targetType, Flags bindingFlags, string name, Type[] parameterTypes)
+		public MethodInvocationEmitter(Type targetType, FasterflectFlags bindingFlags, string name, Type[] parameterTypes)
 			: this(targetType, bindingFlags, name, parameterTypes, null)
 		{
 		}
 
-		private MethodInvocationEmitter(Type targetType, Flags bindingFlags, string name, Type[] parameterTypes,
+		private MethodInvocationEmitter(Type targetType, FasterflectFlags bindingFlags, string name, Type[] parameterTypes,
 										 MemberInfo methodInfo)
 			: base(new CallInfo(targetType, null, bindingFlags, MemberTypes.Method, name, parameterTypes, methodInfo, true))
 		{

@@ -51,43 +51,44 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="Caching\CacheStrategy.cs" />
-    <Compile Include="Caching\Cache.cs" />
-    <Compile Include="Extensions\Objects\ArrayExtensions.cs" />
-    <Compile Include="Extensions\Objects\MapExtensions.cs" />
-    <Compile Include="Extensions\Objects\TryInvokeWithValuesExtensions.cs" />
-    <Compile Include="Extensions\Objects\FieldExtensions.cs" />
-    <Compile Include="Extensions\Objects\MemberExtensions.cs" />
-    <Compile Include="Extensions\Objects\MethodExtensions.cs" />
-    <Compile Include="Extensions\Objects\PropertyExtensions.cs" />
+    <Compile Include="Internal\CacheStrategy.cs" />
+    <Compile Include="Internal\Cache.cs" />
+    <Compile Include="Extensions\Internal\ArrayExtensions.cs" />
+    <Compile Include="Extensions\Internal\EventExtensions.cs" />
+    <Compile Include="Extensions\Internal\MapExtensions.cs" />
+    <Compile Include="Extensions\Internal\TryInvokeWithValuesExtensions.cs" />
+    <Compile Include="Extensions\Internal\FieldExtensions.cs" />
+    <Compile Include="Extensions\Internal\MemberExtensions.cs" />
+    <Compile Include="Extensions\Internal\MethodExtensions.cs" />
+    <Compile Include="Extensions\Internal\PropertyExtensions.cs" />
     <Compile Include="Extensions\Services\XmlFormatOptions.cs" />
-    <Compile Include="DynamicReflection\DynamicWrapper.cs" />
-    <Compile Include="DynamicReflection\DynamicBuilder.cs" />
+    <Compile Include="Internal\DynamicWrapper.cs" />
+    <Compile Include="Internal\DynamicBuilder.cs" />
     <Compile Include="Emitter\MapCallInfo.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\ParameterInfoExtensions.cs" />
-    <Compile Include="Extensions\Utilities\MemberFilter.cs" />
+    <Compile Include="Internal\MemberFilter.cs" />
     <Compile Include="Emitter\MapEmitter.cs" />
     <Compile Include="Emitter\EmitHelper.cs" />
     <Compile Include="Extensions\ConstructorInfoExtensions.cs" />
-    <Compile Include="Extensions\Objects\ValueTypeExtensions.cs" />
-    <Compile Include="Extensions\Services\CloneExtensions.cs" />
+    <Compile Include="Extensions\Internal\ValueTypeExtensions.cs" />
+    <Compile Include="Extensions\Internal\CloneExtensions.cs" />
     <Compile Include="Emitter\Constants.cs" />
     <Compile Include="Extensions\ConstructorExtensions.cs" />
     <Compile Include="Extensions\AttributeExtensions.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Emitter\LookupUtils.cs" />
-    <Compile Include="Flags.cs" />
+    <Compile Include="FasterflectFlags.cs" />
     <Compile Include="Extensions\FieldInfoExtensions.cs" />
     <Compile Include="Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\Services\EventExtensions.cs" />
-    <Compile Include="Extensions\Objects\TryCallMethodExtensions.cs" />
+    <Compile Include="Extensions\Internal\TryCallMethodExtensions.cs" />
     <Compile Include="Extensions\Services\TryCreateInstanceExtensions.cs" />
-    <Compile Include="Extensions\Services\MapExtensions.cs" />
+    <Compile Include="Extensions\MapExtensions.cs" />
     <Compile Include="Extensions\Services\TryInvokeWithValuesExtensions.cs" />
     <Compile Include="Extensions\Services\XmlTransformerExtensions.cs" />
-    <Compile Include="Extensions\Services\Probing\TypeConverter.cs" />
+    <Compile Include="Probing\TypeConverter.cs" />
     <Compile Include="Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\MemberExtensions.cs" />
     <Compile Include="Extensions\PropertyExtensions.cs" />
@@ -103,17 +104,18 @@
     <Compile Include="Emitter\MethodInvocationEmitter.cs" />
     <Compile Include="Emitter\MemberGetEmitter.cs" />
     <Compile Include="Emitter\MemberSetEmitter.cs" />
-    <Compile Include="Extensions\Services\Probing\ConstructorMap.cs" />
-    <Compile Include="Extensions\Services\Probing\MapFactory.cs" />
-    <Compile Include="Extensions\Services\Probing\SourceInfo.cs" />
-    <Compile Include="Extensions\Services\Probing\MethodMap.cs" />
-    <Compile Include="Extensions\Utilities\Utils.cs" />
-    <Compile Include="Extensions\Services\Probing\MethodDispatcher.cs" />
+    <Compile Include="Internal\ConstructorMap.cs" />
+    <Compile Include="Internal\MapFactory.cs" />
+    <Compile Include="Internal\SourceInfo.cs" />
+    <Compile Include="Internal\MethodMap.cs" />
+    <Compile Include="Internal\Utils.cs" />
+    <Compile Include="Probing\MethodDispatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Emitter\ValueTypeHolder.cs" />
+    <Compile Include="Internal\ValueTypeHolder.cs" />
     <Compile Include="Extensions\MethodInfoExtensions.cs" />
     <Compile Include="Reflect.cs" />
     <Compile Include="Reflect.Lookup.cs" />
+    <Compile Include="Reflect_T.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
@@ -123,6 +125,7 @@
       <Link>key.snk</Link>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

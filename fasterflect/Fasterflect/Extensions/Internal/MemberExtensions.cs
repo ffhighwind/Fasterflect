@@ -1,19 +1,36 @@
-﻿using System;
+﻿#region License
+// Copyright 2010 Buu Nguyen, Morten Mertner
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); 
+// you may not use this file except in compliance with the License. 
+// You may obtain a copy of the License at 
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+// See the License for the specific language governing permissions and 
+// limitations under the License.
+// 
+// The latest version of this file can be found at http://fasterflect.codeplex.com/
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Fasterflect.Extensions;
 
-namespace Fasterflect.Extensions.Objects
+namespace Fasterflect.Extensions
 {
 	/// <summary>
 	/// Extension methods for locating and accessing fields or properties, for situations where
 	/// you do not care which it is.
 	/// </summary>
-	public static class MemberExtensions
+	public static partial class MemberExtensions
 	{
-		#region Member Combined
-
 		#region TryGetValue
 		/// <summary>
 		/// Gets the first (public or non-public) instance member with the given <paramref name="name"/> on the given
@@ -25,9 +42,9 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="obj">The source object on which to find the member</param>
 		/// <param name="name">The name of the member whose value should be retrieved</param>
 		/// <returns>The value of the member or null if no member was found</returns>
-		public static object TryGetValue(this object obj, string name)
+		internal static object TryGetValue(this object obj, string name)
 		{
-			return TryGetValue(obj, name, Flags.InstanceAnyVisibility);
+			return TryGetValue(obj, name, FasterflectFlags.InstanceAnyVisibility);
 		}
 
 		/// <summary>
@@ -42,7 +59,7 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="name">The name of the member whose value should be retrieved</param>
 		/// <param name="bindingFlags">A combination of Flags that define the scope of the search</param>
 		/// <returns>The value of the member or null if no member was found</returns>
-		public static object TryGetValue(this object obj, string name, Flags bindingFlags)
+		internal static object TryGetValue(this object obj, string name, FasterflectFlags bindingFlags)
 		{
 			Type type = obj.GetType();
 			MemberInfo info = type.Member(name, bindingFlags);
@@ -64,9 +81,9 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="name">The name of the member whose value should be retrieved</param>
 		/// <param name="value">The value that should be assigned to the member</param>
 		/// <returns>True if the value was assigned to a member and false otherwise</returns>
-		public static bool TrySetValue(this object obj, string name, object value)
+		internal static bool TrySetValue(this object obj, string name, object value)
 		{
-			return TrySetValue(obj, name, value, Flags.InstanceAnyVisibility);
+			return TrySetValue(obj, name, value, FasterflectFlags.InstanceAnyVisibility);
 		}
 
 		/// <summary>
@@ -79,7 +96,7 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="value">The value that should be assigned to the member</param>
 		/// <param name="bindingFlags">A combination of Flags that define the scope of the search</param>
 		/// <returns>True if the value was assigned to a member and false otherwise</returns>
-		public static bool TrySetValue(this object obj, string name, object value, Flags bindingFlags)
+		internal static bool TrySetValue(this object obj, string name, object value, FasterflectFlags bindingFlags)
 		{
 			Type type = obj.GetType();
 			PropertyInfo property = type.Property(name, bindingFlags);
@@ -94,8 +111,6 @@ namespace Fasterflect.Extensions.Objects
 			}
 			return false;
 		}
-		#endregion
-
 		#endregion
 	}
 }

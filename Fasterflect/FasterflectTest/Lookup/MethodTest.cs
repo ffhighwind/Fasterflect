@@ -24,7 +24,6 @@ using System.Linq;
 using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Utilities;
 using FasterflectTest.SampleModel.Animals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -47,7 +46,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestFindMethodInstanceIgnoreCase()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.IgnoreCase;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.IgnoreCase;
 
 			AnimalInstanceMethodNames.Select(s => s.ToLower()).Select(s => typeof(Animal).Method(s)).ForEach(Assert.IsNull);
 			AnimalInstanceMethodNames.Select(s => s.ToLower()).Select(s => typeof(Animal).Method(s, flags)).ForEach(Assert.IsNotNull);
@@ -62,7 +61,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestFindMethodInstanceWithExcludeBackingMembers()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.ExcludeBackingMembers;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.ExcludeBackingMembers;
 
 			AnimalInstanceMethodNames.Select(s => typeof(Animal).Method(s)).ForEach(Assert.IsNotNull);
 			AnimalInstanceMethodNames.Where(s => s.Contains("_")).Select(s => typeof(Animal).Method(s, flags)).ForEach(Assert.IsNull);
@@ -87,7 +86,7 @@ namespace FasterflectTest.Lookup
 			Assert.IsNotNull(typeof(Snake).Method("Bite", new[] { typeof(Mammal) }));
 			Assert.IsNotNull(typeof(Snake).Method("Bite", new[] { typeof(Lion) }));
 
-			Flags flags = Flags.InstanceAnyVisibility;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility;
 			Assert.IsNull(typeof(Snake).Method("Bite", new Type[] { }, flags));
 			Assert.IsNull(typeof(Snake).Method("Bite", new[] { typeof(object) }, flags));
 			Assert.IsNotNull(typeof(Snake).Method("Bite", null, flags)); // should ignore flag when null is passed
@@ -99,7 +98,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestFindMethodInstanceWithExactBinding()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.ExactBinding;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.ExactBinding;
 
 			Assert.IsNull(typeof(Snake).Method("Bite", new Type[] { }, flags));
 			Assert.IsNull(typeof(Snake).Method("Bite", new[] { typeof(object) }, flags));
@@ -112,7 +111,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestFindMethodInstanceWithDeclaredOnly()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.DeclaredOnly;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly;
 
 			AnimalInstanceMethodNames.Select(s => typeof(Animal).Method(s, flags)).ForEach(Assert.IsNotNull);
 			ReptileDeclaredInstanceMethodNames.Select(s => typeof(Reptile).Method(s, flags)).ForEach(Assert.IsNotNull);
@@ -147,7 +146,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestFindMethodsWithExcludeBackingMembers()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.ExcludeBackingMembers;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.ExcludeBackingMembers;
 
 			IList<MethodInfo> methods = typeof(Animal).Methods(flags);
 			CollectionAssert.AreEquivalent(AnimalInstanceMethodNames.Where(s => !s.Contains("_")).Distinct().ToList(),
@@ -165,7 +164,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestFindMethodsWithParameterList()
 		{
-			Flags flags = Flags.InstanceAnyVisibility;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility;
 			IList<MethodInfo> methods = typeof(Animal).Methods(null, flags);
 			CollectionAssert.AreEquivalent(AnimalInstanceMethodNames, methods.Select(m => m.Name).ToList());
 
@@ -195,20 +194,20 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestFindMethodsInstanceWithDeclaredOnly()
 		{
-			IList<MethodInfo> methods = typeof(Animal).Methods(Flags.InstanceAnyVisibility | Flags.DeclaredOnly);
+			IList<MethodInfo> methods = typeof(Animal).Methods(FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly);
 			CollectionAssert.AreEquivalent(AnimalInstanceMethodNames, methods.Select(m => m.Name).ToList());
 
-			methods = typeof(Reptile).Methods(Flags.InstanceAnyVisibility | Flags.DeclaredOnly);
+			methods = typeof(Reptile).Methods(FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly);
 			CollectionAssert.AreEquivalent(ReptileDeclaredInstanceMethodNames, methods.Select(m => m.Name).ToList());
 
-			methods = typeof(Snake).Methods(Flags.InstanceAnyVisibility | Flags.DeclaredOnly);
+			methods = typeof(Snake).Methods(FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly);
 			CollectionAssert.AreEquivalent(SnakeDeclaredInstanceMethodNames, methods.Select(m => m.Name.Contains(".") ? m.Name.Substring(m.Name.LastIndexOf(".") + 1) : m.Name).ToList());
 		}
 
 		[TestMethod]
 		public void TestFindMethodsInstanceWithPartialNameMatch()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.PartialNameMatch;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.PartialNameMatch;
 
 			IList<MethodInfo> methods = typeof(Animal).Methods(flags, "B");
 			CollectionAssert.AreEquivalent(AnimalInstanceMethodNames.Where(s => s.Contains("B")).ToList(), methods.Select(m => m.Name).ToList());

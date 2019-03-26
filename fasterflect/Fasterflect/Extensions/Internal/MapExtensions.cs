@@ -1,16 +1,32 @@
-﻿using System;
+﻿#region License
+// Copyright 2010 Buu Nguyen, Morten Mertner
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); 
+// you may not use this file except in compliance with the License. 
+// You may obtain a copy of the License at 
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+// See the License for the specific language governing permissions and 
+// limitations under the License.
+// 
+// The latest version of this file can be found at http://fasterflect.codeplex.com/
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Fasterflect.Extensions.Utilities;
-
-namespace Fasterflect.Extensions.Objects
+namespace Fasterflect.Extensions
 {
 	/// <summary>
 	/// Extension methods for mapping (copying) members from one object instance to another.
 	/// </summary>
-	public static class MapExtensions
+	public static partial class MapExtensions
 	{
 		#region Map
 		/// <summary>
@@ -25,7 +41,7 @@ namespace Fasterflect.Extensions.Objects
 		/// filter members by substring and <see href="Flags.IgnoreCase"/> to ignore case.</param>
 		public static void Map(this object source, object target, params string[] names)
 		{
-			Fasterflect.Extensions.Services.MapExtensions.DelegateForMap(source.GetType(), target.GetTypeAdjusted(), names)(source, target);
+			Fasterflect.Extensions.MapExtensions.DelegateForMap(source.GetType(), target.GetTypeAdjusted(), names)(source, target);
 		}
 
 		/// <summary>
@@ -39,9 +55,9 @@ namespace Fasterflect.Extensions.Objects
 		/// to be mapped. If this parameter is <c>null</c> or empty no name filtering will be applied. The default 
 		/// behavior is to check for an exact, case-sensitive match. Pass <see href="Flags.PartialNameMatch"/> to 
 		/// filter members by substring and <see href="Flags.IgnoreCase"/> to ignore case.</param>
-		public static void Map(this object source, object target, Flags bindingFlags, params string[] names)
+		public static void Map(this object source, object target, FasterflectFlags bindingFlags, params string[] names)
 		{
-			Fasterflect.Extensions.Services.MapExtensions.DelegateForMap(source.GetType(), target.GetTypeAdjusted(), bindingFlags, names)(source, target);
+			Fasterflect.Extensions.MapExtensions.DelegateForMap(source.GetType(), target.GetTypeAdjusted(), bindingFlags, names)(source, target);
 		}
 
 		/// <summary>
@@ -53,15 +69,15 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="targetTypes">The member types (Fields, Properties or both) to include on the target.</param>
 		/// <param name="bindingFlags">The <see href="Flags"/> used to define the scope when locating members. If
 		/// <paramref name="sourceTypes"/> is different from <paramref name="targetTypes"/> the flag value
-		/// <see cref="Flags.IgnoreCase"/> will automatically be applied.</param>
+		/// <see cref="FasterflectFlags.IgnoreCase"/> will automatically be applied.</param>
 		/// <param name="names">The optional list of member names against which to filter the members that are
 		/// to be mapped. If this parameter is <c>null</c> or empty no name filtering will be applied. The default 
 		/// behavior is to check for an exact, case-sensitive match. Pass <see href="Flags.PartialNameMatch"/> to 
 		/// filter members by substring and <see href="Flags.IgnoreCase"/> to ignore case.</param>
 		public static void Map(this object source, object target, MemberTypes sourceTypes, MemberTypes targetTypes,
-								Flags bindingFlags, params string[] names)
+								FasterflectFlags bindingFlags, params string[] names)
 		{
-			Fasterflect.Extensions.Services.MapExtensions.DelegateForMap(source.GetType(), target.GetTypeAdjusted(), sourceTypes, targetTypes, bindingFlags, names)(
+			Fasterflect.Extensions.MapExtensions.DelegateForMap(source.GetType(), target.GetTypeAdjusted(), sourceTypes, targetTypes, bindingFlags, names)(
 				source, target);
 		}
 		#endregion
@@ -78,7 +94,7 @@ namespace Fasterflect.Extensions.Objects
 		/// filter fields by substring and <see href="Flags.IgnoreCase"/> to ignore case.</param>
 		public static void MapFields(this object source, object target, params string[] names)
 		{
-			source.Map(target, MemberTypes.Field, MemberTypes.Field, Flags.InstanceAnyVisibility, names);
+			source.Map(target, MemberTypes.Field, MemberTypes.Field, FasterflectFlags.InstanceAnyVisibility, names);
 		}
 
 		/// <summary>
@@ -92,7 +108,7 @@ namespace Fasterflect.Extensions.Objects
 		/// filter properties by substring and <see href="Flags.IgnoreCase"/> to ignore case.</param>
 		public static void MapProperties(this object source, object target, params string[] names)
 		{
-			source.Map(target, MemberTypes.Property, MemberTypes.Property, Flags.InstanceAnyVisibility, names);
+			source.Map(target, MemberTypes.Property, MemberTypes.Property, FasterflectFlags.InstanceAnyVisibility, names);
 		}
 
 		/// <summary>
@@ -107,7 +123,7 @@ namespace Fasterflect.Extensions.Objects
 		/// to filter members by substring.</param>
 		public static void MapFieldsToProperties(this object source, object target, params string[] names)
 		{
-			source.Map(target, MemberTypes.Field, MemberTypes.Property, Flags.InstanceAnyVisibility, names);
+			source.Map(target, MemberTypes.Field, MemberTypes.Property, FasterflectFlags.InstanceAnyVisibility, names);
 		}
 
 		/// <summary>
@@ -122,7 +138,7 @@ namespace Fasterflect.Extensions.Objects
 		/// to filter members by substring.</param>
 		public static void MapPropertiesToFields(this object source, object target, params string[] names)
 		{
-			source.Map(target, MemberTypes.Property, MemberTypes.Field, Flags.InstanceAnyVisibility, names);
+			source.Map(target, MemberTypes.Property, MemberTypes.Field, FasterflectFlags.InstanceAnyVisibility, names);
 		}
 		#endregion
 	}

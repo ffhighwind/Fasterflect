@@ -29,13 +29,13 @@ namespace FasterflectTest.Internal
 		[TestMethod]
 		public void TestFlagsToString()
 		{
-			Assert.AreEqual(string.Empty, Flags.None.ToString());
-			Assert.AreEqual("Public", Flags.Public.ToString());
-			Assert.AreEqual("Instance", Flags.Instance.ToString());
-			Assert.AreEqual("Public", (Flags.None | Flags.Public).ToString());
-			Assert.AreEqual("Instance | Public", (Flags.Instance | Flags.Public).ToString());
-			Assert.AreEqual("Instance | NonPublic | Public", (Flags.Instance | Flags.Public | Flags.NonPublic).ToString());
-			Assert.AreEqual("Instance | NonPublic | Public", Flags.InstanceAnyVisibility.ToString());
+			Assert.AreEqual(string.Empty, FasterflectFlags.None.ToString());
+			Assert.AreEqual("Public", FasterflectFlags.Public.ToString());
+			Assert.AreEqual("Instance", FasterflectFlags.Instance.ToString());
+			Assert.AreEqual("Public", (FasterflectFlags.None | FasterflectFlags.Public).ToString());
+			Assert.AreEqual("Instance | Public", (FasterflectFlags.Instance | FasterflectFlags.Public).ToString());
+			Assert.AreEqual("Instance | NonPublic | Public", (FasterflectFlags.Instance | FasterflectFlags.Public | FasterflectFlags.NonPublic).ToString());
+			Assert.AreEqual("Instance | NonPublic | Public", FasterflectFlags.InstanceAnyVisibility.ToString());
 		}
 	}
 }

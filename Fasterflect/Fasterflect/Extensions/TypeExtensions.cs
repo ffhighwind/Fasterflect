@@ -157,7 +157,7 @@ namespace Fasterflect.Extensions
 		public static bool IsFrameworkType(this Type type)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 			byte[] publicKeyToken = type.Assembly.GetName().GetPublicKeyToken();
 			return publicKeyToken != null && tokens.Contains(publicKeyToken, new ByteArrayEqualityComparer());

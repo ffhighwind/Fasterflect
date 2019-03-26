@@ -21,19 +21,17 @@
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using Fasterflect.Extensions.Utilities;
-
 namespace Fasterflect.Emitter
 {
 	internal class CtorInvocationEmitter : InvocationEmitter
 	{
-		public CtorInvocationEmitter(ConstructorInfo ctorInfo, Flags bindingFlags)
+		public CtorInvocationEmitter(ConstructorInfo ctorInfo, FasterflectFlags bindingFlags)
 			: this(ctorInfo.DeclaringType, bindingFlags, ctorInfo.GetParameters().ToTypeArray(), ctorInfo) { }
 
-		public CtorInvocationEmitter(Type targetType, Flags bindingFlags, Type[] paramTypes)
+		public CtorInvocationEmitter(Type targetType, FasterflectFlags bindingFlags, Type[] paramTypes)
 			: this(targetType, bindingFlags, paramTypes, null) { }
 
-		private CtorInvocationEmitter(Type targetType, Flags flags, Type[] parameterTypes, ConstructorInfo ctorInfo)
+		private CtorInvocationEmitter(Type targetType, FasterflectFlags flags, Type[] parameterTypes, ConstructorInfo ctorInfo)
 			: base(new CallInfo(targetType, null, flags, MemberTypes.Constructor, targetType.Name, parameterTypes, ctorInfo, true))
 		{
 		}

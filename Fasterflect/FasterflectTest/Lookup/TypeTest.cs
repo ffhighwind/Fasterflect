@@ -119,7 +119,7 @@ namespace FasterflectTest.Lookup
 			Assert.IsTrue(typeof(BindingFlags).IsFrameworkType());
 			Assert.IsTrue(typeof(List<>).IsFrameworkType());
 			Assert.IsTrue(typeof(int).IsFrameworkType());
-			Assert.IsFalse(typeof(Flags).IsFrameworkType());
+			Assert.IsFalse(typeof(FasterflectFlags).IsFrameworkType());
 			Assert.IsFalse(typeof(Lion).IsFrameworkType());
 		}
 		#endregion

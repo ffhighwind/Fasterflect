@@ -75,7 +75,7 @@ namespace FasterflectTest.Lookup
 		public void TestFindTypesByPartialName()
 		{
 			Assembly assembly = Assembly.GetAssembly(typeof(int));
-			IList<Type> types = assembly.Types(Flags.PartialNameMatch, "Engine");
+			IList<Type> types = assembly.Types(FasterflectFlags.PartialNameMatch, "Engine");
 			Assert.IsNotNull(types);
 			Assert.AreEqual(2, types.Count);
 		}

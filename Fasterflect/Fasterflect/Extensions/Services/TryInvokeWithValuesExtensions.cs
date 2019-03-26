@@ -56,7 +56,7 @@ namespace Fasterflect.Extensions.Services
 		/// <returns>The result of the invocation.</returns>
 		public static object TryCreateInstanceWithValues(this Type type, params object[] parameterValues)
 		{
-			return TryCreateInstanceWithValues(type, null, Flags.InstanceAnyVisibility, parameterValues);
+			return TryCreateInstanceWithValues(type, null, FasterflectFlags.InstanceAnyVisibility, parameterValues);
 		}
 
 		/// <summary>
@@ -156,6 +156,7 @@ namespace Fasterflect.Extensions.Services
 			throw new MissingMemberException();
 		}
 
+		#region Helper Methods
 		private static IEnumerable<MethodBase> GetCandidates(object[] parameterValues, IEnumerable<MethodBase> methodBases)
 		{
 			return (from methodBase in methodBases
@@ -184,5 +185,6 @@ namespace Fasterflect.Extensions.Services
 		{
 			return param.GetCustomAttributes(typeof(ParamArrayAttribute), false).Length > 0;
 		}
+		#endregion
 	}
 }

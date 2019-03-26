@@ -1,18 +1,36 @@
-﻿using System;
+﻿#region License
+// Copyright 2010 Buu Nguyen, Morten Mertner
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); 
+// you may not use this file except in compliance with the License. 
+// You may obtain a copy of the License at 
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+// See the License for the specific language governing permissions and 
+// limitations under the License.
+// 
+// The latest version of this file can be found at http://fasterflect.codeplex.com/
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Fasterflect.Extensions;
 using Fasterflect.Extensions.Services;
 
-namespace Fasterflect.Extensions.Objects
+namespace Fasterflect.Extensions.Internal
 {
 	/// <summary>
 	/// Container class for TryCreateInstanceWithValues and TryCallMethodWithValues extensions.
 	/// </summary>
-	public static class TryInvokeWithValuesExtensions
+	public static partial class TryInvokeWithValuesExtensions
 	{
-
 		/// <summary>
 		/// Obtains the list of methods for <paramref name="obj"/> using the supplied parameter values
 		/// and invokes the best match. This overload requires that the supplied <paramref name="parameterValues"/> 
@@ -26,10 +44,10 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="methodName">The name of the method to be invoked.</param>
 		/// <param name="parameterValues">The values to use when invoking the method.</param>
 		/// <returns>The result of the invocation.</returns>
-		public static object TryCallMethodWithValues(this object obj, string methodName, params object[] parameterValues)
+		internal static object TryCallMethodWithValues(this object obj, string methodName, params object[] parameterValues)
 		{
 			return TryCallMethodWithValues(obj, null, methodName,
-				obj is Type ? Flags.StaticAnyVisibility : Flags.InstanceAnyVisibility, parameterValues);
+				obj is Type ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility, parameterValues);
 		}
 
 		/// <summary>
@@ -50,7 +68,7 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="flags">Binding flags for look up methods.</param>
 		/// <param name="parameterValues">The values to use when invoking the method.</param>
 		/// <returns>The result of the invocation.</returns>
-		public static object TryCallMethodWithValues(this object obj, ParameterConverter converter, string methodName, BindingFlags flags, params object[] parameterValues)
+		internal static object TryCallMethodWithValues(this object obj, ParameterConverter converter, string methodName, BindingFlags flags, params object[] parameterValues)
 		{
 			return TryCallMethodWithValues(obj, converter, methodName, Type.EmptyTypes, flags, parameterValues);
 		}
@@ -75,7 +93,7 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="flags">Binding flags for look up methods.</param>
 		/// <param name="parameterValues">The values to use when invoking the method.</param>
 		/// <returns>The result of the invocation.</returns>
-		public static object TryCallMethodWithValues(this object obj, ParameterConverter converter, string methodName,
+		internal static object TryCallMethodWithValues(this object obj, ParameterConverter converter, string methodName,
 			Type[] genericTypes, BindingFlags flags, params object[] parameterValues)
 		{
 			Type type = obj is Type ? (Type) obj : obj.GetType();

@@ -20,17 +20,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Fasterflect.Extensions.Utilities;
+using Fasterflect.Extensions;
 using Fasterflect.Probing;
 
-namespace Fasterflect.Extensions.Objects
+namespace Fasterflect.Extensions
 {
 	/// <summary>
 	/// Extension methods for creating object instances when you do not know which constructor to call.
 	/// </summary>
-	public static class TryCallMethodExtensions
+	public static partial class TryCallMethodExtensions
 	{
-		#region Method Invocation (TryCallMethod)
 		/// <summary>
 		/// Obtains a list of all methods with the given <paramref name="methodName"/> on the given 
 		/// <paramref name="obj" />, and invokes the best match for the parameters obtained from the 
@@ -39,7 +38,7 @@ namespace Fasterflect.Extensions.Objects
 		/// considered compatible, such as between strings and enums or numbers, Guids and byte[16], etc.
 		/// </summary>
 		/// <returns>The result of the invocation.</returns>
-		public static object TryCallMethod(this object obj, string methodName, bool mustUseAllParameters, object sample)
+		internal static object TryCallMethod(this object obj, string methodName, bool mustUseAllParameters, object sample)
 		{
 			Type sourceType = sample.GetType();
 			SourceInfo sourceInfo = SourceInfo.CreateFromType(sourceType);
@@ -55,7 +54,7 @@ namespace Fasterflect.Extensions.Objects
 		/// considered compatible, such as between strings and enums or numbers, Guids and byte[16], etc.
 		/// </summary>
 		/// <returns>The result of the invocation.</returns>
-		public static object TryCallMethod(this object obj, string methodName, bool mustUseAllParameters, IDictionary<string, object> parameters)
+		internal static object TryCallMethod(this object obj, string methodName, bool mustUseAllParameters, IDictionary<string, object> parameters)
 		{
 			bool hasParameters = parameters != null && parameters.Count > 0;
 			string[] names = hasParameters ? parameters.Keys.ToArray() : new string[0];
@@ -77,7 +76,7 @@ namespace Fasterflect.Extensions.Objects
 		/// <param name="parameterTypes">The types of the supplied parameters.</param>
 		/// <param name="parameterValues">The values of the supplied parameters.</param>
 		/// <returns>The result of the invocation.</returns>
-		public static object TryCallMethod(this object obj, string methodName, bool mustUseAllParameters,
+		internal static object TryCallMethod(this object obj, string methodName, bool mustUseAllParameters,
 											string[] parameterNames, Type[] parameterTypes, object[] parameterValues)
 		{
 			bool isStatic = obj is Type;
@@ -91,6 +90,5 @@ namespace Fasterflect.Extensions.Objects
 			MethodMap map = MapFactory.DetermineBestMethodMatch(type.Methods(methodName).Cast<MethodBase>(), mustUseAllParameters, names, types, values);
 			return isStatic ? map.Invoke(values) : map.Invoke(obj, values);
 		}
-		#endregion
 	}
 }

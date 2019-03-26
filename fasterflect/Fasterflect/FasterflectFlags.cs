@@ -28,22 +28,22 @@ namespace Fasterflect
 	/// This class encapsulates common <see cref="BindingFlags"/> combinations and provides various
 	/// additional Fasterflect-specific flags to further tailor the lookup experience.
 	/// </summary>
-	public struct Flags
+	public struct FasterflectFlags
 	{
 		private readonly long flags;
-		private static readonly Dictionary<Flags, string> flagNames = new Dictionary<Flags, string>(64);
+		private static readonly Dictionary<FasterflectFlags, string> flagNames = new Dictionary<FasterflectFlags, string>(64);
 
 		#region Constructors
-		private Flags(long flags)
+		private FasterflectFlags(long flags)
 		{
 			this.flags = flags;
 		}
 
-		static Flags()
+		static FasterflectFlags()
 		{
 			foreach (BindingFlags flag in Enum.GetValues(typeof(BindingFlags))) {
 				if (flag != BindingFlags.Default) {
-					flagNames[new Flags((long) flag)] = flag.ToString();
+					flagNames[new FasterflectFlags((long) flag)] = flag.ToString();
 				}
 			}
 			flagNames[PartialNameMatch] = "PartialNameMatch"; // new Flags(1L << 32);
@@ -73,43 +73,43 @@ namespace Fasterflect
 		/// <summary>
 		/// This value corresponds to the <see href="BindingFlags.Default"/> value.
 		/// </summary>
-		public static readonly Flags None = new Flags((long) BindingFlags.Default);
+		public static readonly FasterflectFlags None = new FasterflectFlags((long) BindingFlags.Default);
 
 		/// <summary>
 		/// This value corresponds to the <see href="BindingFlags.IgnoreCase"/> value.
 		/// </summary>
-		public static readonly Flags IgnoreCase = new Flags((long) BindingFlags.IgnoreCase);
+		public static readonly FasterflectFlags IgnoreCase = new FasterflectFlags((long) BindingFlags.IgnoreCase);
 
 		/// <summary>
 		/// This value corresponds to the <see href="BindingFlags.DeclaredOnly"/> value.
 		/// </summary>
-		public static readonly Flags DeclaredOnly = new Flags((long) BindingFlags.DeclaredOnly);
+		public static readonly FasterflectFlags DeclaredOnly = new FasterflectFlags((long) BindingFlags.DeclaredOnly);
 
 		/// <summary>
 		/// This value corresponds to the <see href="BindingFlags.ExactBinding"/> value. 
 		/// Note that this value is respected even in cases where normal Reflection calls would ignore it.
 		/// </summary>
-		public static readonly Flags ExactBinding = new Flags((long) BindingFlags.ExactBinding);
+		public static readonly FasterflectFlags ExactBinding = new FasterflectFlags((long) BindingFlags.ExactBinding);
 
 		/// <summary>
 		/// This value corresponds to the <see href="BindingFlags.Public"/> value.
 		/// </summary>
-		public static readonly Flags Public = new Flags((long) BindingFlags.Public);
+		public static readonly FasterflectFlags Public = new FasterflectFlags((long) BindingFlags.Public);
 
 		/// <summary>
 		/// This value corresponds to the <see href="BindingFlags.NonPublic"/> value.
 		/// </summary>
-		public static readonly Flags NonPublic = new Flags((long) BindingFlags.NonPublic);
+		public static readonly FasterflectFlags NonPublic = new FasterflectFlags((long) BindingFlags.NonPublic);
 
 		/// <summary>
 		/// This value corresponds to the <see href="BindingFlags.Instance"/> value.
 		/// </summary>
-		public static readonly Flags Instance = new Flags((long) BindingFlags.Instance);
+		public static readonly FasterflectFlags Instance = new FasterflectFlags((long) BindingFlags.Instance);
 
 		/// <summary>
 		/// This value corresponds to the <see href="BindingFlags.Static"/> value.
 		/// </summary>
-		public static readonly Flags Static = new Flags((long) BindingFlags.Static);
+		public static readonly FasterflectFlags Static = new FasterflectFlags((long) BindingFlags.Static);
 		#endregion
 
 		#region FasterflectFlags
@@ -120,34 +120,34 @@ namespace Fasterflect
 		/// comparison uses <see href="StringComparison.OrginalIgnoreCase"/> and otherwise
 		/// uses <see href="StringComparison.Ordinal"/>.
 		/// </summary>
-		public static readonly Flags PartialNameMatch = new Flags(1L << 32);
+		public static readonly FasterflectFlags PartialNameMatch = new FasterflectFlags(1L << 32);
 
 		/// <summary>
 		/// If this option is specified the search for a named member will strip off the namespace and
 		/// interface name from explicitly implemented interface members before applying any comparison
 		/// operations.
 		/// </summary>
-		public static readonly Flags TrimExplicitlyImplemented = new Flags(1L << 33);
+		public static readonly FasterflectFlags TrimExplicitlyImplemented = new FasterflectFlags(1L << 33);
 
 		/// <summary>
 		/// If this option is specified the search for members will exclude explicitly implemented
 		/// interface members.
 		/// </summary>
-		public static readonly Flags ExcludeExplicitlyImplemented = new Flags(1L << 34);
+		public static readonly FasterflectFlags ExcludeExplicitlyImplemented = new FasterflectFlags(1L << 34);
 
 		/// <summary>
 		/// If this option is specified all members that are backers for another member, such as backing
 		/// fields for automatic properties or get/set methods for properties, will be excluded from the 
 		/// result.
 		/// </summary>
-		public static readonly Flags ExcludeBackingMembers = new Flags(1L << 35);
+		public static readonly FasterflectFlags ExcludeBackingMembers = new FasterflectFlags(1L << 35);
 
 		/// <summary>
 		/// If this option is specified the search for methods will avoid checking whether parameters
 		/// have been declared as ref or out. This allows you to locate a method by its signature
 		/// without supplying the exact details for every parameter.
 		/// </summary>
-		public static readonly Flags IgnoreParameterModifiers = new Flags(1L << 36);
+		public static readonly FasterflectFlags IgnoreParameterModifiers = new FasterflectFlags(1L << 36);
 
 		/// <summary>
 		/// If this option is specified all members that are have either an override or are being 
@@ -158,7 +158,7 @@ namespace Fasterflect
 		/// members based on the presence of the new keyword does not seem to be possible and would
 		/// in any case be much slower.
 		/// </summary>
-		public static readonly Flags ExcludeHiddenMembers = new Flags(1L << 37);
+		public static readonly FasterflectFlags ExcludeHiddenMembers = new FasterflectFlags(1L << 37);
 
 		#region For The Future
 		///// <summary>
@@ -194,84 +194,84 @@ namespace Fasterflect
 		/// Search criteria encompassing all public and non-public members, including base members.
 		/// Note that you also need to specify either the Instance or Static flag.
 		/// </summary>
-		public static readonly Flags AnyVisibility = Public | NonPublic;
+		public static readonly FasterflectFlags AnyVisibility = Public | NonPublic;
 
 		/// <summary>
 		/// Search criteria encompassing all public instance members, including base members.
 		/// </summary>
-		public static readonly Flags InstancePublic = Public | Instance;
+		public static readonly FasterflectFlags InstancePublic = Public | Instance;
 
 		/// <summary>
 		/// Search criteria encompassing all non-public instance members, including base members.
 		/// </summary>
-		public static readonly Flags InstancePrivate = NonPublic | Instance;
+		public static readonly FasterflectFlags InstancePrivate = NonPublic | Instance;
 
 		/// <summary>
 		/// Search criteria encompassing all public and non-public instance members, including base members.
 		/// </summary>
-		public static readonly Flags InstanceAnyVisibility = AnyVisibility | Instance;
+		public static readonly FasterflectFlags InstanceAnyVisibility = AnyVisibility | Instance;
 
 		/// <summary>
 		/// Search criteria encompassing all public static members, including base members.
 		/// </summary>
-		public static readonly Flags StaticPublic = Public | Static;
+		public static readonly FasterflectFlags StaticPublic = Public | Static;
 
 		/// <summary>
 		/// Search criteria encompassing all non-public static members, including base members.
 		/// </summary>
-		public static readonly Flags StaticPrivate = NonPublic | Static;
+		public static readonly FasterflectFlags StaticPrivate = NonPublic | Static;
 
 		/// <summary>
 		/// Search criteria encompassing all public and non-public static members, including base members.
 		/// </summary>
-		public static readonly Flags StaticAnyVisibility = AnyVisibility | Static;
+		public static readonly FasterflectFlags StaticAnyVisibility = AnyVisibility | Static;
 
 		/// <summary>
 		/// Search criteria encompassing all public instance members, excluding base members.
 		/// </summary>
-		public static readonly Flags InstancePublicDeclaredOnly = InstancePublic | DeclaredOnly;
+		public static readonly FasterflectFlags InstancePublicDeclaredOnly = InstancePublic | DeclaredOnly;
 
 		/// <summary>
 		/// Search criteria encompassing all non-public instance members, excluding base members.
 		/// </summary>
-		public static readonly Flags InstancePrivateDeclaredOnly = InstancePrivate | DeclaredOnly;
+		public static readonly FasterflectFlags InstancePrivateDeclaredOnly = InstancePrivate | DeclaredOnly;
 
 		/// <summary>
 		/// Search criteria encompassing all public and non-public instance members, excluding base members.
 		/// </summary>
-		public static readonly Flags InstanceAnyDeclaredOnly = InstanceAnyVisibility | DeclaredOnly;
+		public static readonly FasterflectFlags InstanceAnyDeclaredOnly = InstanceAnyVisibility | DeclaredOnly;
 
 		/// <summary>
 		/// Search criteria encompassing all public static members, excluding base members.
 		/// </summary>
-		public static readonly Flags StaticPublicDeclaredOnly = StaticPublic | DeclaredOnly;
+		public static readonly FasterflectFlags StaticPublicDeclaredOnly = StaticPublic | DeclaredOnly;
 
 		/// <summary>
 		/// Search criteria encompassing all non-public static members, excluding base members.
 		/// </summary>
-		public static readonly Flags StaticPrivateDeclaredOnly = StaticPrivate | DeclaredOnly;
+		public static readonly FasterflectFlags StaticPrivateDeclaredOnly = StaticPrivate | DeclaredOnly;
 
 		/// <summary>
 		/// Search criteria encompassing all public and non-public static members, excluding base members.
 		/// </summary>
-		public static readonly Flags StaticAnyDeclaredOnly = StaticAnyVisibility | DeclaredOnly;
+		public static readonly FasterflectFlags StaticAnyDeclaredOnly = StaticAnyVisibility | DeclaredOnly;
 
 		/// <summary>
 		/// Search criteria encompassing all members, including base and static members.
 		/// </summary>
-		public static readonly Flags StaticInstanceAnyVisibility = InstanceAnyVisibility | Static;
+		public static readonly FasterflectFlags StaticInstanceAnyVisibility = InstanceAnyVisibility | Static;
 		#endregion
 
 		#region Intellisense Convenience Flags
 		/// <summary>
 		/// Search criteria encompassing all public and non-public instance members, including base members.
 		/// </summary>
-		public static readonly Flags Default = InstanceAnyVisibility;
+		public static readonly FasterflectFlags Default = InstanceAnyVisibility;
 
 		/// <summary>
 		/// Search criteria encompassing all members (public and non-public, instance and static), including base members.
 		/// </summary>
-		public static readonly Flags AllMembers = StaticInstanceAnyVisibility;
+		public static readonly FasterflectFlags AllMembers = StaticInstanceAnyVisibility;
 		#endregion
 
 		#endregion
@@ -288,7 +288,7 @@ namespace Fasterflect
 		/// <summary>
 		/// Returns true if all values in the given <paramref name="mask"/> are set in the current Flags instance.
 		/// </summary>
-		public bool IsSet(Flags mask)
+		public bool IsSet(FasterflectFlags mask)
 		{
 			return (flags & mask) == mask;
 		}
@@ -304,7 +304,7 @@ namespace Fasterflect
 		/// <summary>
 		/// Returns true if at least one of the values in the given <paramref name="mask"/> are set in the current Flags instance.
 		/// </summary>
-		public bool IsAnySet(Flags mask)
+		public bool IsAnySet(FasterflectFlags mask)
 		{
 			return (flags & mask) != 0;
 		}
@@ -320,7 +320,7 @@ namespace Fasterflect
 		/// <summary>
 		/// Returns true if all values in the given <paramref name="mask"/> are not set in the current Flags instance.
 		/// </summary>
-		public bool IsNotSet(Flags mask)
+		public bool IsNotSet(FasterflectFlags mask)
 		{
 			return (flags & mask) == 0;
 		}
@@ -330,7 +330,7 @@ namespace Fasterflect
 		/// <paramref name="mask"/> if <paramref name="condition"/> is true, and otherwise returns the
 		/// supplied <paramref name="flags"/>.
 		/// </summary>
-		public static Flags SetIf(Flags flags, Flags mask, bool condition)
+		public static FasterflectFlags SetIf(FasterflectFlags flags, FasterflectFlags mask, bool condition)
 		{
 			return condition ? flags | mask : flags;
 		}
@@ -340,9 +340,9 @@ namespace Fasterflect
 		/// <paramref name="mask"/> if <paramref name="condition"/> is true, and otherwise returns a new 
 		/// Flags instance with the values from <paramref name="flags"/> that were not in <paramref name="mask"/>.
 		/// </summary>
-		public static Flags SetOnlyIf(Flags flags, Flags mask, bool condition)
+		public static FasterflectFlags SetOnlyIf(FasterflectFlags flags, FasterflectFlags mask, bool condition)
 		{
-			return condition ? flags | mask : (Flags) (flags & ~mask);
+			return condition ? flags | mask : (FasterflectFlags) (flags & ~mask);
 		}
 
 		/// <summary>
@@ -350,9 +350,9 @@ namespace Fasterflect
 		/// that were not in <paramref name="mask"/> if <paramref name="condition"/> is true, and otherwise returns
 		/// the supplied <paramref name="flags"/>.
 		/// </summary>
-		public static Flags ClearIf(Flags flags, Flags mask, bool condition)
+		public static FasterflectFlags ClearIf(FasterflectFlags flags, FasterflectFlags mask, bool condition)
 		{
-			return condition ? (Flags) (flags & ~mask) : flags;
+			return condition ? (FasterflectFlags) (flags & ~mask) : flags;
 		}
 		#endregion
 
@@ -363,7 +363,7 @@ namespace Fasterflect
 		/// </summary>
 		public override bool Equals(object obj)
 		{
-			return obj is Flags && flags == ((Flags) obj).flags;
+			return obj is FasterflectFlags && flags == ((FasterflectFlags) obj).flags;
 		}
 
 		/// <summary>
@@ -379,31 +379,31 @@ namespace Fasterflect
 		/// <summary>
 		/// Produces a new Flags instance with the values from <paramref name="f1"/> that were not in <paramref name="f2"/>.
 		/// </summary>
-		public static Flags operator -(Flags f1, Flags f2)
+		public static FasterflectFlags operator -(FasterflectFlags f1, FasterflectFlags f2)
 		{
-			return new Flags(f1.flags & ~f2.flags);
+			return new FasterflectFlags(f1.flags & ~f2.flags);
 		}
 
 		/// <summary>
 		/// Produces a new Flags instance with the values from the union of <paramref name="f1"/> and <paramref name="f2"/>.
 		/// </summary>
-		public static Flags operator |(Flags f1, Flags f2)
+		public static FasterflectFlags operator |(FasterflectFlags f1, FasterflectFlags f2)
 		{
-			return new Flags(f1.flags | f2.flags);
+			return new FasterflectFlags(f1.flags | f2.flags);
 		}
 
 		/// <summary>
 		/// Produces a new Flags instance with the values from the intersection of <paramref name="f1"/> and <paramref name="f2"/>.
 		/// </summary>
-		public static Flags operator &(Flags f1, Flags f2)
+		public static FasterflectFlags operator &(FasterflectFlags f1, FasterflectFlags f2)
 		{
-			return new Flags(f1.flags & f2.flags);
+			return new FasterflectFlags(f1.flags & f2.flags);
 		}
 
 		/// <summary>
 		/// Compares two Flags instances and returns true if they represent identical selections.
 		/// </summary>
-		public static bool operator ==(Flags f1, Flags f2)
+		public static bool operator ==(FasterflectFlags f1, FasterflectFlags f2)
 		{
 			return f1.flags == f2.flags;
 		}
@@ -411,7 +411,7 @@ namespace Fasterflect
 		/// <summary>
 		/// Compares two Flags instances and returns true if they represent different selections.
 		/// </summary>
-		public static bool operator !=(Flags f1, Flags f2)
+		public static bool operator !=(FasterflectFlags f1, FasterflectFlags f2)
 		{
 			return f1.flags != f2.flags;
 		}
@@ -421,23 +421,23 @@ namespace Fasterflect
 		/// <summary>
 		/// Converts from BindingFlags to Flags.
 		/// </summary>
-		public static implicit operator Flags(BindingFlags m)
+		public static implicit operator FasterflectFlags(BindingFlags m)
 		{
-			return new Flags((long) m);
+			return new FasterflectFlags((long) m);
 		}
 
 		/// <summary>
 		/// Converts from long to Flags.
 		/// </summary>
-		public static explicit operator Flags(long m)
+		public static explicit operator FasterflectFlags(long m)
 		{
-			return new Flags(m);
+			return new FasterflectFlags(m);
 		}
 
 		/// <summary>
 		/// Converts from Flags to BindingFlags.
 		/// </summary>
-		public static implicit operator BindingFlags(Flags m)
+		public static implicit operator BindingFlags(FasterflectFlags m)
 		{
 			return (BindingFlags) m.flags;
 		}
@@ -445,7 +445,7 @@ namespace Fasterflect
 		/// <summary>
 		/// Converts from Flags to long.
 		/// </summary>
-		public static implicit operator long(Flags m)
+		public static implicit operator long(FasterflectFlags m)
 		{
 			return m.flags;
 		}
@@ -457,7 +457,7 @@ namespace Fasterflect
 		/// </summary>
 		public override string ToString()
 		{
-			Flags @this = this;
+			FasterflectFlags @this = this;
 			List<string> names = flagNames.Where(kvp => @this.IsSet(kvp.Key))
 										  .Select(kvp => kvp.Value)
 										  .OrderBy(n => n).ToList();

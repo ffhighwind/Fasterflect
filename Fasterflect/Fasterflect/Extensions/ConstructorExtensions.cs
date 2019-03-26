@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Fasterflect.Emitter;
-using Fasterflect.Extensions.Utilities;
 
 namespace Fasterflect.Extensions
 {
@@ -67,8 +66,8 @@ namespace Fasterflect.Extensions
 		/// <see cref="NullReferenceException"/> is thrown.  If you are not sure as to whether
 		/// any element is <c>null</c> or not, use the overload that accepts <c>paramTypes</c> array.
 		/// </remarks>
-		/// <seealso cref="CreateInstance(System.Type,System.Type[],Fasterflect.Flags,object[])"/>
-		public static object CreateInstance(this Type type, Flags bindingFlags, params object[] parameters)
+		/// <seealso cref="CreateInstance(System.Type,System.Type[],Fasterflect.FasterflectFlags,object[])"/>
+		public static object CreateInstance(this Type type, FasterflectFlags bindingFlags, params object[] parameters)
 		{
 			return Reflect.Constructor(type, bindingFlags, parameters.ToTypeArray())(parameters);
 		}
@@ -78,7 +77,7 @@ namespace Fasterflect.Extensions
 		/// matching <paramref name="bindingFlags"/> on the given <paramref name="type"/> 
 		/// with <paramref name="parameters" /> being the arguments.
 		/// </summary>
-		public static object CreateInstance(this Type type, Type[] parameterTypes, Flags bindingFlags, params object[] parameters)
+		public static object CreateInstance(this Type type, Type[] parameterTypes, FasterflectFlags bindingFlags, params object[] parameters)
 		{
 			return Reflect.Constructor(type, bindingFlags, parameterTypes)(parameters);
 		}
@@ -98,7 +97,7 @@ namespace Fasterflect.Extensions
 		/// and matching <paramref name="bindingFlags"/> on the given <paramref name="type"/>.  
 		/// Leave <paramref name="parameterTypes"/> empty if the constructor has no argument. 
 		/// </summary>
-		public static ConstructorInvoker DelegateForCreateInstance(this Type type, Flags bindingFlags,
+		public static ConstructorInvoker DelegateForCreateInstance(this Type type, FasterflectFlags bindingFlags,
 																	params Type[] parameterTypes)
 		{
 			return Reflect.Constructor(type, bindingFlags, parameterTypes);
@@ -133,7 +132,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The matching constructor or null if no match was found.</returns>
 		public static ConstructorInfo Constructor(this Type type, params Type[] parameterTypes)
 		{
-			return Reflect.Lookup.ConstructorInfo(type, parameterTypes);
+			return Reflect.Lookup.Constructor(type, parameterTypes);
 		}
 
 		/// <summary>
@@ -144,9 +143,9 @@ namespace Fasterflect.Extensions
 		/// <param name="bindingFlags">The search criteria to use when reflecting.</param>
 		/// <param name="parameterTypes">The types of the constructor parameters in order.</param>
 		/// <returns>The matching constructor or null if no match was found.</returns>
-		public static ConstructorInfo Constructor(this Type type, Flags bindingFlags, params Type[] parameterTypes)
+		public static ConstructorInfo Constructor(this Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
-			return Reflect.Lookup.ConstructorInfo(type, bindingFlags, parameterTypes);
+			return Reflect.Lookup.Constructor(type, bindingFlags, parameterTypes);
 		}
 		#endregion
 
@@ -168,7 +167,7 @@ namespace Fasterflect.Extensions
 		/// <param name="type">The type to reflect on.</param>
 		/// <param name="bindingFlags">The search criteria to use when reflecting.</param>
 		/// <returns>A list of matching constructors. This value will never be null.</returns>
-		public static IList<ConstructorInfo> Constructors(this Type type, Flags bindingFlags)
+		public static IList<ConstructorInfo> Constructors(this Type type, FasterflectFlags bindingFlags)
 		{
 			return Reflect.Lookup.Constructors(type, bindingFlags);
 		}

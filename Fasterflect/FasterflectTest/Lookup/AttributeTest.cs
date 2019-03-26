@@ -214,7 +214,7 @@ namespace FasterflectTest.Lookup
 		public void TestFindFieldsAndPropertiesWith_NoMatchShouldReturnEmptyList()
 		{
 			Type type = typeof(Lion);
-			IList<MemberInfo> members = type.FieldsAndPropertiesWith(Flags.InstanceAnyVisibility, typeof(ZoneAttribute));
+			IList<MemberInfo> members = type.FieldsAndPropertiesWith(FasterflectFlags.InstanceAnyVisibility, typeof(ZoneAttribute));
 			Assert.IsNotNull(members);
 			Assert.AreEqual(0, members.Count);
 		}
@@ -223,13 +223,13 @@ namespace FasterflectTest.Lookup
 		public void TestFindFieldsAndPropertiesWith_InstanceFieldShouldIncludeInheritedPrivateField()
 		{
 			Type type = typeof(Lion);
-			IList<MemberInfo> members = type.FieldsAndPropertiesWith(Flags.InstanceAnyVisibility, typeof(DefaultValueAttribute));
+			IList<MemberInfo> members = type.FieldsAndPropertiesWith(FasterflectFlags.InstanceAnyVisibility, typeof(DefaultValueAttribute));
 			Assert.IsNotNull(members);
 			Assert.AreEqual(2, members.Count);
 			Assert.IsNotNull(members.FirstOrDefault(m => m.Name == "Name"));
 			Assert.IsNotNull(members.FirstOrDefault(m => m.Name == "birthDay"));
 
-			members = type.FieldsAndPropertiesWith(Flags.Instance | Flags.NonPublic, typeof(CodeAttribute));
+			members = type.FieldsAndPropertiesWith(FasterflectFlags.Instance | FasterflectFlags.NonPublic, typeof(CodeAttribute));
 			Assert.IsNotNull(members);
 			Assert.AreEqual(2, members.Count);
 			Assert.IsNotNull(members.FirstOrDefault(m => m.Name == "id"));
@@ -253,11 +253,11 @@ namespace FasterflectTest.Lookup
 		public void TestFindMembersWith_EmptyOrNullAttributeTypeListShouldReturnAll()
 		{
 			Type type = typeof(Lion);
-			IList<MemberInfo> members = type.MembersWith(MemberTypes.Field, Flags.InstanceAnyVisibility);
+			IList<MemberInfo> members = type.MembersWith(MemberTypes.Field, FasterflectFlags.InstanceAnyVisibility);
 			Assert.IsNotNull(members);
 			Assert.AreEqual(7, members.Count);
 
-			members = type.MembersWith(MemberTypes.Field, Flags.InstanceAnyVisibility, null);
+			members = type.MembersWith(MemberTypes.Field, FasterflectFlags.InstanceAnyVisibility, null);
 			Assert.IsNotNull(members);
 			Assert.AreEqual(7, members.Count);
 		}
@@ -266,13 +266,13 @@ namespace FasterflectTest.Lookup
 		public void TestFindMembersWith_InstanceFieldShouldIncludeInheritedPrivateField()
 		{
 			Type type = typeof(Lion);
-			IList<MemberInfo> members = type.MembersWith(MemberTypes.Field, Flags.InstanceAnyVisibility, typeof(CodeAttribute));
+			IList<MemberInfo> members = type.MembersWith(MemberTypes.Field, FasterflectFlags.InstanceAnyVisibility, typeof(CodeAttribute));
 			Assert.IsNotNull(members);
 			Assert.AreEqual(2, members.Count);
 			Assert.IsNotNull(members.FirstOrDefault(m => m.Name == "id"));
 			Assert.IsNotNull(members.FirstOrDefault(m => m.Name == "lastMealTime"));
 
-			members = type.MembersWith(MemberTypes.Field, Flags.NonPublic | Flags.Instance, typeof(DefaultValueAttribute));
+			members = type.MembersWith(MemberTypes.Field, FasterflectFlags.NonPublic | FasterflectFlags.Instance, typeof(DefaultValueAttribute));
 			Assert.IsNotNull(members);
 			Assert.AreEqual(1, members.Count);
 			Assert.IsNotNull(members.FirstOrDefault(m => m.Name == "birthDay"));
@@ -282,7 +282,7 @@ namespace FasterflectTest.Lookup
 		public void TestFindMembersWith_InstanceFieldShouldIncludeInheritedPrivateField_Generic()
 		{
 			Type type = typeof(Lion);
-			IList<MemberInfo> members = type.MembersWith<CodeAttribute>(MemberTypes.Field, Flags.InstanceAnyVisibility);
+			IList<MemberInfo> members = type.MembersWith<CodeAttribute>(MemberTypes.Field, FasterflectFlags.InstanceAnyVisibility);
 			Assert.IsNotNull(members);
 			Assert.AreEqual(2, members.Count);
 			Assert.IsNotNull(members.FirstOrDefault(m => m.Name == "id"));
@@ -305,7 +305,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestFindMembersAndAttributes()
 		{
-			IDictionary<MemberInfo, List<Attribute>> members = typeof(Lion).MembersAndAttributes(MemberTypes.Field, Flags.InstanceAnyVisibility, typeof(CodeAttribute));
+			IDictionary<MemberInfo, List<Attribute>> members = typeof(Lion).MembersAndAttributes(MemberTypes.Field, FasterflectFlags.InstanceAnyVisibility, typeof(CodeAttribute));
 			Assert.IsNotNull(members);
 			Assert.AreEqual(2, members.Count);
 			foreach (var item in members) {
@@ -318,7 +318,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestFindMembersAndAttributes_DefaultFlagsShouldBeInstanceAnyVisibility()
 		{
-			IDictionary<MemberInfo, List<Attribute>> expectedMembers = typeof(Lion).MembersAndAttributes(MemberTypes.Field, Flags.InstanceAnyVisibility, typeof(CodeAttribute));
+			IDictionary<MemberInfo, List<Attribute>> expectedMembers = typeof(Lion).MembersAndAttributes(MemberTypes.Field, FasterflectFlags.InstanceAnyVisibility, typeof(CodeAttribute));
 			Assert.IsNotNull(expectedMembers);
 			Assert.AreEqual(2, expectedMembers.Count);
 			IDictionary<MemberInfo, List<Attribute>> members = typeof(Lion).MembersAndAttributes(MemberTypes.Field, typeof(CodeAttribute));
@@ -337,13 +337,13 @@ namespace FasterflectTest.Lookup
 		public void TestFindSpecificAttributeOnField()
 		{
 			// declared field
-			FieldInfo field = typeof(Lion).Field("lastMealTime", Flags.InstanceAnyVisibility | Flags.DeclaredOnly);
+			FieldInfo field = typeof(Lion).Field("lastMealTime", FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.IsNotNull(field);
 			Assert.IsNotNull(field.Attribute<CodeAttribute>());
 			// inherited field
-			field = typeof(Lion).Field("birthDay", Flags.InstanceAnyVisibility);
+			field = typeof(Lion).Field("birthDay", FasterflectFlags.InstanceAnyVisibility);
 			Assert.IsNotNull(field);
-			field = typeof(Lion).Field("birthDay", Flags.InstanceAnyVisibility);
+			field = typeof(Lion).Field("birthDay", FasterflectFlags.InstanceAnyVisibility);
 			Assert.IsNotNull(field);
 			Assert.IsNull(field.Attribute<CodeAttribute>());
 			Assert.IsNotNull(field.Attribute<DefaultValueAttribute>());

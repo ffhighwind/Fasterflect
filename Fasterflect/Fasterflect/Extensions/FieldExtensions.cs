@@ -21,14 +21,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Fasterflect.Emitter;
-using Fasterflect.Extensions.Utilities;
 
 namespace Fasterflect.Extensions
 {
 	/// <summary>
 	/// Extension methods for locating and accessing fields.
 	/// </summary>
-	public static class FieldExtensions
+	public static partial class FieldExtensions
 	{
 		#region Field Access
 		/// <summary>
@@ -53,7 +52,7 @@ namespace Fasterflect.Extensions
 		/// Creates a delegate which can set the value of the field specified by <paramref name="name"/> and
 		/// matching <paramref name="bindingFlags"/> on the given <paramref name="type"/>.
 		/// </summary>
-		public static MemberSetter DelegateForSetFieldValue(this Type type, string name, Flags bindingFlags)
+		public static MemberSetter DelegateForSetFieldValue(this Type type, string name, FasterflectFlags bindingFlags)
 		{
 			return Reflect.FieldSetter(type, name, bindingFlags);
 		}
@@ -62,7 +61,7 @@ namespace Fasterflect.Extensions
 		/// Creates a delegate which can get the value of the field specified by <paramref name="name"/> and
 		/// matching <paramref name="bindingFlags"/> on the given <paramref name="type"/>.
 		/// </summary>
-		public static MemberGetter DelegateForGetFieldValue(this Type type, string name, Flags bindingFlags)
+		public static MemberGetter DelegateForGetFieldValue(this Type type, string name, FasterflectFlags bindingFlags)
 		{
 			return Reflect.FieldGetter(type, name, bindingFlags);
 		}
@@ -84,7 +83,7 @@ namespace Fasterflect.Extensions
 		/// Use the <paramref name="bindingFlags"/> parameter to define the scope of the search.
 		/// </summary>
 		/// <returns>A single FieldInfo instance of the first found match or null if no match was found.</returns>
-		public static FieldInfo Field(this Type type, string name, Flags bindingFlags)
+		public static FieldInfo Field(this Type type, string name, FasterflectFlags bindingFlags)
 		{
 			return Reflect.Lookup.Field(type, name, bindingFlags);
 		}
@@ -109,7 +108,7 @@ namespace Fasterflect.Extensions
 		/// Gets all fields on the given <paramref name="type"/> that match the specified <paramref name="bindingFlags"/>.
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="Flags"/> combination used to define
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
 		/// the search behavior and result filtering.</param>
 		/// <param name="names">The optional list of names against which to filter the result. If this parameter is
 		/// <c>null</c> or empty no name filtering will be applied. The default behavior is to check for an exact, 
@@ -117,7 +116,7 @@ namespace Fasterflect.Extensions
 		/// interface members, <see href="Flags.PartialNameMatch"/> to locate by substring, and 
 		/// <see href="Flags.IgnoreCase"/> to ignore case.</param>
 		/// <returns>A list of all matching fields on the type. This value will never be null.</returns>
-		public static IList<FieldInfo> Fields(this Type type, Flags bindingFlags, params string[] names)
+		public static IList<FieldInfo> Fields(this Type type, FasterflectFlags bindingFlags, params string[] names)
 		{
 			return Reflect.Lookup.Fields(type, bindingFlags, names);
 		}

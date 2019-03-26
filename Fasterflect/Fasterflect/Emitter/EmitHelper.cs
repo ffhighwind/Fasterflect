@@ -41,7 +41,7 @@ namespace Fasterflect.Emitter
 		/// <param name="ilGenerator">The <see cref="System.Reflection.Emit.ILGenerator"/> to use.</param>
 		public EmitHelper(ILGenerator ilGenerator)
 		{
-			_ilGenerator = ilGenerator ?? throw new ArgumentNullException("ilGenerator");
+			_ilGenerator = ilGenerator ?? throw new ArgumentNullException(nameof(ILGenerator));
 		}
 
 		private readonly ILGenerator _ilGenerator;
@@ -59,7 +59,7 @@ namespace Fasterflect.Emitter
 		public static implicit operator ILGenerator(EmitHelper emitHelper)
 		{
 			if (emitHelper == null) {
-				throw new ArgumentNullException("emitHelper");
+				throw new ArgumentNullException(nameof(emitHelper));
 			}
 
 			return emitHelper.ILGenerator;
@@ -622,7 +622,7 @@ namespace Fasterflect.Emitter
 		public EmitHelper boxIfValueType(Type type)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 
 			return type.IsValueType ? box(type) : this;
@@ -771,7 +771,7 @@ namespace Fasterflect.Emitter
 		public EmitHelper call(Type type, string methodName, params Type[] optionalParameterTypes)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 
 			MethodInfo methodInfo = type.GetMethod(methodName, optionalParameterTypes);
@@ -798,7 +798,7 @@ namespace Fasterflect.Emitter
 								params Type[] optionalParameterTypes)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 
 			MethodInfo methodInfo = type.GetMethod(methodName, bindingFlags, null, optionalParameterTypes, null);
@@ -883,7 +883,7 @@ namespace Fasterflect.Emitter
 		public EmitHelper callvirt(Type type, string methodName, params Type[] optionalParameterTypes)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 
 			MethodInfo methodInfo = type.GetMethod(methodName, optionalParameterTypes);
@@ -957,7 +957,7 @@ namespace Fasterflect.Emitter
 		public EmitHelper castType(Type type)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 
 			return type.IsValueType ? unbox_any(type) : castclass(type);
@@ -1135,7 +1135,7 @@ namespace Fasterflect.Emitter
 		public EmitHelper conv(Type type)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 
 			switch (Type.GetTypeCode(type)) {
@@ -1759,7 +1759,7 @@ namespace Fasterflect.Emitter
 						ldarg((short) index);
 					}
 					else {
-						throw new ArgumentOutOfRangeException("index");
+						throw new ArgumentOutOfRangeException(nameof(index));
 					}
 
 					break;
@@ -1807,7 +1807,7 @@ namespace Fasterflect.Emitter
 				ldarga((short) index);
 			}
 			else {
-				throw new ArgumentOutOfRangeException("index");
+				throw new ArgumentOutOfRangeException(nameof(index));
 			}
 
 			return this;
@@ -2490,7 +2490,7 @@ namespace Fasterflect.Emitter
 		public EmitHelper ldind(Type type)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 
 			switch (Type.GetTypeCode(type)) {
@@ -2962,7 +2962,7 @@ namespace Fasterflect.Emitter
 		public EmitHelper newobj(Type type, params Type[] parameters)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 
 			ConstructorInfo ci = type.GetConstructor(parameters);
@@ -3451,7 +3451,7 @@ namespace Fasterflect.Emitter
 		public EmitHelper stind(Type type)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 
 			switch (Type.GetTypeCode(type)) {
@@ -3806,7 +3806,7 @@ namespace Fasterflect.Emitter
 		public EmitHelper unboxIfValueType(Type type)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 
 			return type.IsValueType ? unbox_any(type) : this;
@@ -3857,7 +3857,7 @@ namespace Fasterflect.Emitter
 		public EmitHelper LoadInitValue(Type type)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 
 			switch (Type.GetTypeCode(type)) {
@@ -3965,7 +3965,7 @@ namespace Fasterflect.Emitter
 		public EmitHelper Init(LocalBuilder localBuilder)
 		{
 			if (localBuilder == null) {
-				throw new ArgumentNullException("localBuilder");
+				throw new ArgumentNullException(nameof(localBuilder));
 			}
 
 			Type type = localBuilder.LocalType;
@@ -4007,7 +4007,7 @@ namespace Fasterflect.Emitter
 		public EmitHelper CastFromObject(Type type)
 		{
 			if (type == null) {
-				throw new ArgumentNullException("type");
+				throw new ArgumentNullException(nameof(type));
 			}
 
 			return

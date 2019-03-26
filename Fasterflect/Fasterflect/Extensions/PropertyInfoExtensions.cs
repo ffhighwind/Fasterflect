@@ -31,7 +31,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static void Set(this PropertyInfo propInfo, object value)
 		{
-			Reflect.Setter(propInfo, Flags.StaticAnyVisibility)(null, value);
+			Reflect.Setter(propInfo, FasterflectFlags.StaticAnyVisibility)(null, value);
 		}
 
 		/// <summary>
@@ -56,7 +56,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object Get(this PropertyInfo propInfo, object obj)
 		{
-			return Reflect.Getter(propInfo, Flags.InstanceAnyVisibility)(obj);
+			return Reflect.Getter(propInfo, FasterflectFlags.InstanceAnyVisibility)(obj);
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@ namespace Fasterflect.Extensions
 		/// Creates a delegate which can set the value of the property <param name="propInfo"/> matching the
 		/// specified <param name="bindingFlags" />.
 		/// </summary>
-		public static MemberSetter DelegateForSetPropertyValue(this PropertyInfo propInfo, Flags bindingFlags)
+		public static MemberSetter DelegateForSetPropertyValue(this PropertyInfo propInfo, FasterflectFlags bindingFlags)
 		{
 			return Reflect.Setter(propInfo, bindingFlags);
 		}
@@ -88,7 +88,7 @@ namespace Fasterflect.Extensions
 		/// Creates a delegate which can get the value of the property <param name="propInfo"/> matching the
 		/// specified <param name="bindingFlags" />.
 		/// </summary>
-		public static MemberGetter DelegateForGetPropertyValue(this PropertyInfo propInfo, Flags bindingFlags)
+		public static MemberGetter DelegateForGetPropertyValue(this PropertyInfo propInfo, FasterflectFlags bindingFlags)
 		{
 			return Reflect.Getter(propInfo, bindingFlags);
 		}

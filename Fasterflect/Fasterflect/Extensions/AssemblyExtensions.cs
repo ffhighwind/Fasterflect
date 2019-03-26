@@ -39,7 +39,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all matching types. This method never returns null.</returns>
 		public static IList<Type> Types(this Assembly assembly, params string[] names)
 		{
-			return assembly.Types(Flags.None, names);
+			return assembly.Types(FasterflectFlags.None, names);
 		}
 
 		/// <summary>
@@ -53,12 +53,12 @@ namespace Fasterflect.Extensions
 		/// <param name="names">An optional list of names against which to filter the result.  If this is
 		/// <c>null</c> or left empty, all types are returned.</param>
 		/// <returns>A list of all matching types. This method never returns null.</returns>
-		public static IList<Type> Types(this Assembly assembly, Flags bindingFlags, params string[] names)
+		public static IList<Type> Types(this Assembly assembly, FasterflectFlags bindingFlags, params string[] names)
 		{
 			Type[] types = assembly.GetTypes();
 
 			bool hasNames = names != null && names.Length > 0;
-			bool partialNameMatch = bindingFlags.IsSet(Flags.PartialNameMatch);
+			bool partialNameMatch = bindingFlags.IsSet(FasterflectFlags.PartialNameMatch);
 
 			return hasNames
 					   ? types.Where(t => names.Any(n => partialNameMatch ? t.Name.Contains(n) : t.Name == n)).ToArray()

@@ -27,17 +27,17 @@ namespace Fasterflect.Emitter
 {
 	internal class MemberGetEmitter : BaseEmitter
 	{
-		public MemberGetEmitter(MemberInfo memberInfo, Flags bindingFlags)
+		public MemberGetEmitter(MemberInfo memberInfo, FasterflectFlags bindingFlags)
 			: this(memberInfo.DeclaringType, bindingFlags, memberInfo.MemberType, memberInfo.Name, memberInfo)
 		{
 		}
 
-		public MemberGetEmitter(Type targetType, Flags bindingFlags, MemberTypes memberType, string fieldOrPropertyName)
+		public MemberGetEmitter(Type targetType, FasterflectFlags bindingFlags, MemberTypes memberType, string fieldOrPropertyName)
 			: this(targetType, bindingFlags, memberType, fieldOrPropertyName, null)
 		{
 		}
 
-		private MemberGetEmitter(Type targetType, Flags bindingFlags, MemberTypes memberType, string fieldOrPropertyName, MemberInfo memberInfo)
+		private MemberGetEmitter(Type targetType, FasterflectFlags bindingFlags, MemberTypes memberType, string fieldOrPropertyName, MemberInfo memberInfo)
 			: base(new CallInfo(targetType, null, bindingFlags, memberType, fieldOrPropertyName, Type.EmptyTypes, memberInfo, true))
 		{
 		}

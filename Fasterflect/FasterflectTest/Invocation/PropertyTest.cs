@@ -20,7 +20,7 @@ using System;
 using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Objects;
+using Fasterflect.Extensions.Internal;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -44,14 +44,14 @@ namespace FasterflectTest.Invocation
 		[ExpectedException(typeof(MissingMemberException))]
 		public void TestGetPublicStaticPropertyUnderNonPublicBindingFlags()
 		{
-			RunWith((Type type) => type.GetPropertyValue("TotalPeopleCreated", Flags.NonPublic | Flags.Instance));
+			RunWith((Type type) => type.GetPropertyValue("TotalPeopleCreated", FasterflectFlags.NonPublic | FasterflectFlags.Instance));
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(MissingMemberException))]
 		public void TestSetPublicStaticPropertyUnderNonPublicBindingFlags()
 		{
-			RunWith((Type type) => type.SetPropertyValue("TotalPeopleCreated", 2, Flags.NonPublic | Flags.Instance));
+			RunWith((Type type) => type.SetPropertyValue("TotalPeopleCreated", 2, FasterflectFlags.NonPublic | FasterflectFlags.Instance));
 		}
 
 		[TestMethod]
@@ -59,7 +59,7 @@ namespace FasterflectTest.Invocation
 		{
 			RunWith((Type type) =>
 					{
-						PropertyInfo propInfo = type.Property("TotalPeopleCreated", Flags.StaticAnyVisibility);
+						PropertyInfo propInfo = type.Property("TotalPeopleCreated", FasterflectFlags.StaticAnyVisibility);
 						int totalPeopleCreated = (int) propInfo.Get() + 1;
 						propInfo.Set(totalPeopleCreated);
 						VerifyProperties(type, new { totalPeopleCreated });
@@ -81,14 +81,14 @@ namespace FasterflectTest.Invocation
 		[ExpectedException(typeof(MissingMemberException))]
 		public void TestGetPublicPropertyUnderNonPublicBindingFlags()
 		{
-			RunWith((object person) => person.GetPropertyValue("Name", Flags.NonPublic | Flags.Instance));
+			RunWith((object person) => person.GetPropertyValue("Name", FasterflectFlags.NonPublic | FasterflectFlags.Instance));
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(MissingMemberException))]
 		public void TestSetPublicPropertyUnderNonPublicBindingFlags()
 		{
-			RunWith((object person) => person.SetPropertyValue("Name", "John", Flags.NonPublic | Flags.Instance));
+			RunWith((object person) => person.SetPropertyValue("Name", "John", FasterflectFlags.NonPublic | FasterflectFlags.Instance));
 		}
 
 		[TestMethod]

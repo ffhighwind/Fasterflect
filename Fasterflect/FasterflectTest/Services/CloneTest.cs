@@ -25,6 +25,8 @@ using System.Dynamic;
 #endif
 using System.Linq;
 using Fasterflect;
+using Fasterflect.Extensions;
+using Fasterflect.Extensions.Internal;
 using Fasterflect.Extensions.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

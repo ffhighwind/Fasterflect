@@ -22,7 +22,7 @@ using System;
 using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Objects;
+using Fasterflect.Extensions.Internal;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FasterflectTest.Invocation
@@ -35,7 +35,7 @@ namespace FasterflectTest.Invocation
 		{
 			RunWith((Type type) =>
 			   {
-				   System.Reflection.MemberInfo memberInfo = type.Member("TotalPeopleCreated", Flags.StaticAnyVisibility);
+				   System.Reflection.MemberInfo memberInfo = type.Member("TotalPeopleCreated", FasterflectFlags.StaticAnyVisibility);
 				   int totalPeopleCreated = (int) memberInfo.Get() + 1;
 				   memberInfo.Set(totalPeopleCreated);
 				   VerifyProperties(type, new { totalPeopleCreated });

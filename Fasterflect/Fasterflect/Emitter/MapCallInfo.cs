@@ -34,7 +34,7 @@ namespace Fasterflect.Emitter
 		public MemberTypes TargetMemberTypes { get; private set; }
 		public string[] Names { get; private set; }
 
-		public MapCallInfo(Type targetType, Type[] genericTypes, Flags bindingFlags, MemberTypes memberTypes, string name, Type[] parameterTypes, MemberInfo memberInfo, bool isReadOperation, Type sourceType, MemberTypes sourceMemberTypes, MemberTypes targetMemberTypes, string[] names) : base(targetType, genericTypes, bindingFlags, memberTypes, name, parameterTypes, memberInfo, isReadOperation)
+		public MapCallInfo(Type targetType, Type[] genericTypes, FasterflectFlags bindingFlags, MemberTypes memberTypes, string name, Type[] parameterTypes, MemberInfo memberInfo, bool isReadOperation, Type sourceType, MemberTypes sourceMemberTypes, MemberTypes targetMemberTypes, string[] names) : base(targetType, genericTypes, bindingFlags, memberTypes, name, parameterTypes, memberInfo, isReadOperation)
 		{
 			SourceType = sourceType;
 			SourceMemberTypes = sourceMemberTypes;

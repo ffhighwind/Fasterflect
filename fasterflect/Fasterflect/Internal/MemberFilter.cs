@@ -22,7 +22,7 @@ using System.Linq;
 using System.Reflection;
 using Fasterflect.Extensions;
 
-namespace Fasterflect.Extensions.Utilities
+namespace Fasterflect
 {
 	internal static class MemberFilter
 	{
@@ -41,13 +41,13 @@ namespace Fasterflect.Extensions.Utilities
 		/// <summary>
 		/// This method applies name filtering to a set of members.
 		/// </summary>
-		public static IList<T> Filter<T>(this IList<T> members, Flags bindingFlags, string[] names)
+		public static IList<T> Filter<T>(this IList<T> members, FasterflectFlags bindingFlags, string[] names)
 			where T : MemberInfo
 		{
 			List<T> result = new List<T>(members.Count);
-			bool ignoreCase = bindingFlags.IsSet(Flags.IgnoreCase);
-			bool isPartial = bindingFlags.IsSet(Flags.PartialNameMatch);
-			bool trimExplicit = bindingFlags.IsSet(Flags.TrimExplicitlyImplemented);
+			bool ignoreCase = bindingFlags.IsSet(FasterflectFlags.IgnoreCase);
+			bool isPartial = bindingFlags.IsSet(FasterflectFlags.PartialNameMatch);
+			bool trimExplicit = bindingFlags.IsSet(FasterflectFlags.TrimExplicitlyImplemented);
 
 			for (int i = 0; i < members.Count; i++) {
 				T member = members[i];
@@ -87,12 +87,12 @@ namespace Fasterflect.Extensions.Utilities
 		/// <summary>
 		/// This method applies method parameter type filtering to a set of methods.
 		/// </summary>
-		public static IList<T> Filter<T>(this IList<T> methods, Flags bindingFlags, Type[] paramTypes)
+		public static IList<T> Filter<T>(this IList<T> methods, FasterflectFlags bindingFlags, Type[] paramTypes)
 			where T : MethodBase
 		{
 			List<T> result = new List<T>(methods.Count);
 
-			bool exact = bindingFlags.IsSet(Flags.ExactBinding);
+			bool exact = bindingFlags.IsSet(FasterflectFlags.ExactBinding);
 			for (int i = 0; i < methods.Count; i++) {
 				T method = methods[i];
 				// verify parameters
@@ -126,7 +126,7 @@ namespace Fasterflect.Extensions.Utilities
 		/// <summary>
 		/// This method applies member type filtering to a set of members.
 		/// </summary>
-		public static IList<T> Filter<T>(this IList<T> members, Flags bindingFlags, MemberTypes memberTypes)
+		public static IList<T> Filter<T>(this IList<T> members, FasterflectFlags bindingFlags, MemberTypes memberTypes)
 			where T : MemberInfo
 		{
 			List<T> result = new List<T>(members.Count);
@@ -145,14 +145,14 @@ namespace Fasterflect.Extensions.Utilities
 		/// <summary>
 		/// This method applies flags-based filtering to a set of members.
 		/// </summary>
-		public static IList<T> Filter<T>(this IList<T> members, Flags bindingFlags) where T : MemberInfo
+		public static IList<T> Filter<T>(this IList<T> members, FasterflectFlags bindingFlags) where T : MemberInfo
 		{
 			List<T> result = new List<T>(members.Count);
 			List<string> properties = new List<string>(members.Count);
 
-			bool excludeHidden = bindingFlags.IsSet(Flags.ExcludeHiddenMembers);
-			bool excludeBacking = bindingFlags.IsSet(Flags.ExcludeBackingMembers);
-			bool excludeExplicit = bindingFlags.IsSet(Flags.ExcludeExplicitlyImplemented);
+			bool excludeHidden = bindingFlags.IsSet(FasterflectFlags.ExcludeHiddenMembers);
+			bool excludeBacking = bindingFlags.IsSet(FasterflectFlags.ExcludeBackingMembers);
+			bool excludeExplicit = bindingFlags.IsSet(FasterflectFlags.ExcludeExplicitlyImplemented);
 
 			for (int i = 0; i < members.Count; i++) {
 				T member = members[i];

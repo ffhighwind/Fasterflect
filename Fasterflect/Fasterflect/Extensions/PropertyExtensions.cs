@@ -22,14 +22,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Fasterflect.Emitter;
-using Fasterflect.Extensions.Utilities;
 
 namespace Fasterflect.Extensions
 {
 	/// <summary>
 	/// Extension methods for locating and accessing properties.
 	/// </summary>
-	public static class PropertyExtensions
+	public static partial class PropertyExtensions
 	{
 		#region Property Access
 		/// <summary>
@@ -54,7 +53,7 @@ namespace Fasterflect.Extensions
 		/// Creates a delegate which can set the value of the property specified by <param name="name"/>
 		/// matching <param name="bindingFlags"/> on the given <param name="type"/>.
 		/// </summary>
-		public static MemberSetter DelegateForSetPropertyValue(this Type type, string name, Flags bindingFlags)
+		public static MemberSetter DelegateForSetPropertyValue(this Type type, string name, FasterflectFlags bindingFlags)
 		{
 			return Reflect.PropertySetter(type, name, bindingFlags);
 		}
@@ -63,7 +62,7 @@ namespace Fasterflect.Extensions
 		/// Creates a delegate which can get the value of the property specified by <param name="name"/>
 		/// matching <param name="bindingFlags"/> on the given <param name="type"/>.
 		/// </summary>
-		public static MemberGetter DelegateForGetPropertyValue(this Type type, string name, Flags bindingFlags)
+		public static MemberGetter DelegateForGetPropertyValue(this Type type, string name, FasterflectFlags bindingFlags)
 		{
 			return Reflect.PropertyGetter(type, name, bindingFlags);
 		}
@@ -86,7 +85,7 @@ namespace Fasterflect.Extensions
 		/// </example>
 		public static MethodInvoker DelegateForSetIndexer(this Type type, params Type[] parameterTypes)
 		{
-			return Reflect.SetIndexer(type, Flags.InstanceAnyVisibility, parameterTypes);
+			return Reflect.IndexerSetter(type, FasterflectFlags.InstanceAnyVisibility, parameterTypes);
 		}
 
 		/// <summary>
@@ -97,7 +96,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The delegate which can get the value of an indexer.</returns>
 		public static MethodInvoker DelegateForGetIndexer(this Type type, params Type[] parameterTypes)
 		{
-			return Reflect.GetIndexer(type, Flags.InstanceAnyVisibility, parameterTypes);
+			return Reflect.IndexerGetter(type, FasterflectFlags.InstanceAnyVisibility, parameterTypes);
 		}
 
 		/// <summary>
@@ -115,9 +114,9 @@ namespace Fasterflect.Extensions
 		/// MethodInvoker invoker = type.DelegateForSetIndexer(new Type[]{typeof(int), typeof(string)});
 		/// </code>
 		/// </example>
-		public static MethodInvoker DelegateForSetIndexer(this Type type, Flags bindingFlags, params Type[] parameterTypes)
+		public static MethodInvoker DelegateForSetIndexer(this Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
-			return Reflect.SetIndexer(type, bindingFlags, parameterTypes);
+			return Reflect.IndexerSetter(type, bindingFlags, parameterTypes);
 		}
 
 		/// <summary>
@@ -127,9 +126,9 @@ namespace Fasterflect.Extensions
 		/// <param name="bindingFlags">The binding flags used to lookup the indexer.</param>
 		/// <param name="parameterTypes">The types of the indexer parameters (must be in the right order).</param>
 		/// <returns>The delegate which can get the value of an indexer.</returns>
-		public static MethodInvoker DelegateForGetIndexer(this Type type, Flags bindingFlags, params Type[] parameterTypes)
+		public static MethodInvoker DelegateForGetIndexer(this Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
-			return Reflect.GetIndexer(type, bindingFlags, parameterTypes);
+			return Reflect.IndexerGetter(type, bindingFlags, parameterTypes);
 		}
 		#endregion
 
@@ -149,7 +148,7 @@ namespace Fasterflect.Extensions
 		/// Use the <paramref name="bindingFlags"/> parameter to define the scope of the search.
 		/// </summary>
 		/// <returns>A single PropertyInfo instance of the first found match or null if no match was found.</returns>
-		public static PropertyInfo Property(this Type type, string name, Flags bindingFlags)
+		public static PropertyInfo Property(this Type type, string name, FasterflectFlags bindingFlags)
 		{
 			return Reflect.Lookup.Property(type, name, bindingFlags);
 		}
@@ -177,12 +176,12 @@ namespace Fasterflect.Extensions
 		/// including properties defined on base types.
 		/// </summary>
 		/// <returns>A list of all matching properties on the type. This value will never be null.</returns>
-		public static IList<PropertyInfo> Properties(this Type type, Flags bindingFlags, params string[] names)
+		public static IList<PropertyInfo> Properties(this Type type, FasterflectFlags bindingFlags, params string[] names)
 		{
 			return Reflect.Lookup.Properties(type, bindingFlags, names);
 		}
 
-		private static IList<PropertyInfo> GetProperties(Type type, Flags bindingFlags)
+		private static IList<PropertyInfo> GetProperties(Type type, FasterflectFlags bindingFlags)
 		{
 			return Reflect.Lookup.Properties(type, bindingFlags);
 		}

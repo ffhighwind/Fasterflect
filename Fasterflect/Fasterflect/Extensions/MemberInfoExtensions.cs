@@ -32,7 +32,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object Get(this MemberInfo memberInfo)
 		{
-			MemberGetter @delegate = (MemberGetter) new MemberGetEmitter(memberInfo, Flags.StaticAnyVisibility).GetDelegate();
+			MemberGetter @delegate = (MemberGetter) new MemberGetEmitter(memberInfo, FasterflectFlags.StaticAnyVisibility).GetDelegate();
 			return @delegate(null);
 		}
 
@@ -41,7 +41,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static void Set(this MemberInfo memberInfo, object value)
 		{
-			MemberSetter @delegate = (MemberSetter) new MemberSetEmitter(memberInfo, Flags.StaticAnyVisibility).GetDelegate();
+			MemberSetter @delegate = (MemberSetter) new MemberSetEmitter(memberInfo, FasterflectFlags.StaticAnyVisibility).GetDelegate();
 			@delegate(null, value);
 		}
 
@@ -51,7 +51,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object Get(this MemberInfo memberInfo, object obj)
 		{
-			MemberGetter @delegate = (MemberGetter) new MemberGetEmitter(memberInfo, Flags.InstanceAnyVisibility).GetDelegate();
+			MemberGetter @delegate = (MemberGetter) new MemberGetEmitter(memberInfo, FasterflectFlags.InstanceAnyVisibility).GetDelegate();
 			return @delegate(obj);
 		}
 
@@ -61,7 +61,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static void Set(this MemberInfo memberInfo, object obj, object value)
 		{
-			MemberSetter @delegate = (MemberSetter) new MemberSetEmitter(memberInfo, Flags.InstanceAnyVisibility).GetDelegate();
+			MemberSetter @delegate = (MemberSetter) new MemberSetEmitter(memberInfo, FasterflectFlags.InstanceAnyVisibility).GetDelegate();
 			@delegate(obj, value);
 		}
 

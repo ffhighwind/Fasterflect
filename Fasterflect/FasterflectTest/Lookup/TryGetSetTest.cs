@@ -20,7 +20,7 @@
 
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Objects;
+using Fasterflect.Extensions.Internal;
 using FasterflectTest.SampleModel.Animals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -37,7 +37,7 @@ namespace FasterflectTest.Lookup
 			Assert.IsNull(lion.TryGetFieldValue("name"));
 			Assert.IsNull(lion.TryGetFieldValue("ID"));
 			Assert.AreEqual(42, lion.TryGetFieldValue("id"));
-			Assert.AreEqual(42, lion.TryGetFieldValue("ID", Flags.InstanceAnyVisibility | Flags.IgnoreCase));
+			Assert.AreEqual(42, lion.TryGetFieldValue("ID", FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.IgnoreCase));
 			// tryset
 			Assert.IsFalse(lion.TrySetFieldValue("missing", false));
 			Assert.IsTrue(lion.TrySetFieldValue("id", 43));
@@ -70,7 +70,7 @@ namespace FasterflectTest.Lookup
 			Assert.IsFalse(lion.TrySetValue("missing", false));
 			Assert.IsTrue(lion.TrySetValue("id", 43));
 			Assert.AreEqual(43, lion.ID);
-			Assert.IsTrue(lion.TrySetValue("ID", 44, Flags.InstanceAnyVisibility | Flags.IgnoreCase));
+			Assert.IsTrue(lion.TrySetValue("ID", 44, FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.IgnoreCase));
 			Assert.IsTrue(lion.TrySetValue("Name", "Simba"));
 			Assert.AreEqual(44, lion.ID);
 			Assert.AreEqual("Simba", lion.Name);

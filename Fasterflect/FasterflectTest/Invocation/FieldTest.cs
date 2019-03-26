@@ -20,7 +20,7 @@ using System;
 using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Objects;
+using Fasterflect.Extensions.Internal;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -44,14 +44,14 @@ namespace FasterflectTest.Invocation
 		[ExpectedException(typeof(MissingFieldException))]
 		public void TestGetPrivateStaticFieldUnderPublicBindingFlags()
 		{
-			RunWith((Type type) => type.GetFieldValue("totalPeopleCreated", Flags.Public | Flags.Instance));
+			RunWith((Type type) => type.GetFieldValue("totalPeopleCreated", FasterflectFlags.Public | FasterflectFlags.Instance));
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(MissingFieldException))]
 		public void TestSetPrivateStaticFieldUnderPublicBindingFlags()
 		{
-			RunWith((Type type) => type.SetFieldValue("totalPeopleCreated", 2, Flags.Public | Flags.Instance));
+			RunWith((Type type) => type.SetFieldValue("totalPeopleCreated", 2, FasterflectFlags.Public | FasterflectFlags.Instance));
 		}
 
 		[TestMethod]
@@ -59,7 +59,7 @@ namespace FasterflectTest.Invocation
 		{
 			RunWith((Type type) =>
 					{
-						FieldInfo fieldInfo = type.Field("totalPeopleCreated", Flags.StaticAnyVisibility);
+						FieldInfo fieldInfo = type.Field("totalPeopleCreated", FasterflectFlags.StaticAnyVisibility);
 						int totalPeopleCreated = (int) fieldInfo.Get() + 1;
 						fieldInfo.Set(totalPeopleCreated);
 						VerifyFields(type, new { totalPeopleCreated });
@@ -82,8 +82,8 @@ namespace FasterflectTest.Invocation
 		{
 			RunWith((object person) =>
 					{
-						string name = (string) person.GetFieldValue("name", Flags.NonPublic | Flags.Instance) + " updated";
-						person.SetFieldValue("name", name, Flags.NonPublic | Flags.Instance);
+						string name = (string) person.GetFieldValue("name", FasterflectFlags.NonPublic | FasterflectFlags.Instance) + " updated";
+						person.SetFieldValue("name", name, FasterflectFlags.NonPublic | FasterflectFlags.Instance);
 						VerifyFields(person, new { name });
 					});
 		}
@@ -92,14 +92,14 @@ namespace FasterflectTest.Invocation
 		[ExpectedException(typeof(MissingFieldException))]
 		public void TestGetPrivateFieldUnderPublicBindingFlags()
 		{
-			RunWith((object person) => person.GetFieldValue("name", Flags.Public | Flags.Instance));
+			RunWith((object person) => person.GetFieldValue("name", FasterflectFlags.Public | FasterflectFlags.Instance));
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(MissingFieldException))]
 		public void TestSetPrivateFieldUnderPublicBindingFlags()
 		{
-			RunWith((object person) => person.SetFieldValue("name", "John", Flags.Public | Flags.Instance));
+			RunWith((object person) => person.SetFieldValue("name", "John", FasterflectFlags.Public | FasterflectFlags.Instance));
 		}
 
 		[TestMethod]
@@ -138,7 +138,7 @@ namespace FasterflectTest.Invocation
 		[ExpectedException(typeof(MissingFieldException))]
 		public void TestSetNotExistentField()
 		{
-			RunWith((object person) => person.GetFieldValue("not_exist", Flags.Public | Flags.Instance));
+			RunWith((object person) => person.GetFieldValue("not_exist", FasterflectFlags.Public | FasterflectFlags.Instance));
 		}
 
 		[TestMethod]

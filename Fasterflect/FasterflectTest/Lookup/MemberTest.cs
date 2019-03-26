@@ -24,7 +24,6 @@ using System.Linq;
 using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Utilities;
 using FasterflectTest.SampleModel.Animals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -47,7 +46,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestMemberInstanceIgnoreCase()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.IgnoreCase;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.IgnoreCase;
 
 			AnimalInstanceMemberNames.Select(s => s.ToUpper()).Select(s => typeof(Animal).Member(s, flags)).ForEach(Assert.IsNotNull);
 			LionInstanceMemberNames.Select(s => s.ToUpper()).Select(s => typeof(Lion).Member(s, flags)).ForEach(Assert.IsNotNull);
@@ -56,7 +55,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestMemberInstanceDeclaredOnly()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.DeclaredOnly;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly;
 
 			AnimalInstanceMemberNames.Select(s => typeof(Animal).Member(s, flags)).ForEach(Assert.IsNotNull);
 			LionDeclaredInstanceMemberNames.Select(s => typeof(Lion).Member(s, flags)).ForEach(Assert.IsNotNull);
@@ -65,7 +64,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestMemberStatic()
 		{
-			Flags flags = Flags.StaticAnyVisibility;
+			FasterflectFlags flags = FasterflectFlags.StaticAnyVisibility;
 
 			AnimalInstanceMemberNames.Select(s => typeof(Animal).Member(s, flags)).ForEach(Assert.IsNull);
 
@@ -76,7 +75,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestMemberStaticDeclaredOnly()
 		{
-			Flags flags = Flags.StaticAnyVisibility | Flags.DeclaredOnly;
+			FasterflectFlags flags = FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly;
 
 			AnimalStaticMemberNames.Select(s => typeof(Animal).Member(s, flags)).ForEach(Assert.IsNotNull);
 			AnimalStaticMemberNames.Select(s => typeof(Lion).Member(s, flags)).ForEach(Assert.IsNull);
@@ -87,19 +86,19 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestMembersInstance()
 		{
-			IList<MemberInfo> members = typeof(object).Members(Flags.InstanceAnyVisibility);
+			IList<MemberInfo> members = typeof(object).Members(FasterflectFlags.InstanceAnyVisibility);
 			Assert.IsNotNull(members);
 			Assert.AreEqual(0, members.Count);
 
-			members = typeof(Animal).Members(Flags.InstanceAnyVisibility);
+			members = typeof(Animal).Members(FasterflectFlags.InstanceAnyVisibility);
 			Assert.AreEqual(AnimalInstanceMemberNames.Length, members.Count);
 			CollectionAssert.AreEquivalent(AnimalInstanceMemberNames, members.Select(m => m.Name).ToArray());
 			CollectionAssert.AreEquivalent(AnimalInstanceMemberTypes, members.Select(m => m.MemberType).ToArray());
 
-			members = typeof(Mammal).Members(Flags.InstanceAnyVisibility);
+			members = typeof(Mammal).Members(FasterflectFlags.InstanceAnyVisibility);
 			Assert.AreEqual(AnimalInstanceMemberNames.Length + MammalDeclaredInstanceMemberNames.Length, members.Count);
 
-			members = typeof(Lion).Members(Flags.InstanceAnyVisibility);
+			members = typeof(Lion).Members(FasterflectFlags.InstanceAnyVisibility);
 			Assert.AreEqual(LionInstanceMemberNames.Length, members.Count);
 			CollectionAssert.AreEquivalent(LionInstanceMemberNames, members.Select(m => m.Name).ToArray());
 			CollectionAssert.AreEquivalent(LionInstanceMemberTypes, members.Select(m => m.MemberType).ToArray());
@@ -108,19 +107,19 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestMembersInstanceWithDeclaredOnlyFlag()
 		{
-			IList<MemberInfo> members = typeof(object).Members(Flags.InstanceAnyVisibility | Flags.DeclaredOnly);
+			IList<MemberInfo> members = typeof(object).Members(FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.IsNotNull(members);
 			Assert.AreEqual(0, members.Count);
 
-			members = typeof(Animal).Members(Flags.InstanceAnyVisibility | Flags.DeclaredOnly);
+			members = typeof(Animal).Members(FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.AreEqual(AnimalInstanceMemberNames.Length, members.Count);
 			CollectionAssert.AreEquivalent(AnimalInstanceMemberNames, members.Select(m => m.Name).ToArray());
 			CollectionAssert.AreEquivalent(AnimalInstanceMemberTypes, members.Select(m => m.MemberType).ToArray());
 
-			members = typeof(Mammal).Members(Flags.InstanceAnyVisibility | Flags.DeclaredOnly);
+			members = typeof(Mammal).Members(FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.AreEqual(MammalDeclaredInstanceMemberNames.Length, members.Count);
 
-			members = typeof(Lion).Members(Flags.InstanceAnyVisibility | Flags.DeclaredOnly);
+			members = typeof(Lion).Members(FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.AreEqual(LionDeclaredInstanceMemberNames.Length, members.Count);
 			CollectionAssert.AreEquivalent(LionDeclaredInstanceMemberNames, members.Select(m => m.Name).ToArray());
 			CollectionAssert.AreEquivalent(LionDeclaredInstanceMemberTypes, members.Select(m => m.MemberType).ToArray());
@@ -129,16 +128,16 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestMembersStatic()
 		{
-			IList<MemberInfo> members = typeof(object).Members(Flags.StaticAnyVisibility);
+			IList<MemberInfo> members = typeof(object).Members(FasterflectFlags.StaticAnyVisibility);
 			Assert.IsNotNull(members);
 			Assert.AreEqual(0, members.Count);
 
-			members = typeof(Animal).Members(Flags.StaticAnyVisibility);
+			members = typeof(Animal).Members(FasterflectFlags.StaticAnyVisibility);
 			Assert.AreEqual(AnimalStaticMemberNames.Length, members.Count);
 			CollectionAssert.AreEquivalent(AnimalStaticMemberNames, members.Select(m => m.Name).ToArray());
 			CollectionAssert.AreEquivalent(AnimalStaticMemberTypes, members.Select(m => m.MemberType).ToArray());
 
-			members = typeof(Lion).Members(Flags.StaticAnyVisibility);
+			members = typeof(Lion).Members(FasterflectFlags.StaticAnyVisibility);
 			Assert.AreEqual(AnimalStaticMemberNames.Length, members.Count);
 			CollectionAssert.AreEquivalent(AnimalStaticMemberNames, members.Select(m => m.Name).ToArray());
 			CollectionAssert.AreEquivalent(AnimalStaticMemberTypes, members.Select(m => m.MemberType).ToArray());
@@ -147,19 +146,19 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestMembersStaticWithDeclaredOnlyFlag()
 		{
-			IList<MemberInfo> members = typeof(object).Members(Flags.StaticAnyVisibility | Flags.DeclaredOnly);
+			IList<MemberInfo> members = typeof(object).Members(FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.IsNotNull(members);
 			Assert.AreEqual(0, members.Count);
 
-			members = typeof(Animal).Members(Flags.StaticAnyVisibility | Flags.DeclaredOnly);
+			members = typeof(Animal).Members(FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.AreEqual(AnimalStaticMemberNames.Length, members.Count);
 			CollectionAssert.AreEquivalent(AnimalStaticMemberNames, members.Select(m => m.Name).ToArray());
 			CollectionAssert.AreEquivalent(AnimalStaticMemberTypes, members.Select(m => m.MemberType).ToArray());
 
-			members = typeof(Mammal).Members(Flags.StaticAnyVisibility | Flags.DeclaredOnly);
+			members = typeof(Mammal).Members(FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.AreEqual(0, members.Count);
 
-			members = typeof(Lion).Members(Flags.StaticAnyVisibility | Flags.DeclaredOnly);
+			members = typeof(Lion).Members(FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.AreEqual(0, members.Count);
 		}
 		#endregion
@@ -185,7 +184,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestWithExcludeBackingMembers()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.ExcludeBackingMembers;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.ExcludeBackingMembers;
 
 			IList<PropertyInfo> properties = typeof(Employee).Properties("Name");
 			Assert.AreEqual(2, properties.Count);
@@ -209,7 +208,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestWithExcludeHiddenMembers()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.ExcludeHiddenMembers;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.ExcludeHiddenMembers;
 
 			IList<PropertyInfo> properties = typeof(Manager).Properties("Name");
 			Assert.AreEqual(2, properties.Count);
@@ -228,7 +227,7 @@ namespace FasterflectTest.Lookup
 			Assert.AreEqual(7, members.Count);
 			Assert.AreEqual(typeof(Manager), members.First().DeclaringType);
 
-			members = typeof(Manager).Members(memberTypes, flags | Flags.ExcludeBackingMembers);
+			members = typeof(Manager).Members(memberTypes, flags | FasterflectFlags.ExcludeBackingMembers);
 			Assert.AreEqual(4, members.Count);
 			Assert.AreEqual(typeof(Manager), members.First().DeclaringType);
 
@@ -268,12 +267,12 @@ namespace FasterflectTest.Lookup
 			Assert.IsTrue(member.IsWritable());
 
 			// const field
-			member = typeof(Zoo).Member("FirstId", Flags.StaticAnyVisibility);
+			member = typeof(Zoo).Member("FirstId", FasterflectFlags.StaticAnyVisibility);
 			Assert.IsNotNull(member);
 			Assert.IsTrue(member.IsReadable());
 			Assert.IsFalse(member.IsWritable());
 			// static field
-			member = typeof(Zoo).Member("nextId", Flags.StaticAnyVisibility);
+			member = typeof(Zoo).Member("nextId", FasterflectFlags.StaticAnyVisibility);
 			Assert.IsNotNull(member);
 			Assert.IsTrue(member.IsReadable());
 			Assert.IsTrue(member.IsWritable());

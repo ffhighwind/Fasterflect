@@ -23,8 +23,6 @@ using System.Reflection;
 using System.Text;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Utilities;
-
 namespace FasterflectSample.Internal
 {
 	/// <summary>
@@ -41,8 +39,8 @@ namespace FasterflectSample.Internal
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.AppendFormat("=== Extension methods (all):{0}", Environment.NewLine);
-			IList<Type> types = assembly.Types(Flags.PartialNameMatch, "Extensions");
-			types.ForEach(t => Write(sb, t, t.Methods(Flags.Static | Flags.Public).OrderBy(m => m.Name).ToList()));
+			IList<Type> types = assembly.Types(FasterflectFlags.PartialNameMatch, "Extensions");
+			types.ForEach(t => Write(sb, t, t.Methods(FasterflectFlags.Static | FasterflectFlags.Public).OrderBy(m => m.Name).ToList()));
 			return sb.ToString();
 		}
 
@@ -50,10 +48,10 @@ namespace FasterflectSample.Internal
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.AppendFormat("=== Extension methods that are superfluous:{0}", Environment.NewLine);
-			IList<Type> types = assembly.Types(Flags.PartialNameMatch, "Extensions");
-			types.ForEach(t => Write(sb, t, t.Methods(Flags.Static | Flags.Public)
+			IList<Type> types = assembly.Types(FasterflectFlags.PartialNameMatch, "Extensions");
+			types.ForEach(t => Write(sb, t, t.Methods(FasterflectFlags.Static | FasterflectFlags.Public)
 												 .OrderBy(m => m.Name)
-												 .Where(m => IsSuperfluous(m, t.Methods(Flags.Static | Flags.Public, m.Name)))
+												 .Where(m => IsSuperfluous(m, t.Methods(FasterflectFlags.Static | FasterflectFlags.Public, m.Name)))
 												 .ToList()));
 			return sb.ToString();
 		}
@@ -80,11 +78,11 @@ namespace FasterflectSample.Internal
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.AppendFormat("=== Extension methods with naming violations:{0}", Environment.NewLine);
-			IList<Type> types = assembly.Types(Flags.PartialNameMatch, "Extensions");
-			types.ForEach(t => Write(sb, t, t.Methods(Flags.Static | Flags.Public)
+			IList<Type> types = assembly.Types(FasterflectFlags.PartialNameMatch, "Extensions");
+			types.ForEach(t => Write(sb, t, t.Methods(FasterflectFlags.Static | FasterflectFlags.Public)
 												 .OrderBy(m => m.Name)
 												 .Where(
-													 m => IsParameterViolation(typeof(Flags), "bindingFlags", true, m.Parameters()))
+													 m => IsParameterViolation(typeof(FasterflectFlags), "bindingFlags", true, m.Parameters()))
 												 .ToList()));
 			return sb.ToString();
 		}

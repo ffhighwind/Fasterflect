@@ -94,7 +94,7 @@ namespace Fasterflect.Common
 		#region Implementation of IEnumerable
 		public override IEnumerator<PropertyInfo> GetEnumerator()
 		{
-			return Type.Properties(Flags.StaticInstanceAnyVisibility).GetEnumerator();
+			return Type.Properties(FasterflectFlags.StaticInstanceAnyVisibility).GetEnumerator();
 		}
 		#endregion
 	}
@@ -108,7 +108,7 @@ namespace Fasterflect.Common
 		#region Implementation of IEnumerable
 		public override IEnumerator<MethodInfo> GetEnumerator()
 		{
-			return Type.Methods(Flags.StaticInstanceAnyVisibility).GetEnumerator();
+			return Type.Methods(FasterflectFlags.StaticInstanceAnyVisibility).GetEnumerator();
 		}
 		#endregion
 	}

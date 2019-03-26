@@ -30,7 +30,7 @@ namespace Fasterflect.Emitter
 	internal class CallInfo : IEquatable<CallInfo>
 	{
 		public Type TargetType { get; private set; }
-		public Flags BindingFlags { get; internal set; }
+		public FasterflectFlags BindingFlags { get; internal set; }
 		public MemberTypes MemberTypes { get; set; }
 		public Type[] ParamTypes { get; internal set; }
 		public Type[] GenericTypes { get; private set; }
@@ -41,7 +41,7 @@ namespace Fasterflect.Emitter
 		public MemberInfo MemberInfo { get; internal set; }
 		public Type[] MethodParamTypes { get; internal set; }
 
-		public CallInfo(Type targetType, Type[] genericTypes, Flags bindingFlags, MemberTypes memberTypes, string name,
+		public CallInfo(Type targetType, Type[] genericTypes, FasterflectFlags bindingFlags, MemberTypes memberTypes, string name,
 			Type[] parameterTypes, MemberInfo memberInfo, bool isReadOperation)
 		{
 			TargetType = targetType;
@@ -57,7 +57,7 @@ namespace Fasterflect.Emitter
 			MemberInfo = memberInfo;
 			IsReadOperation = isReadOperation;
 			// TODO why do we set this here? it is overwritten in MethodInvocationEmitter
-			IsStatic = BindingFlags.IsSet(Flags.Static);
+			IsStatic = BindingFlags.IsSet(FasterflectFlags.Static);
 		}
 
 		#region Helper Properties

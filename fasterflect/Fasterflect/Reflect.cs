@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using Fasterflect.Emitter;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Utilities;
-using Fasterflect.Probing;
 
 namespace Fasterflect
 {
 	/// <summary>
-	/// 
+	/// Helper class for producing Reflection-based delegates and other utility methods.
 	/// </summary>
 	public static partial class Reflect
 	{
@@ -23,7 +18,7 @@ namespace Fasterflect
 		/// </summary>
 		public static ConstructorInvoker Constructor(Type type, params Type[] parameterTypes)
 		{
-			return Constructor(type, Flags.InstanceAnyVisibility, parameterTypes);
+			return Constructor(type, FasterflectFlags.InstanceAnyVisibility, parameterTypes);
 		}
 
 		/// <summary>
@@ -31,7 +26,7 @@ namespace Fasterflect
 		/// and matching <paramref name="bindingFlags"/> on the given <paramref name="type"/>.  
 		/// Leave <paramref name="parameterTypes"/> empty if the constructor has no argument. 
 		/// </summary>
-		public static ConstructorInvoker Constructor(Type type, Flags bindingFlags, params Type[] parameterTypes)
+		public static ConstructorInvoker Constructor(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
 			return (ConstructorInvoker) new CtorInvocationEmitter(type, bindingFlags, parameterTypes).GetDelegate();
 		}
@@ -43,7 +38,7 @@ namespace Fasterflect
 		/// </summary>
 		public static MemberGetter Getter(FieldInfo fieldInfo)
 		{
-			Flags flags = fieldInfo.IsStatic ? Flags.StaticAnyVisibility : Flags.InstanceAnyVisibility;
+			FasterflectFlags flags = fieldInfo.IsStatic ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
 			return (MemberGetter) new MemberGetEmitter(fieldInfo, flags).GetDelegate();
 		}
 
@@ -52,7 +47,7 @@ namespace Fasterflect
 		/// </summary>
 		public static MemberGetter Getter(PropertyInfo propInfo)
 		{
-			Flags flags = propInfo.IsStatic() ? Flags.StaticAnyVisibility : Flags.InstanceAnyVisibility;
+			FasterflectFlags flags = propInfo.IsStatic() ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
 			return (MemberGetter) new MemberGetEmitter(propInfo, flags).GetDelegate();
 		}
 
@@ -60,7 +55,7 @@ namespace Fasterflect
 		/// Creates a delegate which can get the value of the property <param name="propInfo"/> matching the
 		/// specified <param name="bindingFlags" />.
 		/// </summary>
-		public static MemberGetter Getter(PropertyInfo propInfo, Flags bindingFlags)
+		public static MemberGetter Getter(PropertyInfo propInfo, FasterflectFlags bindingFlags)
 		{
 			return (MemberGetter) new MemberGetEmitter(propInfo, bindingFlags).GetDelegate();
 		}
@@ -72,7 +67,7 @@ namespace Fasterflect
 		/// </summary>
 		public static MemberSetter Setter(FieldInfo fieldInfo)
 		{
-			Flags flags = fieldInfo.IsStatic ? Flags.StaticAnyVisibility : Flags.InstanceAnyVisibility;
+			FasterflectFlags flags = fieldInfo.IsStatic ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
 			return (MemberSetter) new MemberSetEmitter(fieldInfo, flags).GetDelegate();
 		}
 
@@ -81,7 +76,7 @@ namespace Fasterflect
 		/// </summary>
 		public static MemberSetter Setter(PropertyInfo propInfo)
 		{
-			Flags flags = propInfo.IsStatic() ? Flags.StaticAnyVisibility : Flags.InstanceAnyVisibility;
+			FasterflectFlags flags = propInfo.IsStatic() ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
 			return (MemberSetter) new MemberSetEmitter(propInfo, flags).GetDelegate();
 		}
 
@@ -89,7 +84,7 @@ namespace Fasterflect
 		/// Creates a delegate which can set the value of the property <param name="propInfo"/> matching the
 		/// specified <param name="bindingFlags" />.
 		/// </summary>
-		public static MemberSetter Setter(PropertyInfo propInfo, Flags bindingFlags)
+		public static MemberSetter Setter(PropertyInfo propInfo, FasterflectFlags bindingFlags)
 		{
 			return (MemberSetter) new MemberSetEmitter(propInfo, bindingFlags).GetDelegate();
 		}
@@ -102,14 +97,14 @@ namespace Fasterflect
 		/// </summary>
 		public static MemberSetter PropertySetter(Type type, string name)
 		{
-			return PropertySetter(type, name, Flags.StaticInstanceAnyVisibility);
+			return PropertySetter(type, name, FasterflectFlags.StaticInstanceAnyVisibility);
 		}
 
 		/// <summary>
 		/// Creates a delegate which can set the value of the property specified by <param name="name"/>
 		/// matching <param name="bindingFlags"/> on the given <param name="type"/>.
 		/// </summary>
-		public static MemberSetter PropertySetter(Type type, string name, Flags bindingFlags)
+		public static MemberSetter PropertySetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
 			CallInfo callInfo = new CallInfo(type, null, bindingFlags, MemberTypes.Property, name, null, null, false);
 			return (MemberSetter) new MemberSetEmitter(callInfo).GetDelegate();
@@ -121,14 +116,14 @@ namespace Fasterflect
 		/// </summary>
 		public static MemberGetter PropertyGetter(Type type, string name)
 		{
-			return PropertyGetter(type, name, Flags.StaticInstanceAnyVisibility);
+			return PropertyGetter(type, name, FasterflectFlags.StaticInstanceAnyVisibility);
 		}
 
 		/// <summary>
 		/// Creates a delegate which can get the value of the property specified by <param name="name"/>
 		/// matching <param name="bindingFlags"/> on the given <param name="type"/>.
 		/// </summary>
-		public static MemberGetter PropertyGetter(Type type, string name, Flags bindingFlags)
+		public static MemberGetter PropertyGetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
 			CallInfo callInfo = new CallInfo(type, null, bindingFlags, MemberTypes.Property, name, null, null, true);
 			return (MemberGetter) new MemberGetEmitter(callInfo).GetDelegate();
@@ -142,7 +137,7 @@ namespace Fasterflect
 		/// </summary>
 		public static MemberSetter FieldSetter(Type type, string name)
 		{
-			return FieldSetter(type, name, Flags.StaticInstanceAnyVisibility);
+			return FieldSetter(type, name, FasterflectFlags.StaticInstanceAnyVisibility);
 		}
 
 		/// <summary>
@@ -151,14 +146,14 @@ namespace Fasterflect
 		/// </summary>
 		public static MemberGetter FieldGetter(Type type, string name)
 		{
-			return FieldGetter(type, name, Flags.StaticInstanceAnyVisibility);
+			return FieldGetter(type, name, FasterflectFlags.StaticInstanceAnyVisibility);
 		}
 
 		/// <summary>
 		/// Creates a delegate which can set the value of the field specified by <paramref name="name"/> and
 		/// matching <paramref name="bindingFlags"/> on the given <paramref name="type"/>.
 		/// </summary>
-		public static MemberSetter FieldSetter(Type type, string name, Flags bindingFlags)
+		public static MemberSetter FieldSetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
 			CallInfo callInfo = new CallInfo(type, null, bindingFlags, MemberTypes.Field, name, null, null, false);
 			return (MemberSetter) new MemberSetEmitter(callInfo).GetDelegate();
@@ -168,7 +163,7 @@ namespace Fasterflect
 		/// Creates a delegate which can get the value of the field specified by <paramref name="name"/> and
 		/// matching <paramref name="bindingFlags"/> on the given <paramref name="type"/>.
 		/// </summary>
-		public static MemberGetter FieldGetter(Type type, string name, Flags bindingFlags)
+		public static MemberGetter FieldGetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
 			CallInfo callInfo = new CallInfo(type, null, bindingFlags, MemberTypes.Field, name, null, null, true);
 			return (MemberGetter) new MemberGetEmitter(callInfo).GetDelegate();
@@ -190,9 +185,9 @@ namespace Fasterflect
 		/// MethodInvoker invoker = type.DelegateForSetIndexer(new Type[]{typeof(int), typeof(string)});
 		/// </code>
 		/// </example>
-		public static MethodInvoker SetIndexer(Type type, params Type[] parameterTypes)
+		public static MethodInvoker IndexerSetter(Type type, params Type[] parameterTypes)
 		{
-			return SetIndexer(type, Flags.InstanceAnyVisibility, parameterTypes);
+			return IndexerSetter(type, FasterflectFlags.InstanceAnyVisibility, parameterTypes);
 		}
 
 		/// <summary>
@@ -201,9 +196,9 @@ namespace Fasterflect
 		/// <param name="type">The type which the indexer belongs to.</param>
 		/// <param name="parameterTypes">The types of the indexer parameters (must be in the right order).</param>
 		/// <returns>The delegate which can get the value of an indexer.</returns>
-		public static MethodInvoker GetIndexer(Type type, params Type[] parameterTypes)
+		public static MethodInvoker IndexerGetter(Type type, params Type[] parameterTypes)
 		{
-			return GetIndexer(type, Flags.InstanceAnyVisibility, parameterTypes);
+			return IndexerGetter(type, FasterflectFlags.InstanceAnyVisibility, parameterTypes);
 		}
 
 		/// <summary>
@@ -221,7 +216,7 @@ namespace Fasterflect
 		/// MethodInvoker invoker = type.DelegateForSetIndexer(new Type[]{typeof(int), typeof(string)});
 		/// </code>
 		/// </example>
-		public static MethodInvoker SetIndexer(Type type, Flags bindingFlags, params Type[] parameterTypes)
+		public static MethodInvoker IndexerSetter(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
 			return (MethodInvoker) new MethodInvocationEmitter(type, bindingFlags, Constants.IndexerSetterName, parameterTypes).GetDelegate();
 		}
@@ -233,7 +228,7 @@ namespace Fasterflect
 		/// <param name="bindingFlags">The binding flags used to lookup the indexer.</param>
 		/// <param name="parameterTypes">The types of the indexer parameters (must be in the right order).</param>
 		/// <returns>The delegate which can get the value of an indexer.</returns>
-		public static MethodInvoker GetIndexer(Type type, Flags bindingFlags, params Type[] parameterTypes)
+		public static MethodInvoker IndexerGetter(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
 			return (MethodInvoker) new MethodInvocationEmitter(type, bindingFlags, Constants.IndexerGetterName, parameterTypes).GetDelegate();
 		}
@@ -245,7 +240,7 @@ namespace Fasterflect
 		/// </summary>
 		public static MethodInvoker Method(MethodInfo methodInfo)
 		{
-			Flags flags = methodInfo.IsStatic ? Flags.StaticAnyVisibility : Flags.InstanceAnyVisibility;
+			FasterflectFlags flags = methodInfo.IsStatic ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
 			return (MethodInvoker) new MethodInvocationEmitter(methodInfo, flags).GetDelegate();
 		}
 
@@ -256,7 +251,7 @@ namespace Fasterflect
 		/// </summary>
 		public static MethodInvoker Method(Type type, string name, params Type[] parameterTypes)
 		{
-			return Method(type, null, name, Flags.StaticInstanceAnyVisibility, parameterTypes);
+			return Method(type, null, name, FasterflectFlags.StaticInstanceAnyVisibility, parameterTypes);
 		}
 
 		/// <summary>
@@ -265,7 +260,7 @@ namespace Fasterflect
 		/// <seealso cref="Method(Type,string,Type[])"/>
 		public static MethodInvoker Method(Type type, Type[] genericTypes, string name, params Type[] parameterTypes)
 		{
-			return Method(type, genericTypes, name, Flags.StaticInstanceAnyVisibility, parameterTypes);
+			return Method(type, genericTypes, name, FasterflectFlags.StaticInstanceAnyVisibility, parameterTypes);
 		}
 
 		/// <summary>
@@ -273,7 +268,7 @@ namespace Fasterflect
 		/// <paramref name="parameterTypes"/> and matching <paramref name="bindingFlags"/> on the given <paramref name="type"/>.
 		/// Leave <paramref name="parameterTypes"/> empty if the method has no arguments.
 		/// </summary>
-		public static MethodInvoker Method(Type type, string name, Flags bindingFlags, params Type[] parameterTypes)
+		public static MethodInvoker Method(Type type, string name, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
 			return Method(type, null, name, bindingFlags, parameterTypes);
 		}
@@ -281,8 +276,8 @@ namespace Fasterflect
 		/// <summary>
 		/// Create a delegate to invoke a generic method.  See the overload with same parameters except for <paramref name="genericTypes"/>.
 		/// </summary>
-		/// <seealso cref="Method(Type,string,Flags,Type[])"/>
-		public static MethodInvoker Method(Type type, Type[] genericTypes, string name, Flags bindingFlags, params Type[] parameterTypes)
+		/// <seealso cref="Method(Type,string,FasterflectFlags,Type[])"/>
+		public static MethodInvoker Method(Type type, Type[] genericTypes, string name, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
 			CallInfo callInfo = new CallInfo(type, genericTypes, bindingFlags, MemberTypes.Method, name, parameterTypes, null, true);
 			return (MethodInvoker) new MethodInvocationEmitter(callInfo).GetDelegate();
@@ -318,9 +313,9 @@ namespace Fasterflect
 		/// to be mapped. If this parameter is <c>null</c> or empty no name filtering will be applied. The default 
 		/// behavior is to check for an exact, case-sensitive match. Pass <see href="Flags.PartialNameMatch"/> to 
 		/// filter members by substring and <see href="Flags.IgnoreCase"/> to ignore case.</param>
-		public static ObjectMapper ObjectMapper(Type sourceType, Type targetType, params string[] names)
+		public static ObjectMapper Mapper(Type sourceType, Type targetType, params string[] names)
 		{
-			return Mapper(sourceType, targetType, Flags.InstanceAnyVisibility, names);
+			return Mapper(sourceType, targetType, FasterflectFlags.InstanceAnyVisibility, names);
 		}
 
 		/// <summary>
@@ -334,7 +329,7 @@ namespace Fasterflect
 		/// to be mapped. If this parameter is <c>null</c> or empty no name filtering will be applied. The default 
 		/// behavior is to check for an exact, case-sensitive match. Pass <see href="Flags.PartialNameMatch"/> to 
 		/// filter members by substring and <see href="Flags.IgnoreCase"/> to ignore case.</param>
-		public static ObjectMapper Mapper(Type sourceType, Type targetType, Flags bindingFlags, params string[] names)
+		public static ObjectMapper Mapper(Type sourceType, Type targetType, FasterflectFlags bindingFlags, params string[] names)
 		{
 			const MemberTypes memberTypes = MemberTypes.Field | MemberTypes.Property;
 			return Mapper(sourceType, targetType, memberTypes, memberTypes, bindingFlags, names);
@@ -350,13 +345,13 @@ namespace Fasterflect
 		/// <param name="targetTypes">The member types (Fields, Properties or both) to include on the target.</param>
 		/// <param name="bindingFlags">The <see href="Flags"/> used to define the scope when locating members. If
 		/// <paramref name="sourceTypes"/> is different from <paramref name="targetTypes"/> the flag value
-		/// <see cref="Flags.IgnoreCase"/> will automatically be applied.</param>
+		/// <see cref="FasterflectFlags.IgnoreCase"/> will automatically be applied.</param>
 		/// <param name="names">The optional list of member names against which to filter the members that are
 		/// to be mapped. If this parameter is <c>null</c> or empty no name filtering will be applied. The default 
 		/// behavior is to check for an exact, case-sensitive match. Pass <see href="Flags.PartialNameMatch"/> to 
 		/// filter members by substring and <see href="Flags.IgnoreCase"/> to ignore case.</param>
 		public static ObjectMapper Mapper(Type sourceType, Type targetType, MemberTypes sourceTypes, MemberTypes targetTypes,
-							   Flags bindingFlags, params string[] names)
+							   FasterflectFlags bindingFlags, params string[] names)
 		{
 			MapEmitter emitter = new MapEmitter(sourceType, targetType, sourceTypes, targetTypes, bindingFlags, names);
 			return (ObjectMapper) emitter.GetDelegate();
@@ -374,7 +369,7 @@ namespace Fasterflect
 		/// <returns>A deep clone of the source object.</returns>
 		public static T DeepClone<T>(T source) where T : class, new()
 		{
-			return Fasterflect.Extensions.Services.CloneExtensions.DeepClone<T>(source);
+			return Fasterflect.Extensions.CloneExtensions.DeepClone<T>(source);
 		}
 		#endregion
 	}

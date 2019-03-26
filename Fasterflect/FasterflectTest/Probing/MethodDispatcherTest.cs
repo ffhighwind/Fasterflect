@@ -24,7 +24,6 @@ using System.Linq;
 using System.Xml.Linq;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Utilities;
 using Fasterflect.Probing;
 using FasterflectTest.SampleModel.Animals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -49,7 +48,7 @@ namespace FasterflectTest.Probing
 		{
 			Elephant obj = new Elephant();
 			MethodDispatcher dispatcher = new MethodDispatcher();
-			typeof(Elephant).Methods(Flags.InstanceAnyVisibility | Flags.ExcludeBackingMembers).ForEach(dispatcher.AddMethod);
+			typeof(Elephant).Methods(FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.ExcludeBackingMembers).ForEach(dispatcher.AddMethod);
 			dispatcher.Invoke(obj, true, new { });
 			Assert.AreEqual(1, obj.MethodInvoked);
 			dispatcher.Invoke(obj, true, new { count = 2.0, food = "hay", isHay = true });
@@ -93,7 +92,7 @@ namespace FasterflectTest.Probing
 		{
 			Type type = typeof(StaticElephant);
 			MethodDispatcher dispatcher = new MethodDispatcher();
-			typeof(StaticElephant).Methods(Flags.StaticAnyVisibility).ForEach(dispatcher.AddMethod);
+			typeof(StaticElephant).Methods(FasterflectFlags.StaticAnyVisibility).ForEach(dispatcher.AddMethod);
 			dispatcher.Invoke(type, true, new { });
 			Assert.AreEqual(1, StaticElephant.MethodInvoked);
 			dispatcher.Invoke(type, true, new { count = 2.0, food = "hay", isHay = true });

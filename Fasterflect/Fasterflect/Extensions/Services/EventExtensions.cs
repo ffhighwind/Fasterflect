@@ -20,14 +20,14 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Fasterflect.Extensions.Objects;
+using Fasterflect.Extensions.Internal;
 
 namespace Fasterflect.Extensions.Services
 {
 	/// <summary>
 	/// Container class for event/delegate extensions.
 	/// </summary>
-	public static class DynamicHandler
+	public static class EventExtensions
 	{
 		/// <summary>
 		/// Invokes a static delegate using supplied parameters.
@@ -39,18 +39,6 @@ namespace Fasterflect.Extensions.Services
 		public static object InvokeDelegate(this Type targetType, string delegateName, params object[] parameters)
 		{
 			return ((Delegate) targetType.GetFieldValue(delegateName)).DynamicInvoke(parameters);
-		}
-
-		/// <summary>
-		/// Invokes an instance delegate using supplied parameters.
-		/// </summary>
-		/// <param name="target">The object where the delegate belongs to.</param>
-		/// <param name="delegateName">The field name of the delegate.</param>
-		/// <param name="parameters">The parameters used to invoke the delegate.</param>
-		/// <returns>The return value of the invocation.</returns>
-		public static object InvokeDelegate(this object target, string delegateName, params object[] parameters)
-		{
-			return ((Delegate) target.GetFieldValue(delegateName)).DynamicInvoke(parameters);
 		}
 
 		/// <summary>
@@ -67,19 +55,6 @@ namespace Fasterflect.Extensions.Services
 		}
 
 		/// <summary>
-		/// Adds a dynamic handler for an instance delegate.
-		/// </summary>
-		/// <param name="target">The object where the delegate belongs to.</param>
-		/// <param name="fieldName">The field name of the delegate.</param>
-		/// <param name="func">The function which will be invoked whenever the delegate is invoked.</param>
-		/// <returns>The return value of the invocation.</returns>
-		public static Type AddHandler(this object target, string fieldName,
-			Func<object[], object> func)
-		{
-			return InternalAddHandler(target.GetType(), fieldName, func, target, false);
-		}
-
-		/// <summary>
 		/// Assigns a dynamic handler for a static delegate or event.
 		/// </summary>
 		/// <param name="targetType">The type where the delegate or event belongs to.</param>
@@ -90,52 +65,6 @@ namespace Fasterflect.Extensions.Services
 			Func<object[], object> func)
 		{
 			return InternalAddHandler(targetType, fieldName, func, null, true);
-		}
-
-		/// <summary>
-		/// Assigns a dynamic handler for a static delegate or event.
-		/// </summary>
-		/// <param name="target">The object where the delegate or event belongs to.</param>
-		/// <param name="fieldName">The field name of the delegate or event.</param>
-		/// <param name="func">The function which will be invoked whenever the delegate or event is fired.</param>
-		/// <returns>The return value of the invocation.</returns>
-		public static Type AssignHandler(this object target, string fieldName,
-			Func<object[], object> func)
-		{
-			return InternalAddHandler(target.GetType(), fieldName, func, target, true);
-		}
-
-		private static Type InternalAddHandler(Type targetType, string fieldName,
-			Func<object[], object> func, object target, bool assignHandler)
-		{
-			Type delegateType;
-			BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic |
-							   (target == null ? BindingFlags.Static : BindingFlags.Instance);
-			EventInfo eventInfo = targetType.GetEvent(fieldName, bindingFlags);
-			if (eventInfo != null && assignHandler)
-				throw new ArgumentException("Event can be assigned.  Use AddHandler() overloads instead.");
-
-			if (eventInfo != null) {
-				delegateType = eventInfo.EventHandlerType;
-				Delegate dynamicHandler = BuildDynamicHandler(delegateType, func);
-				eventInfo.GetAddMethod(true).Invoke(target, new object[] { dynamicHandler });
-			}
-			else {
-				FieldInfo fieldInfo = targetType.Field(fieldName,
-													target == null
-														? Flags.StaticAnyVisibility
-														: Flags.InstanceAnyVisibility);
-				delegateType = fieldInfo.FieldType;
-				Delegate dynamicHandler = BuildDynamicHandler(delegateType, func);
-				Delegate field = assignHandler ? null : target == null
-								? (Delegate) fieldInfo.Get()
-								: (Delegate) fieldInfo.Get(target);
-				field = field == null
-							? dynamicHandler
-							: Delegate.Combine(field, dynamicHandler);
-				(target ?? targetType).SetFieldValue(fieldName, field);
-			}
-			return delegateType;
 		}
 
 		/// <summary>
@@ -161,5 +90,40 @@ namespace Fasterflect.Extensions.Services
 			LambdaExpression expr = Expression.Lambda(delegateType, body, parameters);
 			return expr.Compile();
 		}
+
+		#region Helper Methods
+		internal static Type InternalAddHandler(Type targetType, string fieldName,
+			Func<object[], object> func, object target, bool assignHandler)
+		{
+			Type delegateType;
+			BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic |
+							   (target == null ? BindingFlags.Static : BindingFlags.Instance);
+			EventInfo eventInfo = targetType.GetEvent(fieldName, bindingFlags);
+			if (eventInfo != null && assignHandler)
+				throw new ArgumentException("Event can be assigned.  Use AddHandler() overloads instead.");
+
+			if (eventInfo != null) {
+				delegateType = eventInfo.EventHandlerType;
+				Delegate dynamicHandler = BuildDynamicHandler(delegateType, func);
+				eventInfo.GetAddMethod(true).Invoke(target, new object[] { dynamicHandler });
+			}
+			else {
+				FieldInfo fieldInfo = targetType.Field(fieldName,
+													target == null
+														? FasterflectFlags.StaticAnyVisibility
+														: FasterflectFlags.InstanceAnyVisibility);
+				delegateType = fieldInfo.FieldType;
+				Delegate dynamicHandler = BuildDynamicHandler(delegateType, func);
+				Delegate field = assignHandler ? null : target == null
+								? (Delegate) fieldInfo.Get()
+								: (Delegate) fieldInfo.Get(target);
+				field = field == null
+							? dynamicHandler
+							: Delegate.Combine(field, dynamicHandler);
+				(target ?? targetType).SetFieldValue(fieldName, field);
+			}
+			return delegateType;
+		}
+		#endregion
 	}
 }

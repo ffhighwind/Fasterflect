@@ -33,10 +33,10 @@ namespace Fasterflect.Emitter
 		private readonly string[] names;
 
 		public MapEmitter(Type sourceType, Type targetType, MemberTypes sourceMemberTypes, MemberTypes targetMemberTypes,
-						   Flags bindingFlags, params string[] names)
+						   FasterflectFlags bindingFlags, params string[] names)
 			: base(new MapCallInfo(targetType, null,
 				// Auto-apply IgnoreCase if we're mapping from one membertype to another
-				Flags.SetIf(bindingFlags, Flags.IgnoreCase, (sourceMemberTypes & targetMemberTypes) != sourceMemberTypes),
+				FasterflectFlags.SetIf(bindingFlags, FasterflectFlags.IgnoreCase, (sourceMemberTypes & targetMemberTypes) != sourceMemberTypes),
 				MemberTypes.Custom,
 				"Fasterflect_Map",
 				Type.EmptyTypes,
@@ -113,7 +113,7 @@ namespace Fasterflect.Emitter
 
 		private IEnumerable<KeyValuePair<MemberInfo, MemberInfo>> GetMatchingMembers()
 		{
-			StringComparison comparison = CallInfo.BindingFlags.IsSet(Flags.IgnoreCase)
+			StringComparison comparison = CallInfo.BindingFlags.IsSet(FasterflectFlags.IgnoreCase)
 											? StringComparison.OrdinalIgnoreCase
 											: StringComparison.Ordinal;
 			var query = from s in sourceType.Members(sourceMemberTypes, CallInfo.BindingFlags, names)

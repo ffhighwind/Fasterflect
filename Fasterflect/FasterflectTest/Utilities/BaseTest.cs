@@ -24,8 +24,7 @@ using System.Linq;
 using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Objects;
-using Fasterflect.Extensions.Utilities;
+using Fasterflect.Extensions.Internal;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FasterflectTest.Common

@@ -24,10 +24,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Fasterflect;
-using Fasterflect.Caching;
 using Fasterflect.Emitter;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Objects;
+using Fasterflect.Extensions.Internal;
 using Fasterflect.Extensions.Services;
 using Fasterflect.Probing;
 
@@ -155,9 +154,9 @@ namespace FasterflectBenchmark
 
 		private static void RunHashCodeBenchmark()
 		{
-			CallInfo callInfo = new CallInfo(TargetType, null, Flags.InstanceAnyVisibility, MemberTypes.Field, "name",
+			CallInfo callInfo = new CallInfo(TargetType, null, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "name",
 										 new[] { typeof(int), typeof(string) }, null, true);
-			CallInfo callInfoOther = new CallInfo(typeof(CallInfo), null, Flags.InstanceAnyVisibility, MemberTypes.Field, "other",
+			CallInfo callInfoOther = new CallInfo(typeof(CallInfo), null, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "other",
 											  new[] { typeof(string) }, null, true);
 			SourceInfo sourceInfo = SourceInfo.CreateFromType(new { ID = 42, Name = "Test" }.GetType());
 			SourceInfo sourceInfoOther = SourceInfo.CreateFromType(new { id = 42, Name = "Test" }.GetType());
@@ -171,7 +170,7 @@ namespace FasterflectBenchmark
 								{ "SourceInfo Equals Other", () => sourceInfo.Equals(sourceInfoOther) },
 								{ "string GetHashCode", () => "foo".GetHashCode() },
 								{ "string Equals", () => "foo".Equals("bar") },
-								{ "new CallInfo", () => new CallInfo(TargetType, null,  Flags.InstanceAnyVisibility, MemberTypes.Field, "name",
+								{ "new CallInfo", () => new CallInfo(TargetType, null,  FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "name",
 																	  new[] { typeof(int), typeof(string) }, null, true) },
 								{ "new SourceInfo", () => new SourceInfo(TargetType, new[] { "ID", "Name" }, new[] { typeof(int), typeof(string) }) },
 								{ "new SourceInfo anon", () => SourceInfo.CreateFromType(new { ID = 42, Name = "Test" }.GetType()) },
@@ -187,7 +186,7 @@ namespace FasterflectBenchmark
 			BindingFlags declaredOnlyFlags = defaultFlags | BindingFlags.DeclaredOnly;
 			Dictionary<string, Action> initMap = new Dictionary<string, Action>
 						  {
-							  { "Init Flags", () => { Flags f = Flags.None; } },
+							  { "Init Flags", () => { FasterflectFlags f = FasterflectFlags.None; } },
 						  };
 			Dictionary<string, Action> actionMap = new Dictionary<string, Action>
 							{

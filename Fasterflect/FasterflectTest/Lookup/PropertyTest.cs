@@ -24,7 +24,6 @@ using System.Linq;
 using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Utilities;
 using FasterflectTest.SampleModel.Animals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -47,7 +46,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestPropertyInstanceIgnoreCase()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.IgnoreCase;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.IgnoreCase;
 
 			AnimalInstancePropertyNames.Select(s => s.ToLower()).Select(s => typeof(Animal).Property(s)).ForEach(Assert.IsNull);
 			AnimalInstancePropertyNames.Select(s => s.ToLower()).Select(s => typeof(Animal).Property(s, flags)).ForEach(Assert.IsNotNull);
@@ -59,7 +58,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestPropertyInstanceDeclaredOnly()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.DeclaredOnly;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly;
 
 			AnimalInstancePropertyNames.Select(s => typeof(Animal).Property(s, flags)).ForEach(Assert.IsNotNull);
 			LionDeclaredInstancePropertyNames.Select(s => typeof(Lion).Property(s, flags)).ForEach(Assert.IsNotNull);
@@ -68,7 +67,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestPropertyByPartialName()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.PartialNameMatch;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.PartialNameMatch;
 
 			string expectedName = AnimalInstancePropertyNames.Where(s => s.Contains("C")).First();
 			PropertyInfo property = typeof(Animal).Property("C", flags);
@@ -84,7 +83,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestPropertyWithExcludeExplicitlyImplemented()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.ExcludeExplicitlyImplemented;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.ExcludeExplicitlyImplemented;
 
 			// using explicit name
 			PropertyInfo property = typeof(Giraffe).Property("FasterflectTest.SampleModel.Animals.Interfaces.ISwim.SwimDistance");
@@ -93,16 +92,16 @@ namespace FasterflectTest.Lookup
 			Assert.IsNull(property);
 
 			// using short name
-			property = typeof(Giraffe).Property("SwimDistance", Flags.InstanceAnyVisibility | Flags.TrimExplicitlyImplemented);
+			property = typeof(Giraffe).Property("SwimDistance", FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.TrimExplicitlyImplemented);
 			Assert.IsNotNull(property);
-			property = typeof(Giraffe).Property("SwimDistance", flags | Flags.TrimExplicitlyImplemented);
+			property = typeof(Giraffe).Property("SwimDistance", flags | FasterflectFlags.TrimExplicitlyImplemented);
 			Assert.IsNull(property);
 		}
 
 		[TestMethod]
 		public void TestPropertyStatic()
 		{
-			Flags flags = Flags.StaticAnyVisibility;
+			FasterflectFlags flags = FasterflectFlags.StaticAnyVisibility;
 
 			AnimalInstancePropertyNames.Select(s => typeof(Animal).Property(s, flags)).ForEach(Assert.IsNull);
 
@@ -113,7 +112,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestPropertyStaticDeclaredOnly()
 		{
-			Flags flags = Flags.StaticAnyVisibility | Flags.DeclaredOnly;
+			FasterflectFlags flags = FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly;
 
 			AnimalStaticPropertyNames.Select(s => typeof(Animal).Property(s, flags)).ForEach(Assert.IsNotNull);
 			AnimalStaticPropertyNames.Select(s => typeof(Lion).Property(s, flags)).ForEach(Assert.IsNull);
@@ -143,18 +142,18 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestPropertiesInstanceWithDeclaredOnlyFlag()
 		{
-			IList<PropertyInfo> properties = typeof(object).Properties(Flags.InstanceAnyVisibility | Flags.DeclaredOnly);
+			IList<PropertyInfo> properties = typeof(object).Properties(FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.IsNotNull(properties);
 			Assert.AreEqual(0, properties.Count);
 
-			properties = typeof(Animal).Properties(Flags.InstanceAnyVisibility | Flags.DeclaredOnly);
+			properties = typeof(Animal).Properties(FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly);
 			CollectionAssert.AreEquivalent(AnimalInstancePropertyNames, properties.Select(p => p.Name).ToArray());
 			CollectionAssert.AreEquivalent(AnimalInstancePropertyTypes, properties.Select(p => p.PropertyType).ToArray());
 
-			properties = typeof(Mammal).Properties(Flags.InstanceAnyVisibility | Flags.DeclaredOnly);
+			properties = typeof(Mammal).Properties(FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.AreEqual(0, properties.Count);
 
-			properties = typeof(Lion).Properties(Flags.InstanceAnyVisibility | Flags.DeclaredOnly);
+			properties = typeof(Lion).Properties(FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.DeclaredOnly);
 			CollectionAssert.AreEquivalent(LionDeclaredInstancePropertyNames, properties.Select(p => p.Name).ToArray());
 			CollectionAssert.AreEquivalent(LionDeclaredInstancePropertyTypes, properties.Select(p => p.PropertyType).ToArray());
 		}
@@ -162,18 +161,18 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestPropertiesStatic()
 		{
-			IList<PropertyInfo> properties = typeof(object).Properties(Flags.StaticAnyVisibility);
+			IList<PropertyInfo> properties = typeof(object).Properties(FasterflectFlags.StaticAnyVisibility);
 			Assert.IsNotNull(properties);
 			Assert.AreEqual(0, properties.Count);
 
-			properties = typeof(Animal).Properties(Flags.StaticAnyVisibility);
+			properties = typeof(Animal).Properties(FasterflectFlags.StaticAnyVisibility);
 			CollectionAssert.AreEquivalent(AnimalStaticPropertyNames, properties.Select(p => p.Name).ToArray());
 			CollectionAssert.AreEquivalent(AnimalStaticPropertyTypes, properties.Select(p => p.PropertyType).ToArray());
 
-			properties = typeof(Mammal).Properties(Flags.StaticAnyVisibility);
+			properties = typeof(Mammal).Properties(FasterflectFlags.StaticAnyVisibility);
 			Assert.AreEqual(AnimalStaticPropertyNames.Length, properties.Count);
 
-			properties = typeof(Lion).Properties(Flags.StaticAnyVisibility);
+			properties = typeof(Lion).Properties(FasterflectFlags.StaticAnyVisibility);
 			CollectionAssert.AreEquivalent(AnimalStaticPropertyNames, properties.Select(p => p.Name).ToArray());
 			CollectionAssert.AreEquivalent(AnimalStaticPropertyTypes, properties.Select(p => p.PropertyType).ToArray());
 		}
@@ -181,18 +180,18 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestPropertiesStaticWithDeclaredOnlyFlag()
 		{
-			IList<PropertyInfo> properties = typeof(object).Properties(Flags.StaticAnyVisibility | Flags.DeclaredOnly);
+			IList<PropertyInfo> properties = typeof(object).Properties(FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.IsNotNull(properties);
 			Assert.AreEqual(0, properties.Count);
 
-			properties = typeof(Animal).Properties(Flags.StaticAnyVisibility | Flags.DeclaredOnly);
+			properties = typeof(Animal).Properties(FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
 			CollectionAssert.AreEquivalent(AnimalStaticPropertyNames, properties.Select(p => p.Name).ToArray());
 			CollectionAssert.AreEquivalent(AnimalStaticPropertyTypes, properties.Select(p => p.PropertyType).ToArray());
 
-			properties = typeof(Mammal).Properties(Flags.StaticAnyVisibility | Flags.DeclaredOnly);
+			properties = typeof(Mammal).Properties(FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.AreEqual(0, properties.Count);
 
-			properties = typeof(Lion).Properties(Flags.StaticAnyVisibility | Flags.DeclaredOnly);
+			properties = typeof(Lion).Properties(FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
 			Assert.AreEqual(0, properties.Count);
 		}
 
@@ -221,7 +220,7 @@ namespace FasterflectTest.Lookup
 		[TestMethod]
 		public void TestPropertiesWithExcludeBackingMembers()
 		{
-			Flags flags = Flags.InstanceAnyVisibility | Flags.ExcludeBackingMembers;
+			FasterflectFlags flags = FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.ExcludeBackingMembers;
 
 			IList<PropertyInfo> properties = typeof(Snake).Properties("SlideDistance");
 			Assert.AreEqual(2, properties.Count);

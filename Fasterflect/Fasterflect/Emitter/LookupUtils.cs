@@ -21,8 +21,6 @@
 using System;
 using System.Reflection;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Utilities;
-
 namespace Fasterflect.Emitter
 {
 	internal class LookupUtils

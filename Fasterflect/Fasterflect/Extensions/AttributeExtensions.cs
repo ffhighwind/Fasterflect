@@ -78,7 +78,7 @@ namespace Fasterflect.Extensions
 		public static Attribute Attribute(this Enum provider, Type attributeType)
 		{
 			Type type = provider.GetType();
-			MemberInfo info = type.Member(provider.ToString(), Flags.StaticAnyVisibility | Flags.DeclaredOnly);
+			MemberInfo info = type.Member(provider.ToString(), FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
 			return info.Attribute(attributeType);
 		}
 		#endregion
@@ -131,7 +131,7 @@ namespace Fasterflect.Extensions
 		public static IList<Attribute> Attributes(this Enum provider, params Type[] attributeTypes)
 		{
 			Type type = provider.GetType();
-			MemberInfo info = type.Member(provider.ToString(), Flags.StaticAnyVisibility | Flags.DeclaredOnly);
+			MemberInfo info = type.Member(provider.ToString(), FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
 			return info.Attributes(attributeTypes);
 		}
 		#endregion
@@ -198,7 +198,7 @@ namespace Fasterflect.Extensions
 		public static IList<MemberInfo> MembersWith(this Type type, MemberTypes memberTypes,
 													 params Type[] attributeTypes)
 		{
-			return type.MembersWith(memberTypes, Flags.InstanceAnyVisibility, attributeTypes);
+			return type.MembersWith(memberTypes, FasterflectFlags.InstanceAnyVisibility, attributeTypes);
 		}
 
 		/// <summary>
@@ -208,10 +208,10 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
 		/// <param name="memberTypes">The <see href="MemberTypes"/> to include in the search.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="Flags"/> combination 
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
-		public static IList<MemberInfo> MembersWith<T>(this Type type, MemberTypes memberTypes, Flags bindingFlags)
+		public static IList<MemberInfo> MembersWith<T>(this Type type, MemberTypes memberTypes, FasterflectFlags bindingFlags)
 		{
 			return type.MembersWith(memberTypes, bindingFlags, typeof(T));
 		}
@@ -225,13 +225,13 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
 		/// <param name="memberTypes">The <see href="MemberTypes"/> to include in the search.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="Flags"/> combination 
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
 		/// be decorated. If this parameter is <c>null</c> or empty then all fields and properties
 		/// matching the given <paramref name="bindingFlags"/> will be included in the result.</param>
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
-		public static IList<MemberInfo> MembersWith(this Type type, MemberTypes memberTypes, Flags bindingFlags,
+		public static IList<MemberInfo> MembersWith(this Type type, MemberTypes memberTypes, FasterflectFlags bindingFlags,
 													 params Type[] attributeTypes)
 		{
 			bool hasTypes = attributeTypes != null && attributeTypes.Length > 0;
@@ -267,13 +267,13 @@ namespace Fasterflect.Extensions
 		/// these will be included.
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="Flags"/> combination 
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
 		/// be decorated. If this parameter is <c>null</c> or empty then all fields and properties
 		/// matching the given <paramref name="bindingFlags"/> will be included in the result.</param>
 		/// <returns>A list of all matching fields and properties on the type. This value will never be null.</returns>
-		public static IList<MemberInfo> FieldsAndPropertiesWith(this Type type, Flags bindingFlags, params Type[] attributeTypes)
+		public static IList<MemberInfo> FieldsAndPropertiesWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
 		{
 			return type.MembersWith(MemberTypes.Field | MemberTypes.Property, bindingFlags, attributeTypes);
 		}
@@ -285,13 +285,13 @@ namespace Fasterflect.Extensions
 		/// these will be included.
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="Flags"/> combination 
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
 		/// be decorated. If this parameter is <c>null</c> or empty then all fields matching the given 
 		/// <paramref name="bindingFlags"/> will be included in the result.</param>
 		/// <returns>A list of all matching fields on the type. This value will never be null.</returns>
-		public static IList<FieldInfo> FieldsWith(this Type type, Flags bindingFlags, params Type[] attributeTypes)
+		public static IList<FieldInfo> FieldsWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
 		{
 			return type.MembersWith(MemberTypes.Field, bindingFlags, attributeTypes).Cast<FieldInfo>().ToList();
 		}
@@ -303,13 +303,13 @@ namespace Fasterflect.Extensions
 		/// these will be included.
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="Flags"/> combination 
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
 		/// be decorated. If this parameter is <c>null</c> or empty then all properties matching the given 
 		/// <paramref name="bindingFlags"/> will be included in the result.</param>
 		/// <returns>A list of all matching properties on the type. This value will never be null.</returns>
-		public static IList<PropertyInfo> PropertiesWith(this Type type, Flags bindingFlags, params Type[] attributeTypes)
+		public static IList<PropertyInfo> PropertiesWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
 		{
 			return type.MembersWith(MemberTypes.Property, bindingFlags, attributeTypes).Cast<PropertyInfo>().ToList();
 		}
@@ -323,13 +323,13 @@ namespace Fasterflect.Extensions
 		/// these will be included.
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="Flags"/> combination 
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
 		/// be decorated. If this parameter is <c>null</c> or empty then all methods matching the given 
 		/// <paramref name="bindingFlags"/> will be included in the result.</param>
 		/// <returns>A list of all matching methods on the type. This value will never be null.</returns>
-		public static IList<MethodInfo> MethodsWith(this Type type, Flags bindingFlags, params Type[] attributeTypes)
+		public static IList<MethodInfo> MethodsWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
 		{
 			return type.MembersWith(MemberTypes.Method, bindingFlags, attributeTypes).Cast<MethodInfo>().ToList();
 		}
@@ -341,13 +341,13 @@ namespace Fasterflect.Extensions
 		/// these will be included.
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="Flags"/> combination 
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
 		/// be decorated. If this parameter is <c>null</c> or empty then all constructors matching the given 
 		/// <paramref name="bindingFlags"/> will be included in the result.</param>
 		/// <returns>A list of all matching constructors on the type. This value will never be null.</returns>
-		public static IList<ConstructorInfo> ConstructorsWith(this Type type, Flags bindingFlags, params Type[] attributeTypes)
+		public static IList<ConstructorInfo> ConstructorsWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
 		{
 			return type.MembersWith(MemberTypes.Constructor, bindingFlags, attributeTypes).Cast<ConstructorInfo>().ToList();
 		}
@@ -369,7 +369,7 @@ namespace Fasterflect.Extensions
 																					 MemberTypes memberTypes,
 																					 params Type[] attributeTypes)
 		{
-			return type.MembersAndAttributes(memberTypes, Flags.InstanceAnyVisibility, null);
+			return type.MembersAndAttributes(memberTypes, FasterflectFlags.InstanceAnyVisibility, null);
 		}
 
 		/// <summary>
@@ -385,7 +385,7 @@ namespace Fasterflect.Extensions
 		/// never be null.</returns>
 		public static IDictionary<MemberInfo, List<Attribute>> MembersAndAttributes(this Type type,
 																					 MemberTypes memberTypes,
-																					 Flags bindingFlags,
+																					 FasterflectFlags bindingFlags,
 																					 params Type[] attributeTypes)
 		{
 			var members = from m in type.Members(memberTypes, bindingFlags)

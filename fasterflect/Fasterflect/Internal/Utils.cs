@@ -24,7 +24,7 @@ using System.Diagnostics;
 using System.Reflection;
 using Fasterflect.Emitter;
 
-namespace Fasterflect.Extensions.Utilities
+namespace Fasterflect
 {
 	[DebuggerStepThrough]
 	internal static class Utils

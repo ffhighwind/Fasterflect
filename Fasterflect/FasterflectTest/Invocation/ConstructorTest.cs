@@ -27,8 +27,7 @@ using FasterflectTest.SampleModel.Animals.Interfaces;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using Fasterflect.Extensions.Utilities;
-using Fasterflect.Extensions.Objects;
+using Fasterflect.Extensions.Internal;
 
 namespace FasterflectTest.Invocation
 {
@@ -45,14 +44,14 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestInvokeCtorWithCorrectBindingFlags()
 		{
-			RunWith(type => type.CreateInstance(Flags.Instance | Flags.NonPublic));
+			RunWith(type => type.CreateInstance(FasterflectFlags.Instance | FasterflectFlags.NonPublic));
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(MissingMemberException))]
 		public void TestInvokeCtorWithIncorrectBindingFlags()
 		{
-			RunWith(type => type.CreateInstance(Flags.Public | Flags.Instance));
+			RunWith(type => type.CreateInstance(FasterflectFlags.Public | FasterflectFlags.Instance));
 		}
 
 		[TestMethod]

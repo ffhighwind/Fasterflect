@@ -22,8 +22,7 @@ using System;
 using System.Linq;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Objects;
-using Fasterflect.Extensions.Utilities;
+using Fasterflect.Extensions.Internal;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FasterflectTest.Invocation
@@ -45,21 +44,21 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestInvokePrivateInstanceMethodUnderNonPublicBindingFlags()
 		{
-			RunWith((object person) => person.CallMethod("Walk", Flags.NonPublic | Flags.Instance, 10d));
+			RunWith((object person) => person.CallMethod("Walk", FasterflectFlags.NonPublic | FasterflectFlags.Instance, 10d));
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(MissingMethodException))]
 		public void TestInvokePublicStaticMethodUnderStaticBindingFlags()
 		{
-			RunWith((object person) => person.CallMethod("Walk", Flags.StaticAnyVisibility, 10d));
+			RunWith((object person) => person.CallMethod("Walk", FasterflectFlags.StaticAnyVisibility, 10d));
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(MissingMethodException))]
 		public void TestInvokePrivateInstanceMethodUnderPublicBindingFlags()
 		{
-			RunWith((object person) => person.CallMethod("Walk", Flags.Public | Flags.Instance, 10d));
+			RunWith((object person) => person.CallMethod("Walk", FasterflectFlags.Public | FasterflectFlags.Instance, 10d));
 		}
 
 		[TestMethod]
@@ -68,7 +67,7 @@ namespace FasterflectTest.Invocation
 			RunWith((object person) =>
 			  {
 				  double[] elements = new[] { 1d, 2d, 3d, 4d, 5d };
-				  System.Reflection.MethodInfo methodInfo = person.UnwrapIfWrapped().GetType().Method("Walk", new[] { typeof(int) }, Flags.InstanceAnyVisibility);
+				  System.Reflection.MethodInfo methodInfo = person.UnwrapIfWrapped().GetType().Method("Walk", new[] { typeof(int) }, FasterflectFlags.InstanceAnyVisibility);
 				  elements.ForEach(element => methodInfo.Call(person, element));
 				  Assert.AreEqual(elements.Sum(), person.GetFieldValue("metersTravelled"));
 			  });
@@ -99,7 +98,7 @@ namespace FasterflectTest.Invocation
 		{
 			object employee = EmployeeType.CreateInstance();
 			double currentMeters = (double) employee.GetFieldValue("metersTravelled");
-			employee.CallMethod("Swim", Flags.InstanceAnyVisibility | Flags.TrimExplicitlyImplemented, 100d);
+			employee.CallMethod("Swim", FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.TrimExplicitlyImplemented, 100d);
 			VerifyFields(employee, new { metersTravelled = currentMeters + 100 });
 		}
 
@@ -126,20 +125,20 @@ namespace FasterflectTest.Invocation
 		[ExpectedException(typeof(MissingMethodException))]
 		public void TestInvokePublicStaticMethodUnderNonPublicBindingFlags()
 		{
-			RunWith((Type type) => type.CallMethod("GetTotalPeopleCreated", Flags.NonPublic | Flags.Static));
+			RunWith((Type type) => type.CallMethod("GetTotalPeopleCreated", FasterflectFlags.NonPublic | FasterflectFlags.Static));
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(MissingMethodException))]
 		public void TestInvokePublicStaticMethodUnderInstanceBindingFlags()
 		{
-			RunWith((Type type) => type.CallMethod("GetTotalPeopleCreated", Flags.InstanceAnyVisibility));
+			RunWith((Type type) => type.CallMethod("GetTotalPeopleCreated", FasterflectFlags.InstanceAnyVisibility));
 		}
 
 		[TestMethod]
 		public void TestInvokePublicStaticMethodUnderPublicBindingFlags()
 		{
-			RunWith((Type type) => type.CallMethod("GetTotalPeopleCreated", Flags.Public | Flags.Static));
+			RunWith((Type type) => type.CallMethod("GetTotalPeopleCreated", FasterflectFlags.Public | FasterflectFlags.Static));
 		}
 
 		[TestMethod]
@@ -149,7 +148,7 @@ namespace FasterflectTest.Invocation
 			  {
 				  int totalPeopleCreated = (int) type.GetFieldValue("totalPeopleCreated");
 				  Assert.AreEqual(totalPeopleCreated,
-								   type.Method("GetTotalPeopleCreated", Flags.StaticAnyVisibility).Call());
+								   type.Method("GetTotalPeopleCreated", FasterflectFlags.StaticAnyVisibility).Call());
 			  });
 		}
 

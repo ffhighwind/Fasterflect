@@ -22,9 +22,8 @@ using System.Linq;
 using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Objects;
+using Fasterflect.Extensions.Internal;
 using Fasterflect.Extensions.Services;
-
 namespace FasterflectSample
 {
 	internal class Program
