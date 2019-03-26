@@ -27,8 +27,6 @@ using FasterflectTest.SampleModel.Animals.Interfaces;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using Fasterflect.Extensions.Internal;
-
 namespace FasterflectTest.Invocation
 {
 	[TestClass]

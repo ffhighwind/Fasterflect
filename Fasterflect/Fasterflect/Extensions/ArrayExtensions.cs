@@ -26,7 +26,7 @@ namespace Fasterflect.Extensions
 	/// </summary>
 	public static partial class ArrayExtensions
 	{
-		#region Array Access
+		#region Array Access (Public)
 		/// <summary>
 		/// Creates a delegate which can set element of <paramref name="arrayType"/>.
 		/// </summary>
@@ -41,6 +41,32 @@ namespace Fasterflect.Extensions
 		public static ArrayElementGetter DelegateForGetElement(this Type arrayType)
 		{
 			return Reflect.ArrayGetter(arrayType);
+		}
+		#endregion
+	}
+
+	/// <summary>
+	/// Extension methods for working with arrays.
+	/// </summary>
+	public static partial class ArrayExtensions
+	{
+		#region Array Access
+		/// <summary>
+		/// Sets <paramref name="value"/> to the element at position <paramref name="index"/> of <paramref name="array"/>.
+		/// </summary>
+		/// <returns><paramref name="array"/>.</returns>
+		internal static object SetElement(this object array, long index, object value)
+		{
+			((Array) array).SetValue(value, index);
+			return array;
+		}
+
+		/// <summary>
+		/// Gets the element at position <paramref name="index"/> of <paramref name="array"/>.
+		/// </summary>
+		internal static object GetElement(this object array, long index)
+		{
+			return ((Array) array).GetValue(index);
 		}
 		#endregion
 	}

@@ -21,7 +21,6 @@
 using System;
 using System.Reflection;
 using Fasterflect;
-using Fasterflect.Extensions.Internal;
 using Fasterflect.Extensions.Services;
 using FasterflectTest.SampleModel.Animals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

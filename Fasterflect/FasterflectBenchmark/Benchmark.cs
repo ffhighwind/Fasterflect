@@ -26,7 +26,6 @@ using System.Threading;
 using Fasterflect;
 using Fasterflect.Emitter;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Internal;
 using Fasterflect.Extensions.Services;
 using Fasterflect.Probing;
 

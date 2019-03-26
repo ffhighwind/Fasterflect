@@ -23,7 +23,6 @@ using System.Collections;
 using Fasterflect;
 using Fasterflect.Emitter;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Internal;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

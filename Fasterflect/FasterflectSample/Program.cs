@@ -22,7 +22,6 @@ using System.Linq;
 using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Internal;
 using Fasterflect.Extensions.Services;
 namespace FasterflectSample
 {

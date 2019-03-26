@@ -3,7 +3,6 @@ using Fasterflect;
 using Fasterflect.Extensions;
 using Fasterflect.Extensions.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Fasterflect.Extensions.Internal;
 
 namespace FasterflectTest.Services
 {

@@ -20,14 +20,13 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Fasterflect.Extensions.Internal;
 
 namespace Fasterflect.Extensions.Services
 {
 	/// <summary>
 	/// Container class for event/delegate extensions.
 	/// </summary>
-	public static class EventExtensions
+	public static partial class EventExtensions
 	{
 		/// <summary>
 		/// Invokes a static delegate using supplied parameters.
@@ -125,5 +124,50 @@ namespace Fasterflect.Extensions.Services
 			return delegateType;
 		}
 		#endregion
+	}
+
+	/// <summary>
+	/// Container class for event/delegate extensions.
+	/// </summary>
+	public static partial class EventExtensions
+	{
+		/// <summary>
+		/// Assigns a dynamic handler for a static delegate or event.
+		/// </summary>
+		/// <param name="target">The object where the delegate or event belongs to.</param>
+		/// <param name="fieldName">The field name of the delegate or event.</param>
+		/// <param name="func">The function which will be invoked whenever the delegate or event is fired.</param>
+		/// <returns>The return value of the invocation.</returns>
+		internal static Type AssignHandler(this object target, string fieldName,
+			Func<object[], object> func)
+		{
+			return Fasterflect.Extensions.Services.EventExtensions.InternalAddHandler(target.GetType(), fieldName, func, target, true);
+		}
+
+
+		/// <summary>
+		/// Adds a dynamic handler for an instance delegate.
+		/// </summary>
+		/// <param name="target">The object where the delegate belongs to.</param>
+		/// <param name="fieldName">The field name of the delegate.</param>
+		/// <param name="func">The function which will be invoked whenever the delegate is invoked.</param>
+		/// <returns>The return value of the invocation.</returns>
+		internal static Type AddHandler(this object target, string fieldName,
+			Func<object[], object> func)
+		{
+			return Fasterflect.Extensions.Services.EventExtensions.InternalAddHandler(target.GetType(), fieldName, func, target, false);
+		}
+
+		/// <summary>
+		/// Invokes an instance delegate using supplied parameters.
+		/// </summary>
+		/// <param name="target">The object where the delegate belongs to.</param>
+		/// <param name="delegateName">The field name of the delegate.</param>
+		/// <param name="parameters">The parameters used to invoke the delegate.</param>
+		/// <returns>The return value of the invocation.</returns>
+		internal static object InvokeDelegate(this object target, string delegateName, params object[] parameters)
+		{
+			return ((Delegate) target.GetFieldValue(delegateName)).DynamicInvoke(parameters);
+		}
 	}
 }

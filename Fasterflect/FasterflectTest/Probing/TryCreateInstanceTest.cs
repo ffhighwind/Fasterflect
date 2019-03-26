@@ -24,7 +24,6 @@ using System.Linq;
 using System.Xml.Linq;
 using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Internal;
 using Fasterflect.Extensions.Services;
 using Fasterflect.Probing;
 using FasterflectTest.SampleModel.Animals;
