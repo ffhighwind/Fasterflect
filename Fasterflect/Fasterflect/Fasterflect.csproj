@@ -81,7 +81,6 @@
     <Compile Include="Extensions\MapExtensions.cs" />
     <Compile Include="Extensions\Services\TryInvokeWithValuesExtensions.cs" />
     <Compile Include="Extensions\Services\XmlTransformerExtensions.cs" />
-    <Compile Include="GenericDataReader.cs" />
     <Compile Include="MapFactory.cs" />
     <Compile Include="MemberFilter.cs" />
     <Compile Include="MethodMap.cs" />
