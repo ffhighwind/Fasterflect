@@ -140,7 +140,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A single PropertyInfo instance of the first found match or null if no match was found.</returns>
 		public static PropertyInfo Property(this Type type, string name)
 		{
-			return Reflect.Lookup.Property(type, name);
+			return ReflectLookup.Property(type, name);
 		}
 
 		/// <summary>
@@ -150,7 +150,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A single PropertyInfo instance of the first found match or null if no match was found.</returns>
 		public static PropertyInfo Property(this Type type, string name, FasterflectFlags bindingFlags)
 		{
-			return Reflect.Lookup.Property(type, name, bindingFlags);
+			return ReflectLookup.Property(type, name, bindingFlags);
 		}
 		#endregion
 
@@ -168,7 +168,7 @@ namespace Fasterflect.Extensions
 		/// This value will never be null.</returns>
 		public static IList<PropertyInfo> Properties(this Type type, params string[] names)
 		{
-			return Reflect.Lookup.Properties(type, names);
+			return ReflectLookup.Properties(type, names);
 		}
 
 		/// <summary>
@@ -178,12 +178,12 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all matching properties on the type. This value will never be null.</returns>
 		public static IList<PropertyInfo> Properties(this Type type, FasterflectFlags bindingFlags, params string[] names)
 		{
-			return Reflect.Lookup.Properties(type, bindingFlags, names);
+			return ReflectLookup.Properties(type, bindingFlags, names);
 		}
 
 		private static IList<PropertyInfo> GetProperties(Type type, FasterflectFlags bindingFlags)
 		{
-			return Reflect.Lookup.Properties(type, bindingFlags);
+			return ReflectLookup.Properties(type, bindingFlags);
 		}
 		#endregion
 	}

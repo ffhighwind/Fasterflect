@@ -75,7 +75,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A single FieldInfo instance of the first found match or null if no match was found.</returns>
 		public static FieldInfo Field(this Type type, string name)
 		{
-			return Reflect.Lookup.Field(type, name);
+			return ReflectLookup.Field(type, name);
 		}
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A single FieldInfo instance of the first found match or null if no match was found.</returns>
 		public static FieldInfo Field(this Type type, string name, FasterflectFlags bindingFlags)
 		{
-			return Reflect.Lookup.Field(type, name, bindingFlags);
+			return ReflectLookup.Field(type, name, bindingFlags);
 		}
 		#endregion
 
@@ -101,7 +101,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all instance fields on the type. This value will never be null.</returns>
 		public static IList<FieldInfo> Fields(this Type type, params string[] names)
 		{
-			return Reflect.Lookup.Fields(type, names);
+			return ReflectLookup.Fields(type, names);
 		}
 
 		/// <summary>
@@ -118,7 +118,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all matching fields on the type. This value will never be null.</returns>
 		public static IList<FieldInfo> Fields(this Type type, FasterflectFlags bindingFlags, params string[] names)
 		{
-			return Reflect.Lookup.Fields(type, bindingFlags, names);
+			return ReflectLookup.Fields(type, bindingFlags, names);
 		}
 		#endregion
 	}

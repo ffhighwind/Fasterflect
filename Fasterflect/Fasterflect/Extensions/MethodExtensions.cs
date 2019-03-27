@@ -84,7 +84,7 @@ namespace Fasterflect.Extensions
 		/// due to method overloading the first found match will be returned.</returns>
 		public static MethodInfo Method(this Type type, string name)
 		{
-			return Reflect.Lookup.Method(type, name);
+			return ReflectLookup.Method(type, name);
 		}
 
 		/// <summary>
@@ -93,7 +93,7 @@ namespace Fasterflect.Extensions
 		/// <seealso cref="Method(Type,string)"/>
 		public static MethodInfo Method(this Type type, Type[] genericTypes, string name)
 		{
-			return Reflect.Lookup.Method(type, genericTypes, name);
+			return ReflectLookup.Method(type, genericTypes, name);
 		}
 
 		/// <summary>
@@ -110,7 +110,7 @@ namespace Fasterflect.Extensions
 		/// due to method overloading the first found match will be returned.</returns>
 		public static MethodInfo Method(this Type type, string name, Type[] parameterTypes)
 		{
-			return Reflect.Lookup.Method(type, name, parameterTypes);
+			return ReflectLookup.Method(type, name, parameterTypes);
 		}
 
 		/// <summary>
@@ -119,7 +119,7 @@ namespace Fasterflect.Extensions
 		/// <seealso cref="Method(Type,string,Type[])"/>
 		public static MethodInfo Method(this Type type, Type[] genericTypes, string name, Type[] parameterTypes)
 		{
-			return Reflect.Lookup.Method(type, genericTypes, name, parameterTypes);
+			return ReflectLookup.Method(type, genericTypes, name, parameterTypes);
 		}
 
 		/// <summary>
@@ -137,7 +137,7 @@ namespace Fasterflect.Extensions
 		/// due to method overloading the first found match will be returned.</returns>
 		public static MethodInfo Method(this Type type, string name, FasterflectFlags bindingFlags)
 		{
-			return Reflect.Lookup.Method(type, name, bindingFlags);
+			return ReflectLookup.Method(type, name, bindingFlags);
 		}
 
 		/// <summary>
@@ -146,7 +146,7 @@ namespace Fasterflect.Extensions
 		/// <seealso cref="Method(Type,string,FasterflectFlags)"/>
 		public static MethodInfo Method(this Type type, Type[] genericTypes, string name, FasterflectFlags bindingFlags)
 		{
-			return Reflect.Lookup.Method(type, genericTypes, name, bindingFlags);
+			return ReflectLookup.Method(type, genericTypes, name, bindingFlags);
 		}
 
 		/// <summary>
@@ -168,7 +168,7 @@ namespace Fasterflect.Extensions
 		/// due to method overloading the first found match will be returned.</returns>
 		public static MethodInfo Method(this Type type, string name, Type[] parameterTypes, FasterflectFlags bindingFlags)
 		{
-			return Reflect.Lookup.Method(type, name, parameterTypes, bindingFlags);
+			return ReflectLookup.Method(type, name, parameterTypes, bindingFlags);
 		}
 
 		/// <summary>
@@ -191,7 +191,7 @@ namespace Fasterflect.Extensions
 		/// due to method overloading the first found match will be returned.</returns>
 		public static MethodInfo Method(this Type type, Type[] genericTypes, string name, Type[] parameterTypes, FasterflectFlags bindingFlags)
 		{
-			return Reflect.Lookup.Method(type, genericTypes, name, parameterTypes, bindingFlags);
+			return ReflectLookup.Method(type, genericTypes, name, parameterTypes, bindingFlags);
 		}
 
 		internal static MethodInfo MakeGeneric(this MethodInfo methodInfo, Type[] genericTypes)
@@ -222,7 +222,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all matching methods. This value will never be null.</returns>
 		public static IList<MethodInfo> Methods(this Type type, params string[] names)
 		{
-			return Reflect.Lookup.Methods(type, names);
+			return ReflectLookup.Methods(type, names);
 		}
 
 		/// <summary>
@@ -240,7 +240,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all matching methods. This value will never be null.</returns>
 		public static IList<MethodInfo> Methods(this Type type, FasterflectFlags bindingFlags, params string[] names)
 		{
-			return Reflect.Lookup.Methods(type, bindingFlags, names);
+			return ReflectLookup.Methods(type, bindingFlags, names);
 		}
 
 		/// <summary>
@@ -256,7 +256,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all matching methods. This value will never be null.</returns>
 		public static IList<MethodInfo> Methods(this Type type, Type[] parameterTypes, params string[] names)
 		{
-			return Reflect.Lookup.Methods(type, parameterTypes, names);
+			return ReflectLookup.Methods(type, parameterTypes, names);
 		}
 
 		/// <summary>
@@ -276,7 +276,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all matching methods. This value will never be null.</returns>
 		public static IList<MethodInfo> Methods(this Type type, Type[] parameterTypes, FasterflectFlags bindingFlags, params string[] names)
 		{
-			return Reflect.Lookup.Methods(type, parameterTypes, bindingFlags, names);
+			return ReflectLookup.Methods(type, parameterTypes, bindingFlags, names);
 		}
 
 		/// <summary>
@@ -300,7 +300,7 @@ namespace Fasterflect.Extensions
 		public static IList<MethodInfo> Methods(this Type type, Type[] genericTypes, Type[] parameterTypes, FasterflectFlags bindingFlags,
 			params string[] names)
 		{
-			return Reflect.Lookup.Methods(type, genericTypes, parameterTypes, bindingFlags, names);
+			return ReflectLookup.Methods(type, genericTypes, parameterTypes, bindingFlags, names);
 		}
 		#endregion
 	}

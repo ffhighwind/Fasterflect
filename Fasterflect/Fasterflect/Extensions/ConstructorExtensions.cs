@@ -132,7 +132,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The matching constructor or null if no match was found.</returns>
 		public static ConstructorInfo Constructor(this Type type, params Type[] parameterTypes)
 		{
-			return Reflect.Lookup.Constructor(type, parameterTypes);
+			return ReflectLookup.Constructor(type, parameterTypes);
 		}
 
 		/// <summary>
@@ -145,7 +145,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The matching constructor or null if no match was found.</returns>
 		public static ConstructorInfo Constructor(this Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
-			return Reflect.Lookup.Constructor(type, bindingFlags, parameterTypes);
+			return ReflectLookup.Constructor(type, bindingFlags, parameterTypes);
 		}
 		#endregion
 
@@ -157,7 +157,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of matching constructors. This value will never be null.</returns>
 		public static IList<ConstructorInfo> Constructors(this Type type)
 		{
-			return Reflect.Lookup.Constructors(type);
+			return ReflectLookup.Constructors(type);
 		}
 
 		/// <summary>
@@ -169,7 +169,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of matching constructors. This value will never be null.</returns>
 		public static IList<ConstructorInfo> Constructors(this Type type, FasterflectFlags bindingFlags)
 		{
-			return Reflect.Lookup.Constructors(type, bindingFlags);
+			return ReflectLookup.Constructors(type, bindingFlags);
 		}
 		#endregion
 	}

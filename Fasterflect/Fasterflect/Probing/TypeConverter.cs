@@ -154,7 +154,7 @@ namespace Fasterflect.Probing
 		/// <param name="sourceType">The type of the provided value.</param>
 		/// <param name="value">The value representing the type.</param>
 		/// <returns></returns>
-		public static object ConvertTypes(Type targetType, Type sourceType, object value)
+		internal static object ConvertTypes(Type targetType, Type sourceType, object value)
 		{
 			if (value == null) {
 				return null;

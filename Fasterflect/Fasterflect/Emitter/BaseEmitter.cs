@@ -23,7 +23,7 @@ namespace Fasterflect.Emitter
 {
 	internal abstract class BaseEmitter
 	{
-		private static readonly Cache<CallInfo, Delegate> cache = new Cache<CallInfo, Delegate>();
+		internal static readonly Cache<CallInfo, Delegate> cache = new Cache<CallInfo, Delegate>();
 
 		protected static readonly MethodInfo StructGetMethod =
 			Constants.StructType.GetMethod("get_Value", BindingFlags.Public | BindingFlags.Instance);

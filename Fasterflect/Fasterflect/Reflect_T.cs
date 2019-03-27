@@ -8,7 +8,7 @@ namespace Fasterflect
 	/// <summary>
 	/// Container class for permanently caching generic <see cref="ConstructorInvoker"/> delegates.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="T">The type of object</typeparam>
 	public static class Reflect<T>
 	{
 		/// <summary>

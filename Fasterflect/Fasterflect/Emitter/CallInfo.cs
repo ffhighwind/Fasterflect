@@ -31,11 +31,11 @@ namespace Fasterflect.Emitter
 	{
 		public Type TargetType { get; private set; }
 		public FasterflectFlags BindingFlags { get; internal set; }
-		public MemberTypes MemberTypes { get; set; }
+		public MemberTypes MemberTypes { get; internal set; }
 		public Type[] ParamTypes { get; internal set; }
 		public Type[] GenericTypes { get; private set; }
 		public string Name { get; private set; }
-		public bool IsReadOperation { get; set; }
+		public bool IsReadOperation { get; internal set; }
 		// these fields don't constitute CallInfo identity:
 		public bool IsStatic { get; internal set; }
 		public MemberInfo MemberInfo { get; internal set; }

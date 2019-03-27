@@ -32,7 +32,7 @@ namespace Fasterflect.Emitter
 	/// A wrapper around the <see cref="ILGenerator"/> class.
 	/// </summary>
 	/// <seealso cref="System.Reflection.Emit.ILGenerator">ILGenerator Class</seealso>
-	internal class EmitHelper
+	public class EmitHelper
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EmitHelper"/> class

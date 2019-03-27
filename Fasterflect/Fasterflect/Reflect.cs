@@ -8,7 +8,7 @@ namespace Fasterflect
 	/// <summary>
 	/// Helper class for producing Reflection-based delegates and other utility methods.
 	/// </summary>
-	public static partial class Reflect
+	public static class Reflect
 	{
 		#region Constructor
 		/// <summary>
@@ -132,31 +132,12 @@ namespace Fasterflect
 
 		#region Field Access
 		/// <summary>
-		/// Creates a delegate which can set the value of the field specified by <paramref name="name"/> on 
-		/// the given <paramref name="type"/>.
-		/// </summary>
-		public static MemberSetter FieldSetter(Type type, string name)
-		{
-			return FieldSetter(type, name, FasterflectFlags.StaticInstanceAnyVisibility);
-		}
-
-		/// <summary>
 		/// Creates a delegate which can get the value of the field specified by <paramref name="name"/> on 
 		/// the given <paramref name="type"/>.
 		/// </summary>
 		public static MemberGetter FieldGetter(Type type, string name)
 		{
 			return FieldGetter(type, name, FasterflectFlags.StaticInstanceAnyVisibility);
-		}
-
-		/// <summary>
-		/// Creates a delegate which can set the value of the field specified by <paramref name="name"/> and
-		/// matching <paramref name="bindingFlags"/> on the given <paramref name="type"/>.
-		/// </summary>
-		public static MemberSetter FieldSetter(Type type, string name, FasterflectFlags bindingFlags)
-		{
-			CallInfo callInfo = new CallInfo(type, null, bindingFlags, MemberTypes.Field, name, null, null, false);
-			return (MemberSetter) new MemberSetEmitter(callInfo).GetDelegate();
 		}
 
 		/// <summary>
@@ -168,9 +149,51 @@ namespace Fasterflect
 			CallInfo callInfo = new CallInfo(type, null, bindingFlags, MemberTypes.Field, name, null, null, true);
 			return (MemberGetter) new MemberGetEmitter(callInfo).GetDelegate();
 		}
+
+		/// <summary>
+		/// Creates a delegate which can set the value of the field specified by <paramref name="name"/> on 
+		/// the given <paramref name="type"/>.
+		/// </summary>
+		public static MemberSetter FieldSetter(Type type, string name)
+		{
+			return FieldSetter(type, name, FasterflectFlags.StaticInstanceAnyVisibility);
+		}
+
+		/// <summary>
+		/// Creates a delegate which can set the value of the field specified by <paramref name="name"/> and
+		/// matching <paramref name="bindingFlags"/> on the given <paramref name="type"/>.
+		/// </summary>
+		public static MemberSetter FieldSetter(Type type, string name, FasterflectFlags bindingFlags)
+		{
+			CallInfo callInfo = new CallInfo(type, null, bindingFlags, MemberTypes.Field, name, null, null, false);
+			return (MemberSetter) new MemberSetEmitter(callInfo).GetDelegate();
+		}
 		#endregion
 
 		#region Indexers
+		/// <summary>
+		/// Creates a delegate which can get the value of an indexer.
+		/// </summary>
+		/// <param name="type">The type which the indexer belongs to.</param>
+		/// <param name="parameterTypes">The types of the indexer parameters (must be in the right order).</param>
+		/// <returns>The delegate which can get the value of an indexer.</returns>
+		public static MethodInvoker IndexerGetter(Type type, params Type[] parameterTypes)
+		{
+			return IndexerGetter(type, FasterflectFlags.InstanceAnyVisibility, parameterTypes);
+		}
+
+		/// <summary>
+		/// Creates a delegate which can get the value of an indexer matching <paramref name="bindingFlags"/>.
+		/// </summary>
+		/// <param name="type">The type which the indexer belongs to.</param>
+		/// <param name="bindingFlags">The binding flags used to lookup the indexer.</param>
+		/// <param name="parameterTypes">The types of the indexer parameters (must be in the right order).</param>
+		/// <returns>The delegate which can get the value of an indexer.</returns>
+		public static MethodInvoker IndexerGetter(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
+		{
+			return (MethodInvoker) new MethodInvocationEmitter(type, bindingFlags, Constants.IndexerGetterName, parameterTypes).GetDelegate();
+		}
+
 		/// <summary>
 		/// Creates a delegate which can set an indexer
 		/// </summary>
@@ -191,17 +214,6 @@ namespace Fasterflect
 		}
 
 		/// <summary>
-		/// Creates a delegate which can get the value of an indexer.
-		/// </summary>
-		/// <param name="type">The type which the indexer belongs to.</param>
-		/// <param name="parameterTypes">The types of the indexer parameters (must be in the right order).</param>
-		/// <returns>The delegate which can get the value of an indexer.</returns>
-		public static MethodInvoker IndexerGetter(Type type, params Type[] parameterTypes)
-		{
-			return IndexerGetter(type, FasterflectFlags.InstanceAnyVisibility, parameterTypes);
-		}
-
-		/// <summary>
 		/// Creates a delegate which can set an indexer matching <paramref name="bindingFlags"/>.
 		/// </summary>
 		/// <param name="type">The type which the indexer belongs to.</param>
@@ -219,18 +231,6 @@ namespace Fasterflect
 		public static MethodInvoker IndexerSetter(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
 			return (MethodInvoker) new MethodInvocationEmitter(type, bindingFlags, Constants.IndexerSetterName, parameterTypes).GetDelegate();
-		}
-
-		/// <summary>
-		/// Creates a delegate which can get the value of an indexer matching <paramref name="bindingFlags"/>.
-		/// </summary>
-		/// <param name="type">The type which the indexer belongs to.</param>
-		/// <param name="bindingFlags">The binding flags used to lookup the indexer.</param>
-		/// <param name="parameterTypes">The types of the indexer parameters (must be in the right order).</param>
-		/// <returns>The delegate which can get the value of an indexer.</returns>
-		public static MethodInvoker IndexerGetter(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
-		{
-			return (MethodInvoker) new MethodInvocationEmitter(type, bindingFlags, Constants.IndexerGetterName, parameterTypes).GetDelegate();
 		}
 		#endregion
 
@@ -286,19 +286,19 @@ namespace Fasterflect
 
 		#region Array Access
 		/// <summary>
-		/// Creates a delegate which can set element of <paramref name="arrayType"/>.
-		/// </summary>
-		public static ArrayElementSetter ArraySetter(Type arrayType)
-		{
-			return (ArrayElementSetter) new ArraySetEmitter(arrayType).GetDelegate();
-		}
-
-		/// <summary>
 		/// Creates a delegate which can retrieve element of <paramref name="arrayType"/>.
 		/// </summary>
 		public static ArrayElementGetter ArrayGetter(Type arrayType)
 		{
 			return (ArrayElementGetter) new ArrayGetEmitter(arrayType).GetDelegate();
+		}
+
+		/// <summary>
+		/// Creates a delegate which can set element of <paramref name="arrayType"/>.
+		/// </summary>
+		public static ArrayElementSetter ArraySetter(Type arrayType)
+		{
+			return (ArrayElementSetter) new ArraySetEmitter(arrayType).GetDelegate();
 		}
 		#endregion
 
