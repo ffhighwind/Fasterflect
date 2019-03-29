@@ -88,6 +88,16 @@ namespace Fasterflect
 		{
 			return (MemberSetter) new MemberSetEmitter(propInfo, bindingFlags).GetDelegate();
 		}
+
+		public static MethodInvoker MultiSetter(Type type, params string[] memberNames)
+		{
+			return MultiSetter(type, FasterflectFlags.InstancePublicDeclaredOnly, memberNames);
+		}
+
+		public static MethodInvoker MultiSetter(Type type, FasterflectFlags flags, params string[] memberNames)
+		{
+			return (MethodInvoker) new MultiSetEmitter(type, flags, memberNames).GetDelegate();
+		}
 		#endregion
 
 		#region Property Access

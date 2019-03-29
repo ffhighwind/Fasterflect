@@ -94,7 +94,7 @@ namespace Fasterflect.Emitter
 			return Method.CreateDelegate(typeof(MethodInvoker));
 		}
 
-		private void GenerateInvocation(MethodInfo methodInfo, byte paramArrayIndex, byte structLocalPosition)
+		protected void GenerateInvocation(MethodInfo methodInfo, byte paramArrayIndex, byte structLocalPosition)
 		{
 			if (!CallInfo.IsStatic) {
 				Generator.ldarg_0.end(); // load arg-0 (this/null);

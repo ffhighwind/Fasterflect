@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Fasterflect.Emitter;
 
@@ -35,8 +36,9 @@ namespace Fasterflect.Emitter
 		public static readonly Type StructType = typeof(ValueTypeHolder);
 		public static readonly Type VoidType = typeof(void);
 		public static readonly Type[] ArrayOfObjectType = new[] { typeof(object) };
-		public static readonly object[] EmptyObjectArray = new object[0];
-		public static readonly string[] EmptyStringArray = new string[0];
-		public static readonly PropertyInfo[] EmptyPropertyInfoArray = new PropertyInfo[0];
+		public static readonly Type[] EmptyTypeArray = Array.Empty<Type>();
+		public static readonly object[] EmptyObjectArray = Array.Empty<object>();
+		public static readonly string[] EmptyStringArray = Array.Empty<string>();
+		public static readonly PropertyInfo[] EmptyPropertyInfoArray = Array.Empty<PropertyInfo>();
 	}
 }

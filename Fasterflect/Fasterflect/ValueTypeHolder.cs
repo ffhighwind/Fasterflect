@@ -41,5 +41,15 @@ namespace Fasterflect
 		/// The actual struct wrapped by this instance.
 		/// </summary>
 		public ValueType Value { get; set; }
+
+		public static implicit operator ValueTypeHolder(ValueType o)
+		{
+			return new ValueTypeHolder(o);
+		}
+
+		public static implicit operator ValueType(ValueTypeHolder o)
+		{
+			return o.Value;
+		}
 	}
 }
