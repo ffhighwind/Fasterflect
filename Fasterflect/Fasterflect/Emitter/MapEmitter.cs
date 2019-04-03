@@ -91,8 +91,8 @@ namespace Fasterflect.Emitter
 
 		private void GenerateGetMemberValue(MemberInfo member)
 		{
-			if (member is FieldInfo) {
-				Generator.ldfld((FieldInfo) member);
+			if (member is FieldInfo field) {
+				Generator.ldfld(field);
 			}
 			else {
 				MethodInfo method = ((PropertyInfo) member).GetGetMethod(true);
@@ -102,8 +102,8 @@ namespace Fasterflect.Emitter
 
 		private void GenerateSetMemberValue(MemberInfo member)
 		{
-			if (member is FieldInfo) {
-				Generator.stfld((FieldInfo) member);
+			if (member is FieldInfo field) {
+				Generator.stfld(field);
 			}
 			else {
 				MethodInfo method = ((PropertyInfo) member).GetSetMethod(true);

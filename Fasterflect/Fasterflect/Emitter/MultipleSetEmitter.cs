@@ -19,7 +19,7 @@ namespace Fasterflect.Emitter
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
-			return CreateDynamicMethod("multisetter", CallInfo.TargetType, Constants.ObjectType,
+			return CreateDynamicMethod("multisetter", CallInfo.TargetType, null,
 				new[] { Constants.ObjectType, Constants.ObjectType.MakeArrayType() });
 		}
 
@@ -86,9 +86,9 @@ namespace Fasterflect.Emitter
 			if (handleInnerStruct) {
 				StoreLocalToInnerStruct(0); // ((ValueTypeHolder)this)).Value = tmpStr
 			}
-			Generator.ldnull.end(); // load null
+			//Generator.ldnull.end(); // load null
 			Generator.ret();
-			return Method.CreateDelegate(typeof(MethodInvoker));
+			return Method.CreateDelegate(typeof(MultiMemberSetter));
 		}
 
 		private void GenerateSetMemberValue(MemberInfo member)

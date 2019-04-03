@@ -80,4 +80,12 @@ namespace Fasterflect
 	/// <param name="source">The object whose instance members' values will be read.</param>
 	/// <param name="target">The object whose instance members' values will be written.</param>
 	public delegate void ObjectMapper(object source, object target);
+
+	/// <summary>
+	/// A delegate to set multiple field/property values of an object.
+	/// </summary>
+	/// <param name="obj">The object whose field's or property's value is to be set.
+	/// Use <c>null</c> if all fields and properties are static.</param>
+	/// <param name="values">The value to be set to the field or property.</param>
+	public delegate void MultiMemberSetter(object obj, params object[] values);
 }
