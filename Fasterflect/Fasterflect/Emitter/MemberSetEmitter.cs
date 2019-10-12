@@ -41,6 +41,7 @@ namespace Fasterflect.Emitter
 			: base(new CallInfo(targetType, null, bindingFlags, memberType, fieldOrProperty, Constants.ArrayOfObjectType, memberInfo, false))
 		{
 		}
+
 		internal MemberSetEmitter(CallInfo callInfo) : base(callInfo)
 		{
 		}

@@ -6,26 +6,25 @@ using System.Text;
 namespace Fasterflect
 {
 	/// <summary>
-	/// Container class for permanently caching generic <see cref="ConstructorInvoker"/> delegates.
+	/// Container class for permanently caching a generic <see cref="ConstructorInvoker"/> delegate.
 	/// </summary>
 	/// <typeparam name="T">The type of object</typeparam>
 	public static class Reflect<T>
 	{
 		/// <summary>
-		/// Delegate for an empty constructor of the given type if one exists, otherwise <see langword="null"/>.
+		/// Delegate for an empty constructor for the given type if one exists, otherwise it calls
+		/// <see cref="System.Runtime.Serialization.FormatterServices.GetUninitializedObject"/>.
 		/// </summary>
 		public static readonly ConstructorInvoker New = null;
 
 		/// <summary>
-		/// Delegate for an empty constructor for the given type if one exists, otherwise it calls
-		/// <see cref="System.Runtime.Serialization.FormatterServices.GetUninitializedObject"/>.
+		/// Returns true if <typeparamref name="T"/> has a default constructor, otherwise false.
 		/// </summary>
-		public static readonly ConstructorInvoker Create = null;
+		public static bool HasDefaultConstructor => New == GetUninitializedObject;
 
 		static Reflect()
 		{
-			New = Reflect.Constructor(typeof(T));
-			Create = New ?? GetUninitializedObject;
+			New = Reflect.Constructor(typeof(T)) ?? GetUninitializedObject;
 		}
 
 		private static object GetUninitializedObject(params object[] parameters)

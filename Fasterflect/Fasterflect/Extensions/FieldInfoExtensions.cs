@@ -31,7 +31,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static void Set(this FieldInfo fieldInfo, object value)
 		{
-			Reflect.Setter(fieldInfo)(null, value);
+			Reflect.FieldSetter(fieldInfo)(null, value);
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static void Set(this FieldInfo fieldInfo, object obj, object value)
 		{
-			Reflect.Setter(fieldInfo)(obj, value);
+			Reflect.FieldSetter(fieldInfo)(obj, value);
 		}
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object Get(this FieldInfo fieldInfo)
 		{
-			return Reflect.Getter(fieldInfo)(null);
+			return Reflect.FieldGetter(fieldInfo)(null);
 		}
 
 		/// <summary>
@@ -56,7 +56,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object Get(this FieldInfo fieldInfo, object obj)
 		{
-			return Reflect.Getter(fieldInfo)(obj);
+			return Reflect.FieldGetter(fieldInfo)(obj);
 		}
 
 		/// <summary>
@@ -64,7 +64,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static MemberSetter DelegateForSetFieldValue(this FieldInfo fieldInfo)
 		{
-			return Reflect.Setter(fieldInfo);
+			return Reflect.FieldSetter(fieldInfo);
 		}
 
 		/// <summary>
@@ -72,7 +72,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static MemberGetter DelegateForGetFieldValue(this FieldInfo fieldInfo)
 		{
-			return Reflect.Getter(fieldInfo);
+			return Reflect.FieldGetter(fieldInfo);
 		}
 	}
 }

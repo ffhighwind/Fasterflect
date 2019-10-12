@@ -44,9 +44,9 @@ namespace Fasterflect.Extensions
 		/// Create a delegate to invoke a generic method.  See the overload with same parameters except for <paramref name="genericTypes"/>.
 		/// </summary>
 		/// <seealso cref="DelegateForCallMethod(Type,string,Type[])"/>
-		public static MethodInvoker DelegateForCallMethod(this Type type, Type[] genericTypes, string name, params Type[] parameterTypes)
+		public static MethodInvoker DelegateForCallMethod(this Type type, string name, Type[] genericTypes, params Type[] parameterTypes)
 		{
-			return Reflect.Method(type, genericTypes, name, parameterTypes);
+			return Reflect.Method(type, name, genericTypes, parameterTypes);
 		}
 
 		/// <summary>

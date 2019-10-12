@@ -31,7 +31,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static void Set(this PropertyInfo propInfo, object value)
 		{
-			Reflect.Setter(propInfo, FasterflectFlags.StaticAnyVisibility)(null, value);
+			Reflect.PropertySetter(propInfo)(null, value);
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static void Set(this PropertyInfo propInfo, object obj, object value)
 		{
-			Reflect.Setter(propInfo)(obj, value);
+			Reflect.PropertySetter(propInfo)(obj, value);
 		}
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object Get(this PropertyInfo propInfo)
 		{
-			return Reflect.Getter(propInfo)(null);
+			return Reflect.PropertyGetter(propInfo)(null);
 		}
 
 		/// <summary>
@@ -56,7 +56,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object Get(this PropertyInfo propInfo, object obj)
 		{
-			return Reflect.Getter(propInfo, FasterflectFlags.InstanceAnyVisibility)(obj);
+			return Reflect.PropertyGetter(propInfo)(obj);
 		}
 
 		/// <summary>
@@ -64,33 +64,14 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static MemberSetter DelegateForSetPropertyValue(this PropertyInfo propInfo)
 		{
-			return Reflect.Setter(propInfo);
+			return Reflect.PropertySetter(propInfo);
 		}
-
-		/// <summary>
-		/// Creates a delegate which can set the value of the property <param name="propInfo"/> matching the
-		/// specified <param name="bindingFlags" />.
-		/// </summary>
-		public static MemberSetter DelegateForSetPropertyValue(this PropertyInfo propInfo, FasterflectFlags bindingFlags)
-		{
-			return Reflect.Setter(propInfo, bindingFlags);
-		}
-
 		/// <summary>
 		/// Creates a delegate which can get the value of the property <param name="propInfo"/>.
 		/// </summary>
 		public static MemberGetter DelegateForGetPropertyValue(this PropertyInfo propInfo)
 		{
-			return Reflect.Getter(propInfo);
-		}
-
-		/// <summary>
-		/// Creates a delegate which can get the value of the property <param name="propInfo"/> matching the
-		/// specified <param name="bindingFlags" />.
-		/// </summary>
-		public static MemberGetter DelegateForGetPropertyValue(this PropertyInfo propInfo, FasterflectFlags bindingFlags)
-		{
-			return Reflect.Getter(propInfo, bindingFlags);
+			return Reflect.PropertyGetter(propInfo);
 		}
 	}
 }
