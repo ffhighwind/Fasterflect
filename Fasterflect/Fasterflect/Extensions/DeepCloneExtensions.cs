@@ -24,12 +24,12 @@ using System.Linq;
 using System.Reflection;
 using Fasterflect.Extensions;
 
-namespace Fasterflect.Extensions
+namespace Fasterflect.Extensions.DeepClone
 {
 	/// <summary>
 	/// Extension methods for deep cloning of objects.
 	/// </summary>
-	internal static class CloneExtensions
+	public static class DeepCloneExtensions
 	{
 		/// <summary>
 		/// Produces a deep clone of the <paramref name="source"/> object. Reference integrity is maintained and

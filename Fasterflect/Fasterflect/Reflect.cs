@@ -486,18 +486,32 @@ namespace Fasterflect
 		}
 		#endregion
 
-		#region Deep Clone
+		#region Clone
 		/// <summary>
 		/// Produces a deep clone of the <paramref name="source"/> object. Reference integrity is maintained and
-		/// every unique object in the graph is cloned only once.
-		/// A current limitation of this method is that all objects in the graph must have a default constructor.
+		/// every unique object in the graph is cloned only once. All objects in the graph must have a default constructor.
 		/// </summary>
 		/// <typeparam name="T">The type of the object to clone.</typeparam>
 		/// <param name="source">The object to clone.</param>
 		/// <returns>A deep clone of the source object.</returns>
 		public static T DeepClone<T>(T source) where T : class, new()
 		{
-			return Fasterflect.Extensions.CloneExtensions.DeepClone<T>(source);
+			return Fasterflect.Extensions.DeepClone.DeepCloneExtensions.DeepClone<T>(source);
+		}
+
+		/// <summary>
+		/// Clones a object via shallow copy.
+		/// </summary>
+		/// <typeparam name="T">The type of object to clone.</typeparam>
+		/// <param name="obj">The object to clone</param>
+		/// <returns>A shallow clone of the source object.</returns>
+		public static T ShallowClone<T>(T obj) where T : class
+		{
+			if (obj == null)
+				return null;
+			System.Reflection.MethodInfo inst = obj.GetType().GetMethod("MemberwiseClone",
+				System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+			return (T) inst?.Invoke(obj, null);
 		}
 		#endregion
 	}

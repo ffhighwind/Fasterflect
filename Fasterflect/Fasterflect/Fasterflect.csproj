@@ -59,7 +59,7 @@
     <Compile Include="ConstructorMap.cs" />
     <Compile Include="DynamicBuilder.cs" />
     <Compile Include="DynamicWrapper.cs" />
-    <Compile Include="Emitter\MultipleSetEmitter.cs" />
+    <Compile Include="Emitter\MultiSetEmitter.cs" />
     <Compile Include="Emitter\MultiSetCallInfo.cs" />
     <Compile Include="Emitter\MapCallInfo.cs" />
     <Compile Include="Emitter\MapEmitter.cs" />
@@ -69,7 +69,7 @@
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Extensions\AttributeExtensions.cs" />
-    <Compile Include="Extensions\CloneExtensions.cs" />
+    <Compile Include="Extensions\DeepCloneExtensions.cs" />
     <Compile Include="Extensions\ConstructorExtensions.cs" />
     <Compile Include="Extensions\ConstructorInfoExtensions.cs" />
     <Compile Include="Extensions\FieldExtensions.cs" />
