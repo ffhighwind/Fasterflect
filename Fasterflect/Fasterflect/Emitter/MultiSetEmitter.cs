@@ -90,16 +90,5 @@ namespace Fasterflect.Emitter
 			Generator.ret();
 			return Method.CreateDelegate(typeof(MultiMemberSetter));
 		}
-
-		private void GenerateSetMemberValue(MemberInfo member)
-		{
-			if (member is FieldInfo fi) {
-				Generator.stfld(fi);
-			}
-			else {
-				MethodInfo method = ((PropertyInfo) member).GetSetMethod(true);
-				Generator.callvirt(method, null);
-			}
-		}
 	}
 }

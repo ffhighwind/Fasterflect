@@ -10,7 +10,7 @@ namespace Fasterflect.Emitter
 {
 	internal class MultiSetCallInfo : CallInfo
 	{
-		internal MemberInfo[] members;
+		public readonly MemberInfo[] members;
 
 		public MultiSetCallInfo(Type targetType, FasterflectFlags flags, string[] names)
 			: base(targetType, null, flags, System.Reflection.MemberTypes.Custom, "Fasterflect_MultiSet", null, null, false)

@@ -410,20 +410,20 @@ namespace Fasterflect
 
 		#region Array Access
 		/// <summary>
-		/// Creates a <see cref="ArrayElementGetter"/> which retrieves an element of an array.
+		/// Creates an <see cref="ArrayElementGetter"/> which retrieves an element of an array.
 		/// </summary>
 		/// <param name="arrayType">The <see cref="Type"/> of the array's elements.</param>
-		/// <returns>A <see cref="ArrayElementGetter"/> which retrieves an element of an array.</returns>
+		/// <returns>An <see cref="ArrayElementGetter"/> which retrieves an element of an array.</returns>
 		public static ArrayElementGetter ArrayGetter(Type arrayType)
 		{
 			return (ArrayElementGetter) new ArrayGetEmitter(arrayType).GetDelegate();
 		}
 
 		/// <summary>
-		/// Creates a <see cref="ArrayElementGetter"/> which sets an element of an array.
+		/// Creates an <see cref="ArrayElementGetter"/> which sets an element of an array.
 		/// </summary>
 		/// <param name="arrayType">The <see cref="Type"/> of the array's elements.</param>
-		/// <returns>A <see cref="ArrayElementGetter"/> which sets an element of an array.</returns>
+		/// <returns>An <see cref="ArrayElementGetter"/> which sets an element of an array.</returns>
 		public static ArrayElementSetter ArraySetter(Type arrayType)
 		{
 			return (ArrayElementSetter) new ArraySetEmitter(arrayType).GetDelegate();
@@ -500,7 +500,7 @@ namespace Fasterflect
 		}
 
 		/// <summary>
-		/// Clones a object via shallow copy.
+		/// Clones an object via shallow copy.
 		/// </summary>
 		/// <typeparam name="T">The type of object to clone.</typeparam>
 		/// <param name="obj">The object to clone</param>
@@ -512,6 +512,31 @@ namespace Fasterflect
 			System.Reflection.MethodInfo inst = obj.GetType().GetMethod("MemberwiseClone",
 				System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
 			return (T) inst?.Invoke(obj, null);
+		}
+
+		/// <summary>
+		/// Creates a delegate that clones an object via shallow copy.
+		/// </summary>
+		/// <typeparam name="T">The type of object to clone.</typeparam>
+		/// <returns>A delegate that clones an object via shallow copy.</returns>
+		public static Func<T, T> ShallowCloner<T>()
+			where T : new()
+		{
+			ShallowClonerEmitter<T> emitter = new ShallowClonerEmitter<T>();
+			return (Func<T, T>) emitter.GetDelegate();
+		}
+
+		/// <summary>
+		/// Creates a delegate that clones an object via shallow copy using the properties and fields matching <paramref name="bindingFlags"/>.
+		/// </summary>
+		/// <typeparam name="T">The type of object to clone.</typeparam>
+		/// <param name="bindingFlags">The <see href="Flags"/> used to define the scope when locating members.</param>
+		/// <returns>A delegate that clones an object via shallow copy.</returns>
+		public static Func<T, T> ShallowCloner<T>(FasterflectFlags bindingFlags)
+			where T : new()
+		{
+			ShallowClonerEmitter<T> emitter = new ShallowClonerEmitter<T>(bindingFlags);
+			return (Func<T, T>) emitter.GetDelegate();
 		}
 		#endregion
 	}
