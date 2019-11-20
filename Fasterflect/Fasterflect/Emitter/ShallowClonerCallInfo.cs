@@ -43,8 +43,8 @@ namespace Fasterflect.Emitter
 
 		public override int GetHashCode()
 		{
-			int hash = 517 * TargetType.GetHashCode();
-			hash = hash * 291 ^ BindingFlags.GetHashCode();
+			int hash = 56721417 * TargetType.GetHashCode();
+			hash = hash * 297891 ^ BindingFlags.GetHashCode();
 			return hash;
 		}
 	}

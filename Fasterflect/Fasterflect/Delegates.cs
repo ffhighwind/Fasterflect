@@ -87,5 +87,5 @@ namespace Fasterflect
 	/// <param name="obj">The object whose field's or property's value is to be set.
 	/// Use <c>null</c> if all fields and properties are static.</param>
 	/// <param name="values">The value to be set to the field or property.</param>
-	public delegate void MultiMemberSetter(object obj, params object[] values);
+	public delegate void MultiSetter(object obj, params object[] values);
 }

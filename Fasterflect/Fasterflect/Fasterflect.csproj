@@ -66,8 +66,8 @@
     <Compile Include="Emitter\EmitHelper.cs" />
     <Compile Include="Emitter\Constants.cs" />
     <Compile Include="Emitter\LookupUtils.cs" />
-    <Compile Include="Emitter\ShallowClonerCallInfo.cs" />
-    <Compile Include="Emitter\ShallowClonerEmitter.cs" />
+    <None Include="Emitter\ShallowClonerCallInfo.cs" />
+    <None Include="Emitter\ShallowClonerEmitter.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Extensions\AttributeExtensions.cs" />

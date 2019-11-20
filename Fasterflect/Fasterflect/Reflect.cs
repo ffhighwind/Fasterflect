@@ -255,26 +255,26 @@ namespace Fasterflect
 
 		#region MultiSetter
 		/// <summary>
-		/// Creates a <see cref="MultiMemberSetter"/> which sets the values of the given members.
+		/// Creates a <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.
 		/// </summary>
 		/// <param name="type">The <see cref="Type"/> whose members will be set.</param>
 		/// <param name="memberNames">The names of the members to set.</param>
-		/// <returns>A <see cref="MultiMemberSetter"/> which sets the values of the given members.</returns>
-		public static MultiMemberSetter MultiSetter(Type type, params string[] memberNames)
+		/// <returns>A <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.</returns>
+		public static MultiSetter MultiSetter(Type type, params string[] memberNames)
 		{
 			return MultiSetter(type, FasterflectFlags.InstancePublicDeclaredOnly, memberNames);
 		}
 
 		/// <summary>
-		/// Creates a <see cref="MultiMemberSetter"/> which sets the values of the given members.
+		/// Creates a <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.
 		/// </summary>
 		/// <param name="type">The <see cref="Type"/> whose members will be set.</param>
 		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> to filter the members.</param>
 		/// <param name="memberNames">The names of the members to set.</param>
-		/// <returns>A <see cref="MultiMemberSetter"/> which sets the values of the given members.</returns>
-		public static MultiMemberSetter MultiSetter(Type type, FasterflectFlags bindingFlags, params string[] memberNames)
+		/// <returns>A <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.</returns>
+		public static MultiSetter MultiSetter(Type type, FasterflectFlags bindingFlags, params string[] memberNames)
 		{
-			return (MultiMemberSetter) new MultiSetEmitter(type, bindingFlags, memberNames).GetDelegate();
+			return (MultiSetter) new MultiSetEmitter(type, bindingFlags, memberNames).GetDelegate();
 		}
 		#endregion
 
@@ -514,6 +514,7 @@ namespace Fasterflect
 			return (T) inst?.Invoke(obj, null);
 		}
 
+		/*
 		/// <summary>
 		/// Creates a delegate that clones an object via shallow copy.
 		/// </summary>
@@ -538,6 +539,7 @@ namespace Fasterflect
 			ShallowClonerEmitter<T> emitter = new ShallowClonerEmitter<T>(bindingFlags);
 			return (Func<T, T>) emitter.GetDelegate();
 		}
+		*/
 		#endregion
 	}
 }

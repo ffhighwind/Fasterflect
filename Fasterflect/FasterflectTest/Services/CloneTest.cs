@@ -26,6 +26,7 @@ using System.Dynamic;
 using System.Linq;
 using Fasterflect;
 using Fasterflect.Extensions;
+using Fasterflect.Extensions.DeepClone;
 using Fasterflect.Extensions.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

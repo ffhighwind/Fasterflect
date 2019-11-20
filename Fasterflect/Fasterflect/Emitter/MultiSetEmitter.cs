@@ -88,7 +88,7 @@ namespace Fasterflect.Emitter
 			}
 			//Generator.ldnull.end(); // load null
 			Generator.ret();
-			return Method.CreateDelegate(typeof(MultiMemberSetter));
+			return Method.CreateDelegate(typeof(MultiSetter));
 		}
 	}
 }
