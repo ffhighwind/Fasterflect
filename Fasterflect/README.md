@@ -7,8 +7,6 @@ MultiSetter.
 
 ## [Reflect](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/Reflect.cs)
 
-See [Delegates](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/Delegates.cs) for all
-
 This is the factory for all reflection-based delegates. Every delegate is stored in a temporary cache, which means that they will be 
 garbage collected unless you keep a reference to them. However, this also means that you cannot create multiple instances of a delegate
 and will not waste memory by trying to do so.
@@ -25,9 +23,10 @@ and will not waste memory by trying to do so.
 | Reflect.MultiSetter() | MultiSetter | Sets multiple properties/fields with one method call. This is generated as a single delegate which means it is faster than setting each member in a loop. |
 | Reflect.Method() | MethodInvoker | MethodInfo.Invoke() |
 | Reflect.Mapper() | ObjectMapper | Maps the properties/fields of one type onto another type. This can also be used as a shallow cloning method if both types are the same. |
-| Reflect.IndexerGetter() | MethodInvoker | list[index] |
-| Reflect.IndexerSetter() | MethodInvoker | list[index] = value |
-| Reflect.ArrayGetter() | ArrayElementGetter | |
+| Reflect.IndexerGetter() | MethodInvoker | value = object[index1, index2] |
+| Reflect.IndexerSetter() | MethodInvoker | object[index1, index2] = value |
+| Reflect.ArrayGetter() | ArrayElementGetter | value = object[index] |
+| Reflect.ArraySetter() | ArrayElementGetter | object[index] = value |
 | Reflect.DeepClone<T>() | T | Creates a deep clone of an object. |
 | Reflect.ShallowClone<T>() | T | Creates a shallow clone of an object using MemberwiseClone. This will throw an exception in certain circumstances because MemberwiseClone is a private method. |
 
