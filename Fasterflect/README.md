@@ -11,7 +11,7 @@ The extensions that are still available include Type specific ones such as prett
 This is the factory for all reflection-based delegates. Every delegate is stored in a temporary cache, which means that you 
 cannot create multiple instances of a delegate and will not waste memory by trying to do so.
 
-| Method | Return | Description |
+| Method | Description |
 | --- | --- | --- |
 | Reflect.Constructor() | ConstructorInfo.Invoke() |
 | Reflect.Getter() | PropertyInfo.GetMethod().GetValue() or FieldInfo.GetValue() | 
