@@ -1,221 +1,58 @@
-[![Code Shelter](https://www.codeshelter.co/static/badges/badge-flat.svg)](https://www.codeshelter.co/)
+# Intro
 
-#### NuGet
-Fasterflect is available on NuGet: https://www.nuget.org/packages/fasterflect/
+This framework is based on [Fasterflect](https://github.com/buunguyen/fasterflect), which was originally developed by 
+Buu Nguyen and Morten Mertner. The reason I recommend using this framework the original is because the extension methods 
+are separated into a namespace so that they do not clutter intellisense and autocomplete. It also includes one new feature: 
+MultiSetter.
 
-#### Overview
-If you frequently use .NET Reflection in your application, you would immediately be aware of its two big issues: usability of the API as a whole and performance of reflection invocations (e.g. method invocation or member access). Fasterflect addresses the usability issue by providing intuitive & highly flexible extension methods to Type, Object and various metadata classes (such as FieldInfo, MethodInfo, etc.) which not only preserve but also enhance the .NET Reflection metadata lookup capability. The performance issue of reflection invocation is addressed by Fasterflect through the use of lightweight dynamic code generation, which performs anywhere from 5 to many hundreds times faster than native .NET Reflection invocations.
+## [Reflect](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/Reflect.cs)
 
-Fasterflect offers 3 major areas of functionality:
+[Delegates](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/Delegates.cs)
 
-* *Querying:* Fasterflect allows you to query .NET metadata, such as looking-up types in an assembly, searching for methods matching a partial name, finding all constructors of a type, etc.  
-* *Accessing:* Fasterflect allows you to perform reflective invocations on constructors, indexers, fields, properties and methods for both reference types (including arrays) and struct types.  Fasterflect also supports working with ref/out parameters, inferring parameter types to simplify invocations. These are backed by the dynamic code generation mechanism.
-* *Services:* Built on top of the core API for querying and accessing, Fasterflect includes several extensions at at higher level of abstraction. This includes functionality for deep object cloning, object materialization (construction) without relying on default constructors, various object mapping scenarios, XML serialization, etc.
+This is the factory for all reflection-based delegates. Every delegate is stored in a temporary cache, which means that they will be 
+garbage collected unless you keep a reference to them. However, this also means that you cannot create multiple instances of a delegate
+and will not waste memory by trying to do so.
 
-Besides being simple, Fasterflect is heavily documented and unit-tested, so you'll find it to be very easy to learn and use. Kickstart your reflection skills by downloading Fasterflect today. We recommend that you start by spending a bit of time with the extensive [documentation](https://github.com/buunguyen/fasterflect/wiki), but the impatient need only write _using Fasterflect;_. We also recommend looking at the unit tests in case the documentation proves to be insufficient. 
+| Factory Method | Delegate | Description |
+| --- | --- | --- |
+| Reflect.Constructor(...) | ConstructorInvoker | |
+| Reflect.Getter(...) | MemberGetter | | 
+| Reflect.PropertyGetter(...) | MemberGetter | |
+| Reflect.FieldGetter(...) | MemberGetter | |
+| Reflect.Setter(...) | MemberSetter | |
+| Reflect.PropertySetter(...) | MemberSetter | |
+| Reflect.FieldSetter(...) | MemberSetter | |
+| Reflect.MultiSetter(...) | MultiSetter | Sets multiple properties/fields with one method call. This is generated as a single delegate which means it is faster than setting each member in a loop. |
+| Reflect.Method(...) | MethodInvoker | |
+| Reflect.Mapper(...) | ObjectMapper | Maps and copies the properties/fields of one type onto another type. This can also be used as a shallow cloning method if both types are the same. |
+| Reflect.IndexerGetter(...) | MethodInvoker | list[index] |
+| Reflect.IndexerSetter(...) | MethodInvoker | list[index] = value |
+| Reflect.ArrayGetter(...) | ArrayElementGetter |  |
+| Reflect.DeepClone<T>(...) | T | Creates a deep clone of an object. |
+| Reflect.ShallowClone<T>(...) | T | Creates a shallow clone of an object using MemberwiseClone. This will throw an exception in certain circumstances because MemberwiseClone is a private method. |
 
-To get a feel of what Fasterflect is like, without first having to download anything or spend time reading the [documentation](https://github.com/buunguyen/fasterflect/wiki), below is some sample code using Fasterflect to construct objects and access members.
+## [ValueTypeHolder](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/ValueTypeHolder.cs)
 
-```csharp
-class Person
-{
-    private int id;
-    private int milesTraveled;
-    public int Id
-    {
-        get { return id; }
-        set { id = value; }
-    }
-    public string Name { get; private set; }
-    private static int InstanceCount;
+Value types must be wrapped with a ValueTypeHolder to work with the reflection methods. The alternative to this approach would be 
+to make the first argument a ref object for all delegates. I have decided against doing this because value types are not supposed 
+to be passed by reference and forcing the user to type ref for every call is tedious and it would reduce the performance for reference types.
 
-    public Person() : this(0) { }
+## [ReflectLookup](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/ReflectLookup.cs)
 
-    public Person(int id) : this(id, string.Empty) { }
+This allows searching for reflection based objects using Fasterflect flags instead of BindingFlags. I do not think it is very useful, 
+but it does include some good ideas such as case insensitive searches. I would recommend using the standard reflection access over these methods.
 
-    public Person(int id, string name)
-    {
-        Id = id;
-        Name = name;
-        InstanceCount++;
-    }
+## [Extensions](https://github.com/ffhighwind/fasterflect/tree/master/Fasterflect/Fasterflect/Extensions)
 
-    public char this[int index]
-    {
-        get { return Name[index]; }
-    }
+All extension methods are in the namespace. This was done because most of the extensions are pointless and clutter the intellisense
+and autocomplete. I especially dislike the extension methods on "object". The only reason I did not remove these is because they are 
+used everywhere and it is too much work to remove them.
 
-    private void Walk(int miles)
-    {
-        milesTraveled += miles;
-    }
+## [Emitter.EmitHelper](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/Emitter/EmitHelper.cs)
 
-    private static void IncreaseInstanceCount()
-    {
-        InstanceCount++;
-    }
+This is a wrapper around System.Reflection.Emit.IlGenerator that is easier to read and simple to use. Instead of typing
+ilGenerator.Emit(OpCodes.XXX, yyy) you would type emitter.xxx(yyy).
 
-    private static int GetInstanceCount()
-    {
-        return InstanceCount;
-    }
-
-    public static void Swap(ref int i, ref int j)
-    {
-        int tmp = i;
-        i = j;
-        j = tmp;
-    }
-}
-
-class Program
-{
-    static void Main()
-    {
-        var type = Assembly.GetExecutingAssembly().GetType( "FasterflectSample.Person" );
-        ExecuteNormalApi(type);
-        ExecuteCacheApi(type);
-    }
-
-    private static void ExecuteNormalApi(Type type)
-    {
-        // Person.InstanceCount should be 0 since no instance is created yet
-        AssertTrue((int)type.GetFieldValue("InstanceCount") == 0);
-        
-        // Invokes the no-arg constructor
-        object obj = type.CreateInstance();
-
-        // Double-check if the constructor is invoked successfully or not
-        AssertTrue(null != obj);
-
-        // Now, Person.InstanceCount should be 1
-        AssertTrue(1 == (int)type.GetFieldValue("InstanceCount"));
-
-        // We can bypass the constructor to change the value of Person.InstanceCount directly
-        type.SetFieldValue("InstanceCount", 2);
-        AssertTrue(2 == (int)type.GetFieldValue("InstanceCount"));
-
-        // Let's invoke Person.IncreaseCounter() static method to increase the counter
-        type.CallMethod("IncreaseInstanceCount");
-        AssertTrue(3 == (int)type.GetFieldValue("InstanceCount"));
-
-        // Now, let's retrieve Person.InstanceCount via the static method GetInstanceCount
-        AssertTrue(3 == (int)type.CallMethod("GetInstanceCount"));
-
-        // Invoke method receiving ref/out params, we need to put arguments in an array
-        var arguments = new object[] { 1, 2 };
-        type.CallMethod("Swap", 
-            // Parameter types must be set to the appropriate ref type
-            new[] { typeof(int).MakeByRefType(), typeof(int).MakeByRefType() },
-            arguments);
-        AssertTrue(2 == (int)arguments[0]);
-        AssertTrue(1 == (int)arguments[1]);
-
-        // Now, invoke the 2-arg constructor.  We don't even have to specify parameter types
-        // if we know that the arguments are not null (Fasterflect will call arg[n].GetType() internally).
-        obj = type.CreateInstance(1, "Doe");
-
-        // id and name should have been set properly
-        AssertTrue(1 == (int)obj.GetFieldValue("id"));
-        AssertTrue("Doe" == obj.GetPropertyValue("Name").ToString());
-
-        // Let's use the indexer to retrieve the character at index 1
-        AssertTrue('o' == (char)obj.GetIndexer(1));
-
-        // If there's null argument, or when we're unsure whether there's a null argument
-        // we must explicitly specify the param type array
-        obj = type.CreateInstance( new[] { typeof(int), typeof(string) }, 1, null );
-
-        // id and name should have been set properly
-        AssertTrue(1 == (int)obj.GetFieldValue("id"));
-        AssertTrue(null == obj.GetPropertyValue("Name"));
-
-        // Now, modify the id
-        obj.SetFieldValue("id", 2);
-        AssertTrue(2 == (int)obj.GetFieldValue("id"));
-        AssertTrue(2 == (int)obj.GetPropertyValue("Id"));
-
-        // We can chain calls
-        obj.SetFieldValue("id", 3)
-           .SetPropertyValue("Name", "Buu");
-        AssertTrue(3 == (int)obj.GetPropertyValue("Id"));
-        AssertTrue("Buu" == (string)obj.GetPropertyValue("Name"));
-         
-        // Map a set of properties from a source to a target
-        new { Id = 4, Name = "Nguyen" }.MapProperties( obj );
-        AssertTrue(4 == (int)obj.GetPropertyValue("Id"));
-        AssertTrue("Nguyen" == (string)obj.GetPropertyValue("Name"));
-
-        // Let's have the folk walk 6 miles
-	obj.CallMethod("Walk", 6);
-		
-        // Double-check the current value of the milesTravelled field
-        AssertTrue(6 == (int)obj.GetFieldValue("milesTraveled"));
-
-        // Construct an array of 10 elements for current type
-        var arr = type.MakeArrayType().CreateInstance(10);
-
-        // GetValue & set element of array
-        obj = type.CreateInstance();
-        arr.SetElement(4, obj)
-           .SetElement(9, obj);
-
-        AssertTrue(obj == arr.GetElement(4));
-        AssertTrue(obj == arr.GetElement(9));
-        AssertTrue(null == arr.GetElement(0));
-    }
-
-    private static void ExecuteCacheApi(Type type)
-    {
-        var range = Enumerable.Range(0, 10).ToList();
-
-        // Let's cache the getter for InstanceCount
-        StaticMemberGetter count = type.DelegateForGetStaticFieldValue("InstanceCount");
-
-        // Now cache the 2-arg constructor of Person and playaround with the delegate returned
-        int currentInstanceCount = (int)count();
-        ConstructorInvoker ctor = type.DelegateForCreateInstance(new[] { typeof(int), typeof(string) });
-        range.ForEach(i =>
-        {
-            object obj = ctor(i, "_" + i);
-            AssertTrue(++currentInstanceCount == (int)count());
-            AssertTrue(i == (int)obj.GetFieldValue("id"));
-            AssertTrue("_" + i == obj.GetPropertyValue("Name").ToString());
-        });
-
-        // Getter/setter
-        MemberSetter nameSetter = type.DelegateForSetPropertyValue("Name");
-        MemberGetter nameGetter = type.DelegateForGetPropertyValue("Name");
-
-        object person = ctor(1, "John");
-        AssertTrue("John" == (string)nameGetter(person));
-        nameSetter(person, "Jane");
-        AssertTrue("Jane" == (string)nameGetter(person));
-
-        // Invoke method
-        person = type.CreateInstance();
-        MethodInvoker walk = type.DelegateForCallMethod("Walk", new[] { typeof(int) });
-        range.ForEach(i => walk(person, i));
-        AssertTrue(range.Sum() == (int)person.GetFieldValue("milesTraveled"));
-        
-        // Map properties
-        var ano = new { Id = 4, Name = "Doe" };
-        var mapper = ano.GetType().DelegateForMap( type );
-        mapper(ano, person);
-        AssertTrue(4 == (int)person.GetPropertyValue("Id"));
-        AssertTrue("Doe" == (string)person.GetPropertyValue("Name"));
-
-    }
-
-    public static void AssertTrue(bool expression)
-    {
-        if (!expression)
-            throw new Exception("Not true");
-        Console.WriteLine("Ok!");
-    }
-}
-```
-
-#### Copyright
-
-Copyright 2010 Buu Nguyen, Morten Mertner
+### Copyright
+Copyright 2010 Buu Nguyen, Morten Mertner \
+Copyright 2018 Wesley Hamilton

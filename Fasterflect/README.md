@@ -1,8 +1,9 @@
 # Intro
 
-This framework is based on [Fasterflect](https://github.com/buunguyen/fasterflect), developed originally by Buu Nguyen and Morten Mertner. 
-It includes one new feature: MultiSetter. The reason I recommend using this framework the original is because the extension methods 
-are separated into a namespace so that they do not clutter intellisense and autocomplete.
+This framework is based on [Fasterflect](https://github.com/buunguyen/fasterflect), which was originally developed by 
+Buu Nguyen and Morten Mertner. The reason I recommend using this framework the original is because the extension methods 
+are separated into a namespace so that they do not clutter intellisense and autocomplete. It also includes one new feature: 
+MultiSetter.
 
 ## [Reflect](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/Reflect.cs)
 
@@ -53,5 +54,5 @@ This is a wrapper around System.Reflection.Emit.IlGenerator that is easier to re
 ilGenerator.Emit(OpCodes.XXX, yyy) you would type emitter.xxx(yyy).
 
 ### Copyright
-Copyright 2010 Buu Nguyen, Morten Mertner
+Copyright 2010 Buu Nguyen, Morten Mertner \
 Copyright 2018 Wesley Hamilton
