@@ -12,7 +12,7 @@ This is the factory for all reflection-based delegates. Every delegate is stored
 cannot create multiple instances of a delegate and will not waste memory by trying to do so.
 
 | Method | Description |
-| --- | --- | --- |
+| --- | --- |
 | Reflect.Constructor() | ConstructorInfo.Invoke() |
 | Reflect.Getter() | PropertyInfo.GetMethod().GetValue() or FieldInfo.GetValue() | 
 | Reflect.PropertyGetter() | PropertyInfo.GetMethod().GetValue() |
