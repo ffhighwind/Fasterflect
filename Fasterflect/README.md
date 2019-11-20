@@ -13,22 +13,22 @@ cannot create multiple instances of a delegate and will not waste memory by tryi
 
 | Method | Description |
 | --- | --- |
-| Reflect.Constructor() | ConstructorInfo.Invoke() |
-| Reflect.Getter() | PropertyInfo.GetMethod().GetValue() or FieldInfo.GetValue() | 
-| Reflect.PropertyGetter() | PropertyInfo.GetMethod().GetValue() |
-| Reflect.FieldGetter() | FieldInfo.GetValue() |
-| Reflect.Setter() | PropertyInfo.SetMethod().SetValue() or FieldInfo.SetValue() |
-| Reflect.PropertySetter() | PropertyInfo.SetMethod().SetValue() |
-| Reflect.FieldSetter() | FieldInfo.SetValue() |
-| Reflect.MultiSetter() | Sets multiple properties/fields with one method call. This is generated as a single delegate which means it is faster than setting each member in a loop. |
-| Reflect.Method() | MethodInfo.Invoke() |
+| Reflect.Constructor() | ConstructorInfo |
+| Reflect.Getter() | PropertyInfo.GetMethod() or FieldInfo | 
+| Reflect.PropertyGetter() | PropertyInfo.GetMethod() |
+| Reflect.FieldGetter() | FieldInfo |
+| Reflect.Setter() | PropertyInfo.SetMethod() or FieldInfo |
+| Reflect.PropertySetter() | PropertyInfo.SetMethod() |
+| Reflect.FieldSetter() | FieldInfo |
+| Reflect.MultiSetter() | Sets multiple properties/fields without using a loop. |
+| Reflect.Method() | MethodInfo |
 | Reflect.Mapper() | Maps the properties/fields of one type onto another type. This can also be used as a shallow cloning method if both types are the same. |
 | Reflect.IndexerGetter() | value = object[index1, index2] |
 | Reflect.IndexerSetter() | object[index1, index2] = value |
 | Reflect.ArrayGetter() | value = object[index] |
 | Reflect.ArraySetter() | object[index] = value |
 | Reflect.DeepClone<T>() | Creates a deep clone of an object. |
-| Reflect.ShallowClone<T>() | Creates a shallow clone of an object using MemberwiseClone. This will throw an exception in certain circumstances because MemberwiseClone is a private method. |
+| Reflect.ShallowClone<T>() | Creates a shallow clone of an object using MemberwiseClone. This can throw an exception if access to M. |
 
 ## [ValueTypeHolder](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/ValueTypeHolder.cs)
 
