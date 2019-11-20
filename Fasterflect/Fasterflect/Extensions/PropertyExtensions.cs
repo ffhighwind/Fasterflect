@@ -28,7 +28,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for locating and accessing properties.
 	/// </summary>
-	public static partial class PropertyExtensions
+	internal static partial class PropertyExtensions
 	{
 		#region Property Access
 		/// <summary>
@@ -191,7 +191,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for locating and accessing properties.
 	/// </summary>
-	public static partial class PropertyExtensions
+	internal static partial class PropertyExtensions
 	{
 		#region Property Access (Internal)
 		/// <summary>

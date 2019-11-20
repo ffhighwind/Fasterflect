@@ -24,7 +24,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for inspecting and working with fields.
 	/// </summary>
-	public static class FieldInfoExtensions
+	internal static class FieldInfoExtensions
 	{
 		/// <summary>
 		/// Sets the static field identified by <paramref name="fieldInfo"/> to the specified <paramref name="value" />.

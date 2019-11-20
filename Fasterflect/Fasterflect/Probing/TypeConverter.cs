@@ -31,7 +31,7 @@ namespace Fasterflect.Probing
 	/// <summary>
 	/// Helper class for converting values between various types.
 	/// </summary>
-	public static class TypeConverter
+	internal static class TypeConverter
 	{
 		#region GetValue methods
 		/// <summary>

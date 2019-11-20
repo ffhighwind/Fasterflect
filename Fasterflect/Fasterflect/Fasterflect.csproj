@@ -71,9 +71,9 @@
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Extensions\AttributeExtensions.cs" />
-    <Compile Include="Extensions\DeepCloneExtensions.cs" />
     <Compile Include="Extensions\ConstructorExtensions.cs" />
     <Compile Include="Extensions\ConstructorInfoExtensions.cs" />
+    <Compile Include="Extensions\DeepCloneExtensions.cs" />
     <Compile Include="Extensions\FieldExtensions.cs" />
     <Compile Include="Extensions\FieldInfoExtensions.cs" />
     <Compile Include="Extensions\MapExtensions.cs" />

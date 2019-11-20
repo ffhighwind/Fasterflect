@@ -25,7 +25,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for inspecting, invoking and working with constructors.
 	/// </summary>
-	public static class ConstructorInfoExtensions
+	internal static class ConstructorInfoExtensions
 	{
 		/// <summary>
 		/// Invokes the constructor <paramref name="ctorInfo"/> with <paramref name="parameters"/> as arguments.

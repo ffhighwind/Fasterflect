@@ -27,7 +27,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for locating, inspecting and invoking constructors.
 	/// </summary>
-	public static class ConstructorExtensions
+	internal static class ConstructorExtensions
 	{
 		#region Constructor Invocation (CreateInstance)
 		/// <summary>

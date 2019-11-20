@@ -229,6 +229,10 @@ namespace Fasterflect
 		/// Gets all properties on the given <paramref name="type"/> that match the specified <paramref name="bindingFlags"/>,
 		/// including properties defined on base types.
 		/// </summary>
+		/// <param name="type">The type whose public properties are to be retrieved.</param>
+		/// <param name="names">A list of names of properties to be retrieved. If this is <c>null</c>, 
+		/// all properties are returned.</param>
+		/// <param name="bindingFlags"></param>
 		/// <returns>A list of all matching properties on the type. This value will never be null.</returns>
 		public static IList<PropertyInfo> Properties(Type type, FasterflectFlags bindingFlags, params string[] names)
 		{
@@ -250,7 +254,15 @@ namespace Fasterflect
 			return properties;
 		}
 
-		private static IList<PropertyInfo> GetProperties(Type type, FasterflectFlags bindingFlags)
+		/// <summary>
+		/// Gets all properties on the given <paramref name="type"/> that match the specified <paramref name="bindingFlags"/>,
+		/// including properties defined on base types.
+		/// </summary>
+		/// <param name="type">The type whose public properties are to be retrieved.</param>
+		/// <param name="bindingFlags"></param>
+		/// <returns>A list of all public properties on the type filted by <paramref name="names"/>.
+		/// This value will never be null.</returns>
+		public static IList<PropertyInfo> GetProperties(Type type, FasterflectFlags bindingFlags)
 		{
 			bool recurse = bindingFlags.IsNotSet(FasterflectFlags.DeclaredOnly);
 

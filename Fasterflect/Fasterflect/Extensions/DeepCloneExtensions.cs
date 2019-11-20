@@ -29,7 +29,7 @@ namespace Fasterflect.Extensions.DeepClone
 	/// <summary>
 	/// Extension methods for deep cloning of objects.
 	/// </summary>
-	public static class DeepCloneExtensions
+	internal static class DeepCloneExtensions
 	{
 		/// <summary>
 		/// Produces a deep clone of the <paramref name="source"/> object. Reference integrity is maintained and

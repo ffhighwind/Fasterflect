@@ -27,7 +27,7 @@ namespace Fasterflect.Extensions.Services
 	/// <summary>
 	/// Extension methods for creating object instances when you do not know which constructor to call.
 	/// </summary>
-	public static class TryCreateInstanceExtensions
+	internal static class TryCreateInstanceExtensions
 	{
 		/// <summary>
 		/// This field is used to cache information on objects used as parameters for object construction, which

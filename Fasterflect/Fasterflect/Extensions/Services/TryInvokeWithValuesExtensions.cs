@@ -35,12 +35,12 @@ namespace Fasterflect.Extensions.Services
 	/// <param name="target">The type or object whose method or constructor is being called.</param>
 	/// <param name="value">The value to be converted.</param>
 	/// <returns></returns>
-	public delegate bool ParameterConverter(Type parameterType, object target, ref object value);
+	internal delegate bool ParameterConverter(Type parameterType, object target, ref object value);
 
 	/// <summary>
 	/// Container class for TryCreateInstanceWithValues and TryCallMethodWithValues extensions.
 	/// </summary>
-	public static partial class TryInvokeWithValuesExtensions
+	internal static partial class TryInvokeWithValuesExtensions
 	{
 		/// <summary>
 		/// Obtains the list of contructors for <paramref name="type"/> using the supplied parameter values
@@ -191,7 +191,7 @@ namespace Fasterflect.Extensions.Services
 	/// <summary>
 	/// Container class for TryCreateInstanceWithValues and TryCallMethodWithValues extensions.
 	/// </summary>
-	public static partial class TryInvokeWithValuesExtensions
+	internal static partial class TryInvokeWithValuesExtensions
 	{
 		/// <summary>
 		/// Obtains the list of methods for <paramref name="obj"/> using the supplied parameter values

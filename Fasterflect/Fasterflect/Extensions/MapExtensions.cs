@@ -25,7 +25,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for mapping (copying) members from one object instance to another.
 	/// </summary>
-	public static partial class MapExtensions
+	internal static partial class MapExtensions
 	{
 		#region Map
 		/// <summary>
@@ -87,7 +87,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for mapping (copying) members from one object instance to another.
 	/// </summary>
-	public static partial class MapExtensions
+	internal static partial class MapExtensions
 	{
 		#region Map (Internal)
 		/// <summary>

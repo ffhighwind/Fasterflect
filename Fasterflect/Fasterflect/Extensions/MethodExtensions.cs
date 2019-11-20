@@ -27,7 +27,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for locating, inspecting and invoking methods.
 	/// </summary>
-	public static partial class MethodExtensions
+	internal static partial class MethodExtensions
 	{
 		#region Method Invocation
 		/// <summary>
@@ -308,7 +308,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for locating, inspecting and invoking methods.
 	/// </summary>
-	public static partial class MethodExtensions
+	internal static partial class MethodExtensions
 	{
 		#region Method Invocation (Internal)
 		/// <summary>

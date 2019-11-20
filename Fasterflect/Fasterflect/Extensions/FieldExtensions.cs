@@ -27,7 +27,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for locating and accessing fields.
 	/// </summary>
-	public static partial class FieldExtensions
+	internal static partial class FieldExtensions
 	{
 		#region Field Access
 		/// <summary>
@@ -126,7 +126,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for locating and accessing fields.
 	/// </summary>
-	public static partial class FieldExtensions
+	internal static partial class FieldExtensions
 	{
 		#region Field Access
 		/// <summary>

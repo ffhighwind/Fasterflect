@@ -24,7 +24,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for working with arrays.
 	/// </summary>
-	public static partial class ArrayExtensions
+	internal static partial class ArrayExtensions
 	{
 		#region Array Access (Public)
 		/// <summary>
@@ -48,7 +48,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for working with arrays.
 	/// </summary>
-	public static partial class ArrayExtensions
+	internal static partial class ArrayExtensions
 	{
 		#region Array Access
 		/// <summary>

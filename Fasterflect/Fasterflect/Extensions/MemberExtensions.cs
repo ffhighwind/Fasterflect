@@ -26,7 +26,7 @@ namespace Fasterflect.Extensions
 	/// Extension methods for locating and accessing fields or properties, for situations where
 	/// you do not care which it is.
 	/// </summary>
-	public static partial class MemberExtensions
+	internal static partial class MemberExtensions
 	{
 		#region Member Lookup (Single)
 		/// <summary>
@@ -193,7 +193,7 @@ namespace Fasterflect.Extensions
 	/// Extension methods for locating and accessing fields or properties, for situations where
 	/// you do not care which it is.
 	/// </summary>
-	public static partial class MemberExtensions
+	internal static partial class MemberExtensions
 	{
 		#region TryGetValue
 		/// <summary>

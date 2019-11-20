@@ -25,7 +25,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for inspecting and working with method parameters.
 	/// </summary>
-	public static class ParameterInfoExtensions
+	public static partial class ParameterInfoExtensions
 	{
 		/// <summary>
 		/// Determines whether null can be assigned to the given <paramref name="parameter"/>.
@@ -35,7 +35,14 @@ namespace Fasterflect.Extensions
 		{
 			return !parameter.ParameterType.IsValueType || parameter.ParameterType.IsSubclassOf(typeof(Nullable));
 		}
+	}
 
+	/// <summary>
+	/// Extension methods for inspecting and working with method parameters.
+	/// </summary>
+	public static partial class ParameterInfoExtensions
+	{
+		#region Internal
 		/// <summary>
 		/// Determines whether the given <paramref name="parameter"/> has the given <paramref name="name"/>.
 		/// The comparison uses OrdinalIgnoreCase and allows for a leading underscore in either name
@@ -43,7 +50,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		/// <returns>True if the name is considered identical, false otherwise. If either parameter
 		/// is null an exception will be thrown.</returns>
-		public static bool HasName(this ParameterInfo parameter, string name)
+		internal static bool HasName(this ParameterInfo parameter, string name)
 		{
 			string parameterName = parameter.Name.Length > 0 && parameter.Name[0] == '_'
 									   ? parameter.Name.Substring(1)
@@ -58,7 +65,7 @@ namespace Fasterflect.Extensions
 		/// the attribute. It also does not support C# 4.0 default parameter specifications.
 		/// </summary>
 		/// <returns>True if the attribute was detected, false otherwise.</returns>
-		public static bool HasDefaultValue(this ParameterInfo parameter)
+		internal static bool HasDefaultValue(this ParameterInfo parameter)
 		{
 			DefaultValueAttribute defaultValue = parameter.Attribute<DefaultValueAttribute>();
 			return defaultValue != null;
@@ -71,12 +78,13 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		/// <returns>The default value if one could be obtained and converted into the type of the parameter,
 		/// and null otherwise.</returns>
-		public static object DefaultValue(this ParameterInfo parameter)
+		internal static object DefaultValue(this ParameterInfo parameter)
 		{
 			DefaultValueAttribute defaultValue = parameter.Attribute<DefaultValueAttribute>();
 			return defaultValue != null
 					   ? Probing.TypeConverter.Get(parameter.ParameterType, defaultValue.Value)
 					   : null;
 		}
+		#endregion Internal
 	}
 }

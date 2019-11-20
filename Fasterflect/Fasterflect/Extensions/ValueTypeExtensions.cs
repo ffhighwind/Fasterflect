@@ -32,7 +32,7 @@ namespace Fasterflect.Extensions
 		///<param name="obj">An object to be examined.</param>
 		///<returns>A wrapper <seealso cref="ValueTypeHolder"/> instance if <paramref name="obj"/>
 		/// is a value type, or <paramref name="obj"/> itself if it's a reference type.</returns>
-		internal static object WrapIfValueType(this object obj)
+		public static object WrapIfValueType(this object obj)
 		{
 			return obj.GetType().IsValueType ? new ValueTypeHolder(obj) : obj;
 		}
@@ -43,7 +43,7 @@ namespace Fasterflect.Extensions
 		///<param name="obj">An object to be "erased".</param>
 		///<returns>The object wrapped by <paramref name="obj"/> if the latter is of type <see cref="ValueTypeHolder"/>.  Otherwise,
 		/// return <paramref name="obj"/>.</returns>
-		internal static object UnwrapIfWrapped(this object obj)
+		public static object UnwrapIfWrapped(this object obj)
 		{
 			return !(obj is ValueTypeHolder holder) ? obj : holder.Value;
 		}
@@ -53,7 +53,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		/// <param name="obj">The object to check.</param>
 		/// <returns>Returns true if <paramref name="obj"/> is a wrapped object (instance of <see cref="ValueTypeHolder"/>).</returns>
-		internal static bool IsWrapped(this object obj)
+		public static bool IsWrapped(this object obj)
 		{
 			return obj as ValueTypeHolder != null;
 		}

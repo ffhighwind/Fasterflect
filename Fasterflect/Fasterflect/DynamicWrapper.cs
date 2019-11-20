@@ -35,7 +35,7 @@ namespace Fasterflect
 		}
 		public DynamicWrapper(ref ValueType target)
 		{
-			this.target = target.WrapIfValueType();
+			this.target = target.WrapIfValueType(); 
 		}
 		#endregion
 

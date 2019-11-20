@@ -27,7 +27,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for inspecting, invoking and working with methods.
 	/// </summary>
-	public static class MethodInfoExtensions
+	internal static class MethodInfoExtensions
 	{
 		#region Access
 		/// <summary>

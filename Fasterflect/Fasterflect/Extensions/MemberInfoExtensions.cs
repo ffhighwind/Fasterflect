@@ -25,7 +25,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for inspecting and working with members.
 	/// </summary>
-	public static class MemberInfoExtensions
+	internal static class MemberInfoExtensions
 	{
 		/// <summary>
 		/// Gets the static field or property identified by <paramref name="memberInfo"/>.

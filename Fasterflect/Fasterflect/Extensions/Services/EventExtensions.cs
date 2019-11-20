@@ -26,7 +26,7 @@ namespace Fasterflect.Extensions.Services
 	/// <summary>
 	/// Container class for event/delegate extensions.
 	/// </summary>
-	public static partial class EventExtensions
+	internal static partial class EventExtensions
 	{
 		/// <summary>
 		/// Invokes a static delegate using supplied parameters.
@@ -129,7 +129,7 @@ namespace Fasterflect.Extensions.Services
 	/// <summary>
 	/// Container class for event/delegate extensions.
 	/// </summary>
-	public static partial class EventExtensions
+	internal static partial class EventExtensions
 	{
 		/// <summary>
 		/// Assigns a dynamic handler for a static delegate or event.

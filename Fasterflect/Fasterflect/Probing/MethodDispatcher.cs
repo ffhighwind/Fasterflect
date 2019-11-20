@@ -26,7 +26,7 @@ namespace Fasterflect.Probing
 	/// <summary>
 	/// Collects methods into a pool and allows invocation of the best match given a set of parameters.
 	/// </summary>
-	public class MethodDispatcher
+	internal class MethodDispatcher
 	{
 		/// <summary>
 		/// The list of candidate methods for invocations through this dispatcher instance.

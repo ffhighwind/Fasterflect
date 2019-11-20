@@ -24,7 +24,7 @@ namespace Fasterflect
 	/// A wrapper for value type.  Must be used in order for Fasterflect to 
 	/// work with value type such as struct.
 	/// </summary>
-	internal class ValueTypeHolder
+	public class ValueTypeHolder
 	{
 		/// <summary>
 		/// Creates a wrapper for <paramref name="value"/> value type.  The wrapper
@@ -42,11 +42,19 @@ namespace Fasterflect
 		/// </summary>
 		public ValueType Value { get; set; }
 
+		/// <summary>
+		/// Casts a <see cref="ValueType"/> to a <see cref="ValueTypeHolder"/>.
+		/// </summary>
+		/// <param name="o"></param>
 		public static implicit operator ValueTypeHolder(ValueType o)
 		{
 			return new ValueTypeHolder(o);
 		}
 
+		/// <summary>
+		/// Casts a <see cref="ValueTypeHolder"/> to a <see cref="ValueType"/>.
+		/// </summary>
+		/// <param name="o"></param>
 		public static implicit operator ValueType(ValueTypeHolder o)
 		{
 			return o.Value;

@@ -2,14 +2,14 @@
 
 This framework is based on [Fasterflect](https://github.com/buunguyen/fasterflect), which was originally developed by 
 Buu Nguyen and Morten Mertner. The reason I recommend using this framework the original is because the extension methods 
-are separated into a namespace so that they do not clutter intellisense and autocomplete. It also includes one new feature: 
-MultiSetter.
+have been moved to a separate namespace to ensure that they do not clutter intellisense and auto-complete. Almost all of them
+have been changed to internal as well because this most of the functionality should be accessed from ReflectLookup instead. 
+The extensions that are still available include Type specific ones such as pretty printing. It also includes one new feature: MultiSetter.
 
 ## [Reflect](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/Reflect.cs)
 
-This is the factory for all reflection-based delegates. Every delegate is stored in a temporary cache, which means that they will be 
-garbage collected unless you keep a reference to them. However, this also means that you cannot create multiple instances of a delegate
-and will not waste memory by trying to do so.
+This is the factory for all reflection-based delegates. Every delegate is stored in a temporary cache, which means that you 
+cannot create multiple instances of a delegate and will not waste memory by trying to do so.
 
 | Method | Return | Description |
 | --- | --- | --- |
@@ -43,9 +43,9 @@ but it does include some good ideas such as case insensitive searches. I would r
 
 ## [Extensions](https://github.com/ffhighwind/fasterflect/tree/master/Fasterflect/Fasterflect/Extensions)
 
-All extension methods are in the namespace. This was done because most of the extensions are pointless and clutter the intellisense
-and autocomplete. I especially dislike the extension methods on "object". The only reason I did not remove these is because they are 
-used everywhere and it is too much work to remove them.
+All extension methods are in this namespace. This was done because most of the extensions are pointless and clutter the intellisense
+and autocomplete. I especially dislike the extension methods on "object". The only reason I did't remove these is because they are 
+used everywhere and it is too much work to remove them without breaking everything.
 
 ## [Emitter.EmitHelper](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/Emitter/EmitHelper.cs)
 

@@ -26,7 +26,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for locating and retrieving attributes.
 	/// </summary>
-	public static class AttributeExtensions
+	internal static class AttributeExtensions
 	{
 		#region Attribute Lookup (Single)
 		/// <summary>

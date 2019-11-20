@@ -24,7 +24,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for inspecting and working with properties.
 	/// </summary>
-	public static class PropertyInfoExtensions
+	internal static class PropertyInfoExtensions
 	{
 		/// <summary>
 		/// Sets the static property identified by <paramref name="propInfo"/> to the specified <paramref name="value" />.
@@ -66,6 +66,7 @@ namespace Fasterflect.Extensions
 		{
 			return Reflect.PropertySetter(propInfo);
 		}
+
 		/// <summary>
 		/// Creates a delegate which can get the value of the property <param name="propInfo"/>.
 		/// </summary>
