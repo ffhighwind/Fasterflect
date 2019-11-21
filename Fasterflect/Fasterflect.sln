@@ -13,13 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FasterflectSample", "Faster
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{65C619B0-3B3E-4482-848C-1BC17CA71711}"
 	ProjectSection(SolutionItems) = preProject
-		CodeCoverage.testsettings = CodeCoverage.testsettings
-		Default.testsettings = Default.testsettings
-		Fasterflect.vsmdi = Fasterflect.vsmdi
-		key.snk = key.snk
 		README.md = README.md
 		..\README.md = ..\README.md
-		SolutionInfo.cs = SolutionInfo.cs
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FasterflectPlayground", "FasterflectPlayground\FasterflectPlayground.csproj", "{715C1C1D-1B45-44FF-9C6E-356051C31A38}"
