@@ -8,8 +8,8 @@ The extensions that are still available include Type specific ones such as prett
 
 ## [Reflect](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/Reflect.cs)
 
-This is the factory for all reflection-based delegates. Every delegate is stored in a temporary cache, which means that you 
-cannot create multiple instances of a delegate and will not waste memory by trying to do so.
+Reflect is the static factory for all reflection-based delegates. Every delegate that is generated is stored in a temporary cache.
+This ensures that you do not create multiple instances of a delegate and will not waste memory by trying to do so.
 
 | Method | Description |
 | --- | --- |
@@ -28,11 +28,11 @@ cannot create multiple instances of a delegate and will not waste memory by tryi
 | Reflect.ArrayGetter() | value = object[index] |
 | Reflect.ArraySetter() | object[index] = value |
 | Reflect.DeepClone<T>() | Creates a deep clone of an object. |
-| Reflect.ShallowClone<T>() | Creates a shallow clone of an object using MemberwiseClone. This can throw an exception if access to M. |
+| Reflect.ShallowClone<T>() | Creates a shallow clone of an object using MemberwiseClone. This can throw an exception. |
 
 ## [ValueTypeHolder](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/ValueTypeHolder.cs)
 
-Value types must be wrapped with a ValueTypeHolder to work with the reflection methods. The alternative to this approach would be 
+Value types must be wrapped with a ValueTypeHolder to work with the reflection delegates. The alternative to this approach would be 
 to make the first argument a ref object for all delegates. I have decided against doing this because value types are not supposed 
 to be passed by reference and forcing the user to type ref for every call is tedious and it would reduce the performance for reference types.
 
