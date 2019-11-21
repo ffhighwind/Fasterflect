@@ -45,8 +45,8 @@ namespace Fasterflect.Emitter
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
-			return CreateDynamicMethod("invoke", CallInfo.TargetType, Constants.ObjectType,
-				new[] { Constants.ObjectType, Constants.ObjectType.MakeArrayType() });
+			return CreateDynamicMethod("invoke", CallInfo.TargetType, typeof(object),
+				new[] { typeof(object), typeof(object).MakeArrayType() });
 		}
 
 		protected internal override Delegate CreateDelegate()
@@ -54,7 +54,7 @@ namespace Fasterflect.Emitter
 			MethodInfo method = (MethodInfo) CallInfo.MemberInfo ?? LookupUtils.GetMethod(CallInfo);
 			CallInfo.IsStatic = method.IsStatic;
 			const byte paramArrayIndex = 1;
-			bool hasReturnType = method.ReturnType != Constants.VoidType;
+			bool hasReturnType = method.ReturnType != typeof(void);
 
 			byte startUsableLocalIndex = 0;
 			if (CallInfo.HasRefParam) {
@@ -62,7 +62,7 @@ namespace Fasterflect.Emitter
 				// create by_ref_locals from argument array
 				Generator.DeclareLocal(hasReturnType
 											? method.ReturnType
-											: Constants.ObjectType); // T result;
+											: typeof(object)); // T result;
 				GenerateInvocation(method, paramArrayIndex, (byte) (startUsableLocalIndex + 1));
 				if (hasReturnType) {
 					Generator.stloc(startUsableLocalIndex); // result = <stack>;
@@ -72,7 +72,7 @@ namespace Fasterflect.Emitter
 			else {
 				Generator.DeclareLocal(hasReturnType
 											? method.ReturnType
-											: Constants.ObjectType); // T result;
+											: typeof(object)); // T result;
 				GenerateInvocation(method, paramArrayIndex, (byte) (startUsableLocalIndex + 1));
 				if (hasReturnType) {
 					Generator.stloc(startUsableLocalIndex); // result = <stack>;

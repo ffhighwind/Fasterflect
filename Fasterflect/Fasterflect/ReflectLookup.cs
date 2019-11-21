@@ -236,7 +236,7 @@ namespace Fasterflect
 		/// <returns>A list of all matching properties on the type. This value will never be null.</returns>
 		public static IList<PropertyInfo> Properties(Type type, FasterflectFlags bindingFlags, params string[] names)
 		{
-			if (type == null || type == Constants.ObjectType) {
+			if (type == null || type == typeof(object)) {
 				return Constants.EmptyPropertyInfoArray;
 			}
 

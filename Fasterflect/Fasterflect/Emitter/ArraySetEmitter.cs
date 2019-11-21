@@ -33,7 +33,7 @@ namespace Fasterflect.Emitter
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
 			return CreateDynamicMethod(Constants.ArraySetterName, CallInfo.TargetType, null,
-										new[] { Constants.ObjectType, Constants.IntType, Constants.ObjectType });
+										new[] { typeof(object), typeof(int), typeof(object) });
 		}
 
 		protected internal override Delegate CreateDelegate()

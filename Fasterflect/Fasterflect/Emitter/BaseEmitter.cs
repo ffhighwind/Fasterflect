@@ -26,10 +26,10 @@ namespace Fasterflect.Emitter
 		internal static readonly Cache<CallInfo, Delegate> cache = new Cache<CallInfo, Delegate>();
 
 		protected static readonly MethodInfo StructGetMethod =
-			Constants.StructType.GetMethod("get_Value", BindingFlags.Public | BindingFlags.Instance);
+			typeof(ValueTypeHolder).GetMethod("get_Value", BindingFlags.Public | BindingFlags.Instance);
 
 		protected static readonly MethodInfo StructSetMethod =
-			Constants.StructType.GetMethod("set_Value", BindingFlags.Public | BindingFlags.Instance);
+			typeof(ValueTypeHolder).GetMethod("set_Value", BindingFlags.Public | BindingFlags.Instance);
 
 		protected CallInfo CallInfo;
 		protected DynamicMethod Method;
@@ -67,7 +67,7 @@ namespace Fasterflect.Emitter
 		protected void LoadInnerStructToLocal(byte localPosition)
 		{
 			Generator
-				.castclass(Constants.StructType) // (ValueTypeHolder)wrappedStruct
+				.castclass(typeof(ValueTypeHolder)) // (ValueTypeHolder)wrappedStruct
 				.callvirt(StructGetMethod) // <stack>.get_Value()
 				.unbox_any(CallInfo.TargetType) // unbox <stack>
 				.stloc(localPosition) // localStr = <stack>
@@ -83,7 +83,7 @@ namespace Fasterflect.Emitter
 		{
 			Generator
 				.ldarg(argPosition)
-				.castclass(Constants.StructType) // wrappedStruct = (ValueTypeHolder)this
+				.castclass(typeof(ValueTypeHolder)) // wrappedStruct = (ValueTypeHolder)this
 				.ldloc(localPosition) // load localStr
 				.boxIfValueType(CallInfo.TargetType) // box <stack>
 				.callvirt(StructSetMethod); // wrappedStruct.set_Value(<stack>)

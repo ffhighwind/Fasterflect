@@ -20,7 +20,7 @@ namespace Fasterflect.Emitter
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
 			return CreateDynamicMethod("multisetter", CallInfo.TargetType, null,
-				new[] { Constants.ObjectType, Constants.ObjectType.MakeArrayType() });
+				new[] { typeof(object), typeof(object).MakeArrayType() });
 		}
 
 		protected internal override Delegate CreateDelegate()
@@ -40,7 +40,7 @@ namespace Fasterflect.Emitter
 				Generator.ldarg_0.end();                            // load arg-0 (this)
 				if (handleInnerStruct) {
 					Generator.DeclareLocal(CallInfo.TargetType);    // TargetType tmpStr
-					Generator.castclass(Constants.StructType) // (ValueTypeHolder)wrappedStruct
+					Generator.castclass(typeof(ValueTypeHolder)) // (ValueTypeHolder)wrappedStruct
 						.callvirt(StructGetMethod) // <stack>.get_Value()
 						.unbox_any(CallInfo.TargetType) // unbox <stack>
 						.stloc(0); // localStr = <stack>

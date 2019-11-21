@@ -47,7 +47,7 @@ namespace Fasterflect.Emitter
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
-			return CreateDynamicMethod("getter", CallInfo.TargetType, Constants.ObjectType, new[] { Constants.ObjectType });
+			return CreateDynamicMethod("getter", CallInfo.TargetType, typeof(object), new[] { typeof(object) });
 		}
 
 		protected internal override Delegate CreateDelegate()
@@ -63,7 +63,7 @@ namespace Fasterflect.Emitter
 				Generator.ldarg_0                               // load arg-0 (this)
 						 .DeclareLocal(CallInfo.TargetType);    // TargetType tmpStr
 				LoadInnerStructToLocal(0);                      // tmpStr = ((ValueTypeHolder)this)).Value
-				Generator.DeclareLocal(Constants.ObjectType);   // object result;
+				Generator.DeclareLocal(typeof(object));   // object result;
 			}
 			else if (!CallInfo.IsStatic) {
 				Generator.ldarg_0                               // load arg-0 (this)
