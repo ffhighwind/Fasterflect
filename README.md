@@ -25,15 +25,15 @@ public class Person
 public class Program {
 public static void Main(string[] args)
 {
-	ConstructorInvoker ctor = Reflect.Constructor(typeof(person), typeof(string), typeof(int));
-	var getName = Reflect.Getter(typeof(Person), "Name");
-	var getAge = Reflect.FieldGetter(typeof(Person), "Age");
-	var setAge = Reflect.Setter(typeof(Person), "Age");
+	ConstructorInvoker ctor = Reflect.Constructor(typeof(Person), typeof(string), typeof(int));
+	MemberGetter getName = Reflect.Getter(typeof(Person), "Name");
+	MemberGetter getAge = Reflect.FieldGetter(typeof(Person), "Age");
+	MemberSetter setAge = Reflect.Setter(typeof(Person), "Age");
 
 	Person person = (Person) ctor("John Doe", 21);
 	setAge(person, 35);
-	Console.Writeline(person.Name);
-	Console.WriteLine(person.Age);
+	Console.WriteLine(getName(person));
+	Console.WriteLine(getAge(person));
 	Console.WriteLine("Complete...");
 	Console.ReadLine();
 }
