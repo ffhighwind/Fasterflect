@@ -37,7 +37,8 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile></AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -57,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fasterflect\Fasterflect.csproj">
-      <Project>{FDF54936-A188-45B1-B482-632DA23DB0B0}</Project>
+      <Project>{612e62d9-3884-423c-86b5-94004b5c43f5}</Project>
       <Name>Fasterflect</Name>
     </ProjectReference>
   </ItemGroup>

@@ -17,8 +17,6 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 
 #endregion
-
-
 namespace Fasterflect
 {
 #if DOT_NET_4

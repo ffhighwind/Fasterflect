@@ -204,8 +204,12 @@ namespace Fasterflect.Emitter
 			int endLine,
 			int endColumn)
 		{
+#if NET45
 			_ilGenerator.MarkSequencePoint(document, startLine, startColumn, endLine, endColumn);
 			return this;
+#else
+			throw new NotSupportedException(nameof(EmitHelper.MarkSequencePoint));
+#endif
 		}
 
 		/// <summary>
@@ -230,9 +234,9 @@ namespace Fasterflect.Emitter
 			_ilGenerator.UsingNamespace(namespaceName);
 			return this;
 		}
-		#endregion
+#endregion
 
-		#region Addtional Methods
+#region Addtional Methods
 		public EmitHelper ldelem(Type type)
 		{
 			_ilGenerator.Emit(OpCodes.Ldelem, type);
@@ -262,9 +266,9 @@ namespace Fasterflect.Emitter
 			_ilGenerator.Emit(isStatic ? OpCodes.Stsfld : OpCodes.Stfld, fieldInfo);
 			return this;
 		}
-		#endregion
+#endregion
 
-		#region Emit Wrappers
+#region Emit Wrappers
 		/// <summary>
 		/// Calls ILGenerator.Emit(<see cref="OpCodes.Add"/>) that
 		/// adds two values and pushes the result onto the evaluation stack.
@@ -822,8 +826,12 @@ namespace Fasterflect.Emitter
 		/// <seealso cref="System.Reflection.Emit.ILGenerator.EmitCalli(OpCode,CallingConvention,Type,Type[])">ILGenerator.EmitCalli</seealso>
 		public EmitHelper calli(CallingConvention unmanagedCallConv, Type returnType, Type[] parameterTypes)
 		{
+#if NET45
 			_ilGenerator.EmitCalli(OpCodes.Calli, unmanagedCallConv, returnType, parameterTypes);
 			return this;
+#else
+			throw new NotSupportedException(nameof(EmitHelper.calli));
+#endif
 		}
 
 		/// <summary>
@@ -3848,7 +3856,7 @@ namespace Fasterflect.Emitter
 		public void end()
 		{
 		}
-		#endregion
+#endregion
 
 		/// <summary>
 		/// Loads default value of given type onto the evaluation stack.
