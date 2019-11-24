@@ -8,9 +8,9 @@
     <NeutralLanguage>en-us</NeutralLanguage>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageTags>reflection reflection-emit dynamic-method .net35 .net40 .net45 .netstandard2</PackageTags>
-    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageLicense>Apache-2.0</PackageLicense>
     <PackageProjectUrl>https://github.com/ffhighwind/fasterflect</PackageProjectUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Copyright>Copyright (c) 2010 Buu Nguyen, Morten Mertner, Copyright (c) 2018 Wesley Hamilton</Copyright>
     <RepositoryUrl>https://github.com/ffhighwind/fasterflect</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
@@ -20,12 +20,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
     <DefineConstants>DOT_NET_4;NETSTANDARD2_0</DefineConstants>
+    <OutputPath>bin\lib\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DefineConstants>DOT_NET_4;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net461|AnyCPU'">
     <DefineConstants>DOT_NET_4;NET461</DefineConstants>
+    <OutputPath>bin\lib\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
     <DefineConstants>DOT_NET_4;NET461</DefineConstants>
