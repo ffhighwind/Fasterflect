@@ -1,10 +1,9 @@
 # Intro
 
 This framework is based on [Fasterflect](https://github.com/buunguyen/fasterflect), which was originally developed by 
-Buu Nguyen and Morten Mertner. The reason I recommend using this framework the original is because the extension methods 
-have been moved to a separate namespace to ensure that they do not clutter intellisense and auto-complete. Almost all of them
-have been changed to internal as well because this most of the functionality should be accessed from ReflectLookup instead. 
-The extensions that are still available include Type specific ones such as pretty printing. It also includes one new feature: MultiSetter.
+Buu Nguyen and Morten Mertner. The extension methods in this version have been moved to a separate namespace to ensure that 
+they do not clutter intellisense and auto-complete. Most of the search methods have been moved to ReflectLookup instead.
+It also includes one new feature: MultiSetter.
 
 ## Example
 
@@ -71,7 +70,7 @@ This ensures that you do not create multiple instances of a delegate and will no
 
 ## [ValueTypeHolder](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/ValueTypeHolder.cs)
 
-Value types must be wrapped with a ValueTypeHolder to work with the reflection delegates. The alternative to this approach would be 
+Value types (structs) must be wrapped with a ValueTypeHolder to work with the reflection delegates. The alternative to this approach would be 
 to make the first argument a ref object for all delegates. I have decided against doing this because value types are not supposed 
 to be passed by reference and forcing the user to type ref for every call is tedious and it would reduce the performance for reference types.
 
