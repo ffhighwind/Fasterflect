@@ -6,6 +6,45 @@ have been moved to a separate namespace to ensure that they do not clutter intel
 have been changed to internal as well because this most of the functionality should be accessed from ReflectLookup instead. 
 The extensions that are still available include Type specific ones such as pretty printing. It also includes one new feature: MultiSetter.
 
+## Example
+
+```csharp
+using Fasterflect;
+
+public class Person
+{
+	public Person(string name, int age) 
+	{
+		Name = name;
+		Age = age;
+	}
+	public string Name { get; set; }
+	public int Age;
+}
+
+public class Program {
+public static void Main(string[] args)
+{
+	ConstructorInvoker ctor = Reflect.Constructor(typeof(person), typeof(string), typeof(int));
+	var getName = Reflect.Getter(typeof(Person), "Name");
+	var getAge = Reflect.FieldGetter(typeof(Person), "Age");
+	var setAge = Reflect.Setter(typeof(Person), "Age");
+
+	Person person = (Person) ctor("John Doe", 21);
+	setAge(person, 35);
+	Console.Writeline(person.Name);
+	Console.WriteLine(person.Age);
+	Console.WriteLine("Complete...");
+	Console.ReadLine();
+}
+}
+
+// Output
+// John Doe
+// 35
+// Complete...
+```
+
 ## [Reflect](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/Reflect.cs)
 
 Reflect is the static factory for all reflection-based delegates. Every delegate that is generated is stored in a temporary cache.

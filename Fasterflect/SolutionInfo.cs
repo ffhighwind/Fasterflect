@@ -17,3 +17,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("3.0.1")]
 [assembly: AssemblyFileVersion("3.0.1")]
+
+[assembly: InternalsVisibleTo("FasterflectExample")]
+[assembly: InternalsVisibleTo("FasterflectBenchmark")]
+[assembly: InternalsVisibleTo("FasterflectSample")]
