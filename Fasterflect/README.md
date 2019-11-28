@@ -6,44 +6,41 @@ This framework is based on [Fasterflect](https://github.com/buunguyen/fasterflec
 
 ## Benchmarks
 
-Cached Fasterflect is 50x faster than .NET reflection, and 2-10x slower than direct property access. Note also that Fasterflect only uses objects as arguments and return types.
-This means it is slowed down by needing to box and unbox data, which also means that it performs slightly worse than generic delegates that have the exact type. However, this is usually the only
-time that reflection is useful. If you know the generic types at compile time then you likely have direct access to the properties or you can implement an interface that lets you 
-bypass the need for reflection.
+Cached Fasterflect is 50x faster than .NET reflection, and 2-10x slower than direct property access. Note also that Fasterflect only uses *objects* as arguments and return types. This slows down the methods because data needs to be boxed and unboxed. However, this is usually the only time that reflection is useful. If you know the generic types at compile time then you likely have direct access to the properties or you can implement an interface that lets you bypass the need for reflection.
 
 ### Getters
-|                                Getters |        Mean |   Ratio |
-|--------------------------------------- |------------:|--------:|
-|        Direct Access (inlining)        |   0.0000 ns |   0.000 |
-|     Direct Access (no inlining)        |   0.0000 ns |   0.000 |
-| Delegate.CreateDelegate Func<T,string> |   1.7718 ns |   0.582 |
-|                     Fasterflect        |   3.0426 ns |   1.000 |
-|     Magnum (Expression.Compile)        |  10.6231 ns |   3.492 |
-|           ILEmit Func<T,string>        |  12.3850 ns |   4.071 |
-|             ILEmit MemberGetter        |  13.8618 ns |   4.556 |
-|     ILEmit Func<\object,object>        |  13.9188 ns |   4.574 |
-|                      FastMember        |  30.7529 ns |  10.109 |
-|               MethodInfo.Invoke        | 124.4104 ns |  40.895 |
-|           PropertyInfo (cached)        | 133.4586 ns |  43.869 |
-|                    PropertyInfo        | 193.6173 ns |  63.643 |
-|          Delegate.DynamicInvoke        | 701.8960 ns | 230.719 |
+|                                  Getters |        Mean |   Ratio |
+|----------------------------------------- |------------:|--------:|
+|        Direct Access (inlining)          |   0.0000 ns |   0.000 |
+|     Direct Access (no inlining)          |   0.0000 ns |   0.000 |
+| Delegate.CreateDelegate (Func<T,string>) |   1.7718 ns |   0.582 |
+|                     **Fasterflect**      | **3.0426 ns** | **1.000** |
+|     Magnum (Expression.Compile)          |  10.6231 ns |   3.492 |
+|           ILEmit (Func<T,string>)        |  12.3850 ns |   4.071 |
+|             ILEmit (MemberGetter)        |  13.8618 ns |   4.556 |
+|     ILEmit Func<object,object>           |  13.9188 ns |   4.574 |
+|                      FastMember          |  30.7529 ns |  10.109 |
+|               MethodInfo.Invoke          | 124.4104 ns |  40.895 |
+|           PropertyInfo (cached)          | 133.4586 ns |  43.869 |
+|                    PropertyInfo          | 193.6173 ns |  63.643 |
+|          Delegate.DynamicInvoke          | 701.8960 ns | 230.719 |
 
 ### Setters
-|                                  Setters |       Mean |  Ratio |
-|----------------------------------------- |-----------:|-------:|
-|       Direct Access (inlining)           |   1.300 ns |   0.33 |
-|    Direct Access (no inlining)           |   1.299 ns |   0.33 |
-| Delegate.CreateDelegate Action<T,string> |   3.036 ns |   0.78 |
-|        ILEmit Action<T,string>           |   3.081 ns |   0.79 |
-|            ILEmit MemberSetter           |   3.900 ns |   1.00 |
-|  ILEmit Action<\object,object>           |   3.905 ns |   1.00 |
-|                    Fasterflect           |   3.907 ns |   1.00 |
-|    Magnum (Expression.Compile)           |  10.508 ns |   2.69 |
-|                     FastMember           |  32.130 ns |   8.22 |
-|              MethodInfo.Invoke           | 191.305 ns |  48.96 |
-|          PropertyInfo (cached)           | 200.824 ns |  51.39 |
-|                   PropertyInfo           | 259.840 ns |  66.51 |
-|         Delegate.DynamicInvoke           | 763.633 ns | 195.48 |
+|                                    Setters |       Mean |  Ratio |
+|------------------------------------------- |-----------:|-------:|
+|       Direct Access (inlining)             |   1.300 ns |   0.33 |
+|    Direct Access (no inlining)             |   1.299 ns |   0.33 |
+| Delegate.CreateDelegate (Action<T,string>) |   3.036 ns |   0.78 |
+|        ILEmit (Action<T,string>)           |   3.081 ns |   0.79 |
+|            ILEmit (MemberSetter)           |   3.900 ns |   1.00 |
+|  ILEmit (Action<object,object>)            |   3.905 ns |   1.00 |
+|                    **Fasterflect**         | **3.907 ns** | **1.00** |
+|    Magnum (Expression.Compile)             |  10.508 ns |   2.69 |
+|                     FastMember             |  32.130 ns |   8.22 |
+|              MethodInfo.Invoke             | 191.305 ns |  48.96 |
+|          PropertyInfo (cached)             | 200.824 ns |  51.39 |
+|                   PropertyInfo             | 259.840 ns |  66.51 |
+|         Delegate.DynamicInvoke             | 763.633 ns | 195.48 |
 
 [Other Benchmarks](https://github.com/ffhighwind/fasterflect/wiki/Benchmarks)
 All times are recorded in miliseconds using 2 million iterations.
