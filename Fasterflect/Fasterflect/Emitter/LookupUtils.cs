@@ -68,11 +68,17 @@ namespace Fasterflect.Emitter
 			}
 			if (callInfo.MemberTypes.HasFlag(MemberTypes.Field)) {
 				member = callInfo.TargetType.Field(callInfo.Name, callInfo.BindingFlags);
-				if (member != null) {
-					callInfo.MemberTypes = MemberTypes.Field;
-					callInfo.MemberInfo = member;
-					return member;
+				if (member == null) {
+					const string fmt = "No match for field with name {0} and flags {1} on type {2}.";
+					throw new MissingFieldException(string.Format(fmt, callInfo.Name, callInfo.BindingFlags, callInfo.TargetType));
 				}
+				callInfo.MemberTypes = MemberTypes.Field;
+				callInfo.MemberInfo = member;
+				return member;
+			}
+			if (callInfo.MemberTypes.HasFlag(MemberTypes.Property)) {
+				const string fmt = "No match for property with name {0} and flags {1} on type {2}.";
+				throw new MissingMemberException(string.Format(fmt, callInfo.Name, callInfo.BindingFlags, callInfo.TargetType));
 			}
 			throw new ArgumentException(callInfo.MemberTypes + " is not supported");
 		}

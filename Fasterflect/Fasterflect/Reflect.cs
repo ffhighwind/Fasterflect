@@ -80,7 +80,7 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given member.</returns>
 		public static MemberGetter Getter(Type type, string name)
 		{
-			return Getter(type, name, MemberTypes.Field | MemberTypes.Property, FasterflectFlags.StaticInstanceAnyVisibility);
+			return (MemberGetter)new MemberGetEmitter(type, FasterflectFlags.StaticInstanceAnyVisibility, MemberTypes.Field | MemberTypes.Property, name).GetDelegate();
 		}
 
 		/// <summary>
@@ -92,7 +92,7 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given member.</returns>
 		public static MemberGetter Getter(Type type, string name, FasterflectFlags bindingFlags)
 		{
-			return Getter(type, name, MemberTypes.Field | MemberTypes.Property, bindingFlags);
+			return (MemberGetter)new MemberGetEmitter(type, bindingFlags, MemberTypes.Field | MemberTypes.Property, name).GetDelegate();
 		}
 
 		/// <summary>
@@ -125,7 +125,7 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.</returns>
 		public static MemberGetter PropertyGetter(Type type, string name)
 		{
-			return Getter(type, name, MemberTypes.Property, FasterflectFlags.StaticInstanceAnyVisibility);
+			return (MemberGetter)new MemberGetEmitter(type, FasterflectFlags.StaticInstanceAnyVisibility, MemberTypes.Property, name).GetDelegate();
 		}
 
 		/// <summary>
@@ -137,7 +137,7 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.</returns>
 		public static MemberGetter PropertyGetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
-			return Getter(type, name, MemberTypes.Property, bindingFlags);
+			return (MemberGetter)new MemberGetEmitter(type, bindingFlags, MemberTypes.Property, name).GetDelegate();
 		}
 
 		/// <summary>
@@ -148,7 +148,7 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="FieldInfo"/>.</returns>
 		public static MemberGetter FieldGetter(Type type, string name)
 		{
-			return Getter(type, name, MemberTypes.Field, FasterflectFlags.StaticInstanceAnyVisibility);
+			return (MemberGetter)new MemberGetEmitter(type, FasterflectFlags.StaticInstanceAnyVisibility, MemberTypes.Field, name).GetDelegate();
 		}
 
 		/// <summary>
@@ -160,7 +160,7 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="FieldInfo"/>.</returns>
 		public static MemberGetter FieldGetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
-			return Getter(type, name, MemberTypes.Field, bindingFlags);
+			return (MemberGetter)new MemberGetEmitter(type, bindingFlags, MemberTypes.Field, name).GetDelegate();
 		}
 		#endregion
 
@@ -283,7 +283,7 @@ namespace Fasterflect
 		/// <returns>A <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.</returns>
 		public static MultiSetter MultiSetter(Type type, params string[] memberNames)
 		{
-			return MultiSetter(type, FasterflectFlags.InstancePublicDeclaredOnly, memberNames);
+			return MultiSetter(type, FasterflectFlags.StaticInstanceAnyVisibility, memberNames);
 		}
 
 		/// <summary>

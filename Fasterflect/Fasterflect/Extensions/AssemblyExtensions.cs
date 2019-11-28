@@ -26,7 +26,7 @@ namespace Fasterflect.Extensions
 	/// <summary>
 	/// Extension methods for inspecting assemblies.
 	/// </summary>
-	internal static class AssemblyExtensions
+	public static class AssemblyExtensions
 	{
 		#region Types
 		/// <summary>

@@ -22,18 +22,22 @@ namespace FasterflectExample
 			MemberGetter getName = Reflect.Getter(typeof(Person), "Name");
 			MemberGetter getAge = Reflect.FieldGetter(typeof(Person), "Age");
 			MemberSetter setAge = Reflect.Setter(typeof(Person), "Age");
+			MultiSetter setBoth = Reflect.MultiSetter(typeof(Person), "Age", "Name");
 
 			Person person = (Person) ctor("John Doe", 21);
-			setAge(person, 35);
+			setAge(person, 30);
 			Console.WriteLine(getName(person));
 			Console.WriteLine(getAge(person));
-			Console.WriteLine("Complete...");
+			setBoth(person, 35, "John Wick");
+			Console.WriteLine(getName(person));
+			Console.WriteLine(getAge(person));
 			Console.ReadLine();
 		}
 	}
 
 	// Output:
 	// John Doe
+	// 30
+	// John Wick
 	// 35
-	// Complete...
 }
