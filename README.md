@@ -6,7 +6,7 @@ This framework is based on [Fasterflect](https://github.com/buunguyen/fasterflec
 
 ## Benchmarks
 
-Fasterflect is 50x faster than .NET reflection and 2-10x slower than direct access. Note also that Fasterflect only uses *objects* as arguments and return types. This slows down the methods because data needs to be boxed and unboxed. However, this is usually the only time that reflection is useful. If you know the generic types at compile time then you likely have direct access to the properties or you can implement an interface that lets you bypass the need for reflection.
+Fasterflect is 50x faster than .NET reflection, 8x faster than FastMember, and 2-10x slower than direct access. Note also that Fasterflect only uses *objects* as arguments and return types. This slows down the methods because data needs to be boxed and unboxed. However, this is usually the only time that reflection is useful. If you know the generic types at compile time then you likely have direct access to the properties or you can implement an interface that lets you bypass the need for reflection.
 
 ### Getters
 |                                  Getters |        Mean |   Ratio |
