@@ -117,13 +117,13 @@ namespace Fasterflect.Extensions
 		/// Gets all public and non-public instance members of the given <paramref name="memberTypes"/> on the 
 		/// given <paramref name="type"/>, optionally filtered by the supplied <paramref name="names"/> list.
 		/// </summary>
-		/// <param name="memberTypes">The <see href="MemberTypes"/> to include in the result.</param>
+		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the result.</param>
 		/// <param name="type">The type on which to reflect.</param>
 		/// <param name="names">The optional list of names against which to filter the result. If this parameter is
-		/// <c>null</c> or empty no name filtering will be applied. The default behavior is to check for an exact, 
-		/// case-sensitive match. Pass <see href="Flags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
-		/// interface members, <see href="Flags.PartialNameMatch"/> to locate by substring, and 
-		/// <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		/// <see langword="null"/> or empty no name filtering will be applied. The default behavior is to check for an exact, 
+		/// case-sensitive match. Pass <see cref="FasterflectFlags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
+		/// interface members, <see cref="FasterflectFlags.PartialNameMatch"/> to locate by substring, and 
+		/// <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> Members(this Type type, MemberTypes memberTypes, params string[] names)
 		{
@@ -136,14 +136,14 @@ namespace Fasterflect.Extensions
 		/// list (in accordance with the given <paramref name="bindingFlags"/>).
 		/// </summary>
 		/// <param name="type">The type to reflect on.</param>
-		/// <param name="memberTypes">The <see href="MemberTypes"/> to include in the result.</param>
+		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the result.</param>
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
 		/// the search behavior and result filtering.</param>
 		/// <param name="names">The optional list of names against which to filter the result. If this parameter is
-		/// <c>null</c> or empty no name filtering will be applied. The default behavior is to check for an exact, 
-		/// case-sensitive match. Pass <see href="Flags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
-		/// interface members, <see href="Flags.PartialNameMatch"/> to locate by substring, and 
-		/// <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		/// <see langword="null"/> or empty no name filtering will be applied. The default behavior is to check for an exact, 
+		/// case-sensitive match. Pass <see cref="FasterflectFlags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
+		/// interface members, <see cref="FasterflectFlags.PartialNameMatch"/> to locate by substring, and 
+		/// <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> Members(this Type type, MemberTypes memberTypes, FasterflectFlags bindingFlags,
 												 params string[] names)

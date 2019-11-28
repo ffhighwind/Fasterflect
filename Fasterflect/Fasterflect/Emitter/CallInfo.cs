@@ -80,9 +80,9 @@ namespace Fasterflect.Emitter
 
 		#region Equality Methods
 		/// <summary>
-		/// Two <c>CallInfo</c> instances are considered equaled if the following properties
-		/// are equaled: <c>TargetType</c>, <c>Flags</c>, <c>IsStatic</c>, <c>MemberTypes</c>, <c>Name</c>,
-		/// <c>ParamTypes</c> and <c>GenericTypes</c>.
+		/// Two <see cref="CallInfo"/> instances are considered equaled if the following properties
+		/// are equal: <see cref="CallInfo.TargetType"/>, <see cref="CallInfo.BindingFlags"/>, <see cref="CallInfo.MemberTypes"/>, <see cref="CallInfo.Name"/>,
+		/// <see cref="CallInfo.ParamTypes"/> and <see cref="CallInfo.GenericTypes"/>.
 		/// </summary>
 		public bool Equals(CallInfo other)
 		{
@@ -118,9 +118,9 @@ namespace Fasterflect.Emitter
 		}
 
 		/// <summary>
-		/// Two <c>CallInfo</c> instances are considered equaled if the following properties
-		/// are equaled: <c>TargetType</c>, <c>Flags</c>, <c>MemberTypes</c>, <c>Name</c>,
-		/// <c>ParamTypes</c> and <c>GenericTypes</c>.
+		/// Two <see cref="CallInfo"/> instances are considered equaled if the following properties
+		/// are equal: <see cref="CallInfo.TargetType"/>, <see cref="CallInfo.BindingFlags"/>, <see cref="CallInfo.MemberTypes"/>, <see cref="CallInfo.Name"/>,
+		/// <see cref="CallInfo.ParamTypes"/> and <see cref="CallInfo.GenericTypes"/>.
 		/// </summary>
 		public override bool Equals(object obj)
 		{

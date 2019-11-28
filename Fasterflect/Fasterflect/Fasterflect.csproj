@@ -1,36 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <AssemblyName>Fasterflect.Reflect</AssemblyName>
-    <Version>3.0.1</Version>
+    <Version>3.0.2</Version>
     <Authors>Buu Nguyen, Morten Mertner, Wesley Hamilton</Authors>
-    <Description>Reflection library that achieves greater performance than the built-in .NET Reflection.</Description>
+    <Description>Reflection library that achieves greater performance than the built-in .NET reflection.</Description>
     <NeutralLanguage>en-us</NeutralLanguage>
-    <PackageReleaseNotes></PackageReleaseNotes>
-    <PackageTags>reflection reflection-emit dynamic-method .net35 .net40 .net45 .netstandard2</PackageTags>
+    <PackageReleaseNotes>Added documentation</PackageReleaseNotes>
+    <PackageTags>reflection reflection-emit dynamic-method .net45 .netstandard2</PackageTags>
     <PackageLicense>Apache-2.0</PackageLicense>
     <PackageProjectUrl>https://github.com/ffhighwind/fasterflect</PackageProjectUrl>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Copyright (c) 2010 Buu Nguyen, Morten Mertner, Copyright (c) 2018 Wesley Hamilton</Copyright>
     <RepositoryUrl>https://github.com/ffhighwind/fasterflect</RepositoryUrl>
-    <RepositoryType>GIT</RepositoryType>
+    <RepositoryType>git</RepositoryType>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>key.snk.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
     <DefineConstants>DOT_NET_4;NETSTANDARD2_0</DefineConstants>
     <OutputPath>bin\lib\</OutputPath>
+    <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DefineConstants>DOT_NET_4;NETSTANDARD2_0</DefineConstants>
+    <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net461|AnyCPU'">
-    <DefineConstants>DOT_NET_4;NET461</DefineConstants>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
+    <DefineConstants>DOT_NET_4;NET45</DefineConstants>
     <OutputPath>bin\lib\</OutputPath>
+    <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
-    <DefineConstants>DOT_NET_4;NET461</DefineConstants>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
+    <DefineConstants>DOT_NET_4;NET45</DefineConstants>
+    <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Reflection.Emit" Version="4.6.0" />

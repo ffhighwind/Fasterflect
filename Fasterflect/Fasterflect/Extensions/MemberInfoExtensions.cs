@@ -118,7 +118,7 @@ namespace Fasterflect.Extensions
 		/// Determines whether the given <paramref name="member"/> is a static member.
 		/// </summary>
 		/// <returns>True for static fields, properties and methods and false for instance fields,
-		/// properties and methods. Throws an exception for all other <see href="MemberTypes" />.</returns>
+		/// properties and methods. Throws an exception for all other <see cref="MemberTypes"/>.</returns>
 		public static bool IsStatic(this MemberInfo member)
 		{
 			FieldInfo field = member as FieldInfo;
@@ -140,7 +140,7 @@ namespace Fasterflect.Extensions
 		/// Determines whether the given <paramref name="member"/> is an instance member.
 		/// </summary>
 		/// <returns>True for instance fields, properties and methods and false for static fields,
-		/// properties and methods. Throws an exception for all other <see href="MemberTypes" />.</returns>
+		/// properties and methods. Throws an exception for all other <see cref="MemberTypes"/>.</returns>
 		public static bool IsInstance(this MemberInfo member)
 		{
 			return !member.IsStatic();

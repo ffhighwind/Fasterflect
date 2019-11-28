@@ -85,7 +85,7 @@ namespace FasterflectBenchmark
 		}
 		#endregion
 
-		private static readonly int[] Iterations = new[] { 20000, 2000000 };
+		private static readonly int[] Iterations = new[] { 2000000 };
 		private static readonly object[] NoArgArray = new object[0];
 		private static readonly object[] ArgArray = new object[] { 10 };
 		private static readonly Type TargetType = typeof(Person);
@@ -99,7 +99,7 @@ namespace FasterflectBenchmark
 #if DOT_NET_4
             Console.SetOut(new StreamWriter("benchmark.4.txt"));
 #else
-			Console.SetOut(new StreamWriter("benchmark.35.txt"));
+			//Console.SetOut(new StreamWriter("benchmark.35.txt"));
 #endif
 			//RunDictionaryBenchmark();
 			//RunHashCodeBenchmark();
@@ -273,7 +273,7 @@ namespace FasterflectBenchmark
 								{ "Reflection GetConstructors", () => typeof(Person).GetConstructors(defaultFlags) },
 								{ "Fasterflect Constructors", () => typeof(Person).Constructors(declaredOnlyFlags) },
 							};
-			Execute("Benchmark for Metadata Lookup", initMap, actionMap);
+			Execute("Metadata Lookup", initMap, actionMap);
 		}
 		#endregion
 
@@ -460,7 +460,7 @@ namespace FasterflectBenchmark
 								{ "Fasterflect static invoke", () => noArgStaticMethodInfo.Call() },
 								{ "Fasterflect static invoke (arg)", () => argStaticMethodInfo.Call(ArgArray) },
 							};
-			Execute("Benchmark for Access Methods Enabled via .NET Reflection Metadata", initMap, actionMap);
+			Execute("Access Methods Enabled via .NET Reflection Metadata", initMap, actionMap);
 		}
 
 		private static void RunConstructorBenchmark()
@@ -487,7 +487,7 @@ namespace FasterflectBenchmark
 								{ "Fasterflect ctor", () => typeof(Person).CreateInstance() },
 								{ "Fasterflect cached ctor", () => invoker(NoArgArray) },
 							};
-			Execute("Benchmark for Object Construction", initMap, actionMap);
+			Execute("Object Construction", initMap, actionMap);
 		}
 
 		private static void RunFieldBenchmark()
@@ -527,7 +527,7 @@ namespace FasterflectBenchmark
 								{ "Fasterflect cached set", () => setter(TargetPerson, "John") },
 								{ "Fasterflect cached get", () => getter(TargetPerson) },
 							};
-			Execute("Benchmark for Field Access", initMap, actionMap);
+			Execute("Field Access", initMap, actionMap);
 		}
 
 		private static void RunStaticFieldBenchmark()
@@ -566,7 +566,7 @@ namespace FasterflectBenchmark
 								{ "Fasterflect cached set", () => setter(null, 1) },
 								{ "Fasterflect cached get", () => getter(null) },
 							};
-			Execute("Benchmark for Static Field Access", initMap, actionMap);
+			Execute("Static Field Access", initMap, actionMap);
 		}
 
 		private static void RunPropertyBenchmark()
@@ -606,7 +606,7 @@ namespace FasterflectBenchmark
 								{ "Fasterflect cached set", () => setter(TargetPerson, 10) },
 								{ "Fasterflect cached get", () => getter(TargetPerson) },
 							};
-			Execute("Benchmark for Property Access", initMap, actionMap);
+			Execute("Property Access", initMap, actionMap);
 		}
 
 		private static void RunStaticPropertyBenchmark()
@@ -646,7 +646,7 @@ namespace FasterflectBenchmark
 								{ "Fasterflect cached set", () => setter(null, 10) },
 								{ "Fasterflect cached get", () => getter(null) },
 							};
-			Execute("Benchmark for Static Property Access", initMap, actionMap);
+			Execute("Static Property Access", initMap, actionMap);
 		}
 
 		private static void RunIndexerBenchmark()
@@ -715,7 +715,7 @@ namespace FasterflectBenchmark
 								{ "Fasterflect cached set", () => setter(TargetPerson, 1, 2, null) },
 								{ "Fasterflect cached get", () => getter(TargetPerson, 1, 2) },
 							};
-			Execute("Benchmark for Indexer Access", initMap, actionMap);
+			Execute("Indexer Access", initMap, actionMap);
 		}
 
 		private static void RunMethodInvocationBenchmark()
@@ -779,7 +779,7 @@ namespace FasterflectBenchmark
 								{ "Fasterflect cached invoke", () => noArgInvoker(TargetPerson, NoArgArray) },
 								{ "Fasterflect cached invoke (arg)", () => argInvoker(TargetPerson, ArgArray) }
 							};
-			Execute("Benchmark for Method Invocation", initMap, actionMap);
+			Execute("Method Invocation", initMap, actionMap);
 		}
 
 		private static void RunStaticMethodInvocationBenchmark()
@@ -839,7 +839,7 @@ namespace FasterflectBenchmark
 								{ "Fasterflect cached invoke", () => noArgInvoker(null, NoArgArray) },
 								{ "Fasterflect cached invoke (arg)", () => argInvoker(null, ArgArray) }
 							};
-			Execute("Benchmark for Static Method Invocation", initMap, actionMap);
+			Execute("Static Method Invocation", initMap, actionMap);
 		}
 
 		private static void RunArrayBenchmark()
@@ -864,7 +864,7 @@ namespace FasterflectBenchmark
 								{ "Fasterflect cached set", () => setter(PeopleArray, 5, null) },
 								{ "Fasterflect cached get", () => getter(PeopleArray, 5) },
 							};
-			Execute("Benchmark for Array Element Access", initMap, actionMap);
+			Execute("Array Element Access", initMap, actionMap);
 		}
 		#endregion
 
@@ -872,32 +872,51 @@ namespace FasterflectBenchmark
 		private static void Execute(string name, Dictionary<string, Action> initMap,
 									 Dictionary<string, Action> actionMap)
 		{
-			Console.WriteLine("!!!! {0}", name);
+			Console.WriteLine("### {0}", name);
 
-			Console.WriteLine("||Initialization|| ||");
-			Measure(Watch, initMap, 1);
+			//Console.WriteLine("| Initialization |  |");
+			//Console.WriteLine("| --- | --- |");
+			Measure("Initialization", Watch, initMap, new int[] { 1 });
 			Console.WriteLine();
-
-			foreach (int iterationCount in Iterations) {
-				Console.WriteLine("||Executing for {0} iterations|| ||", iterationCount);
-				Measure(Watch, actionMap, iterationCount);
-				Console.WriteLine();
-			}
+			Measure("Tests", Watch, actionMap, Iterations);
 			Console.WriteLine();
 		}
 
-		private static void Measure(Stopwatch watch, Dictionary<string, Action> actionMap,
-									 int iterationCount)
+		private static void Measure(string name, Stopwatch watch, Dictionary<string, Action> actionMap,
+									 int[] iterationCounts)
 		{
-			foreach (var entry in actionMap) {
-				watch.Start();
-				for (int i = 0; i < iterationCount; i++) {
-					entry.Value();
-				}
-				watch.Stop();
-				Console.WriteLine("|{0,-35} | {1,6} ms|", entry.Key + ":", watch.ElapsedMilliseconds);
-				watch.Reset();
+			Console.Write("| {0,-35} |", name);
+			for (int j = 0; j < iterationCounts.Length; j++)
+			{
+				if (iterationCounts[j] == 0)
+					Console.WriteLine(" |");
+				else
+					Console.Write(" {0} iterations |", iterationCounts[j]);
 			}
+			Console.WriteLine();
+			Console.Write("|");
+			for (int j = 0; j <= iterationCounts.Length; j++)
+			{
+				Console.Write(" --- |");
+			}
+			Console.WriteLine();
+
+			foreach (var entry in actionMap) {
+				Console.Write("| {0,-35} |", entry.Key);
+				for (int j = 0; j < iterationCounts.Length; j++)
+				{
+					watch.Start();
+					for (int i = 0, count = iterationCounts[j]; i < count; i++)
+					{
+						entry.Value();
+					}
+					watch.Stop();
+					Console.Write(" {0,6} ms |", watch.ElapsedMilliseconds);
+					watch.Reset();
+				}
+				Console.WriteLine();
+			}
+			Console.WriteLine();
 		}
 		#endregion
 

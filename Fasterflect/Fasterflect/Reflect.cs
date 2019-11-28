@@ -47,7 +47,7 @@ namespace Fasterflect
 		/// Creates a <see cref="ConstructorInvoker"/> which invokes the given <see cref="ConstructorInfo"/>.
 		/// </summary>
 		/// <param name="type">The <see cref="Type"/> that the <see cref="ConstructorInvoker"/> will construct.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> to use when searching for the <see cref="ConstructorInfo"/>.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to use when searching for the <see cref="ConstructorInfo"/>.</param>
 		/// <param name="parameterTypes">The <see cref="ConstructorInfo"/>'s parameters types.</param>
 		/// <returns>A <see cref="ConstructorInvoker"/> which invokes the given <see cref="ConstructorInfo"/>.</returns>
 		public static ConstructorInvoker Constructor(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
@@ -88,7 +88,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="type">The <see cref="Type"/> of the member.</param>
 		/// <param name="name">The name of the member.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> to filter the member.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the member.</param>
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given member.</returns>
 		public static MemberGetter Getter(Type type, string name, FasterflectFlags bindingFlags)
 		{
@@ -133,7 +133,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="type">The <see cref="Type"/> of the <see cref="PropertyInfo"/>.</param>
 		/// <param name="name">The name of the <see cref="PropertyInfo"/>.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> to filter the <see cref="PropertyInfo"/>.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the <see cref="PropertyInfo"/>.</param>
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.</returns>
 		public static MemberGetter PropertyGetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
@@ -156,7 +156,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="type">The <see cref="Type"/> of the <see cref="FieldInfo"/>.</param>
 		/// <param name="name">The name of the <see cref="FieldInfo"/>.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> to filter the <see cref="FieldInfo"/>.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the <see cref="FieldInfo"/>.</param>
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="FieldInfo"/>.</returns>
 		public static MemberGetter FieldGetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
@@ -187,7 +187,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="type">The <see cref="Type"/> whose member will be set.</param>
 		/// <param name="name">The name of the member to set.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> to filter the member.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the member.</param>
 		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given member.</returns>
 		public static MemberSetter Setter(Type type, string name, FasterflectFlags bindingFlags)
 		{
@@ -220,7 +220,7 @@ namespace Fasterflect
 		/// Creates a <see cref="MemberSetter"/> which sets the value of the given <see cref="PropertyInfo"/>.
 		/// </summary>
 		/// <param name="propInfo">The <see cref="PropertyInfo"/> whose value will be set.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> to filter the <see cref="PropertyInfo"/>.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the <see cref="PropertyInfo"/>.</param>
 		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given <see cref="PropertyInfo"/>.</returns>
 		public static MemberSetter PropertySetter(PropertyInfo propInfo, FasterflectFlags bindingFlags)
 		{
@@ -243,7 +243,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="type">The <see cref="Type"/> whose <see cref="PropertyInfo"/> will be set.</param>
 		/// <param name="name">The name of the <see cref="PropertyInfo"/> to set.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> to filter the member.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the member.</param>
 		/// <returns>A<see cref="MemberSetter"/> which sets the value of the given <see cref="PropertyInfo"/>.</returns>
 		public static MemberSetter PropertySetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
@@ -266,7 +266,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="type">The <see cref="FieldInfo"/> whose value will be set.</param>
 		/// <param name="name">The name of the <see cref="FieldInfo"/> to set.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> to filter the <see cref="FieldInfo"/>.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the <see cref="FieldInfo"/>.</param>
 		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given <see cref="FieldInfo"/>.</returns>
 		public static MemberSetter FieldSetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
@@ -290,7 +290,7 @@ namespace Fasterflect
 		/// Creates a <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.
 		/// </summary>
 		/// <param name="type">The <see cref="Type"/> whose members will be set.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> to filter the members.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the members.</param>
 		/// <param name="memberNames">The names of the members to set.</param>
 		/// <returns>A <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.</returns>
 		public static MultiSetter MultiSetter(Type type, FasterflectFlags bindingFlags, params string[] memberNames)
@@ -315,7 +315,7 @@ namespace Fasterflect
 		/// Creates a delegate which can get the value of an indexer matching <paramref name="bindingFlags"/>.
 		/// </summary>
 		/// <param name="type">The type which the indexer belongs to.</param>
-		/// <param name="bindingFlags">The binding flags used to lookup the indexer.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> used to lookup the indexer.</param>
 		/// <param name="parameterTypes">The types of the indexer parameters (must be in the right order).</param>
 		/// <returns>The delegate which can get the value of an indexer.</returns>
 		public static MethodInvoker IndexerGetter(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
@@ -331,7 +331,7 @@ namespace Fasterflect
 		/// the type of the indexer.</param>
 		/// <returns>A delegate which can set an indexer.</returns>
 		/// <example>
-		/// If the indexer is of type <c>string</c> and accepts one parameter of type <c>int</c>, this 
+		/// If the indexer is of type <see cref="string"/> and accepts one parameter of type <see langword="int"/>, this 
 		/// method should be invoked as follow:
 		/// <code>
 		/// MethodInvoker invoker = type.DelegateForSetIndexer(new Type[]{typeof(int), typeof(string)});
@@ -346,12 +346,12 @@ namespace Fasterflect
 		/// Creates a delegate which can set an indexer matching <paramref name="bindingFlags"/>.
 		/// </summary>
 		/// <param name="type">The type which the indexer belongs to.</param>
-		/// <param name="bindingFlags">The binding flags used to lookup the indexer.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> used to lookup the indexer.</param>
 		/// <param name="parameterTypes">The types of the indexer parameters (must be in the right order), plus
 		/// the type of the indexer.</param>
 		/// <returns>A delegate which can set an indexer.</returns>
 		/// <example>
-		/// If the indexer is of type <c>string</c> and accepts one parameter of type <c>int</c>, this 
+		/// If the indexer is of type <see cref="string"/> and accepts one parameter of type <see langword="int"/>, this 
 		/// method should be invoked as follow:
 		/// <code>
 		/// MethodInvoker invoker = type.DelegateForSetIndexer(new Type[]{typeof(int), typeof(string)});
@@ -405,7 +405,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="type">The <see cref="Type"/> that the object that has the <see cref="MethodInfo"/>.</param>
 		/// <param name="name">The name of the <see cref="MethodInfo"/>.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> to filter the <see cref="MethodInfo"/>.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the <see cref="MethodInfo"/>.</param>
 		/// <param name="parameterTypes">The <see cref="Type"/>s of the <see cref="MethodInfo"/>'s parameters.</param>
 		/// <returns>A <see cref="MethodInvoker"/> which invokes the given <see cref="MethodInfo"/>.</returns>
 		public static MethodInvoker Method(Type type, string name, FasterflectFlags bindingFlags, params Type[] parameterTypes)
@@ -418,7 +418,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="type">The <see cref="Type"/> that the object that has the <see cref="MethodInfo"/>.</param>
 		/// <param name="name">The name of the <see cref="MethodInfo"/>.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> to filter the <see cref="MethodInfo"/>.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the <see cref="MethodInfo"/>.</param>
 		/// <param name="genericTypes">The generic <see cref="Type"/>s of the <see cref="MethodInfo"/>'s parameters.</param>
 		/// <param name="parameterTypes">The <see cref="Type"/>s of the <see cref="MethodInfo"/>'s parameters.</param>
 		/// <returns>A <see cref="MethodInvoker"/> which invokes the given <see cref="MethodInfo"/>.</returns>
@@ -459,9 +459,9 @@ namespace Fasterflect
 		/// <param name="sourceType">The type of the source object.</param>
 		/// <param name="targetType">The type of the target object.</param>
 		/// <param name="names">The optional list of member names against which to filter the members that are
-		/// to be mapped. If this parameter is <c>null</c> or empty no name filtering will be applied. The default 
-		/// behavior is to check for an exact, case-sensitive match. Pass <see href="Flags.PartialNameMatch"/> to 
-		/// filter members by substring and <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		/// to be mapped. If this parameter is <see langword="null"/> or empty no name filtering will be applied. The default 
+		/// behavior is to check for an exact, case-sensitive match. Pass <see cref="FasterflectFlags.PartialNameMatch"/> to 
+		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static ObjectMapper Mapper(Type sourceType, Type targetType, params string[] names)
 		{
 			return Mapper(sourceType, targetType, FasterflectFlags.InstanceAnyVisibility, names);
@@ -473,11 +473,11 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="sourceType">The type of the source object.</param>
 		/// <param name="targetType">The type of the target object.</param>
-		/// <param name="bindingFlags">The <see href="Flags"/> used to define the scope when locating members.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> used to define the scope when locating members.</param>
 		/// <param name="names">The optional list of member names against which to filter the members that are
-		/// to be mapped. If this parameter is <c>null</c> or empty no name filtering will be applied. The default 
-		/// behavior is to check for an exact, case-sensitive match. Pass <see href="Flags.PartialNameMatch"/> to 
-		/// filter members by substring and <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		/// to be mapped. If this parameter is <see langword="null"/> or empty no name filtering will be applied. The default 
+		/// behavior is to check for an exact, case-sensitive match. Pass <see cref="FasterflectFlags.PartialNameMatch"/> to 
+		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static ObjectMapper Mapper(Type sourceType, Type targetType, FasterflectFlags bindingFlags, params string[] names)
 		{
 			const MemberTypes memberTypes = MemberTypes.Field | MemberTypes.Property;
@@ -492,13 +492,13 @@ namespace Fasterflect
 		/// <param name="targetType">The type of the target object.</param>
 		/// <param name="sourceTypes">The member types (Fields, Properties or both) to include on the source.</param>
 		/// <param name="targetTypes">The member types (Fields, Properties or both) to include on the target.</param>
-		/// <param name="bindingFlags">The <see href="Flags"/> used to define the scope when locating members. If
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> used to define the scope when locating members. If
 		/// <paramref name="sourceTypes"/> is different from <paramref name="targetTypes"/> the flag value
 		/// <see cref="FasterflectFlags.IgnoreCase"/> will automatically be applied.</param>
 		/// <param name="names">The optional list of member names against which to filter the members that are
-		/// to be mapped. If this parameter is <c>null</c> or empty no name filtering will be applied. The default 
-		/// behavior is to check for an exact, case-sensitive match. Pass <see href="Flags.PartialNameMatch"/> to 
-		/// filter members by substring and <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		/// to be mapped. If this parameter is <see langword="null"/> or empty no name filtering will be applied. The default 
+		/// behavior is to check for an exact, case-sensitive match. Pass <see cref="FasterflectFlags.PartialNameMatch"/> to 
+		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static ObjectMapper Mapper(Type sourceType, Type targetType, MemberTypes sourceTypes, MemberTypes targetTypes,
 							   FasterflectFlags bindingFlags, params string[] names)
 		{
@@ -535,7 +535,7 @@ namespace Fasterflect
 			return (T) inst?.Invoke(obj, null);
 		}
 
-		/*
+		/**
 		/// <summary>
 		/// Creates a delegate that clones an object via shallow copy.
 		/// </summary>
@@ -552,7 +552,7 @@ namespace Fasterflect
 		/// Creates a delegate that clones an object via shallow copy using the properties and fields matching <paramref name="bindingFlags"/>.
 		/// </summary>
 		/// <typeparam name="T">The type of object to clone.</typeparam>
-		/// <param name="bindingFlags">The <see href="Flags"/> used to define the scope when locating members.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> used to define the scope when locating members.</param>
 		/// <returns>A delegate that clones an object via shallow copy.</returns>
 		public static Func<T, T> ShallowCloner<T>(FasterflectFlags bindingFlags)
 			where T : new()

@@ -103,8 +103,7 @@ namespace Fasterflect
 		{
 			object entry;
 			entries.TryGetValue(key, out entry);
-			WeakReference wr = entry as WeakReference;
-			return (TValue) (wr != null ? wr.Target : entry);
+			return (TValue)(entry is WeakReference wr ? wr.Target : entry);
 		}
 		#endregion
 

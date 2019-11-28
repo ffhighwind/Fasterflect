@@ -23,7 +23,7 @@ namespace Fasterflect
 	/// </summary>
 	/// <param name="obj">
 	/// The object whose field's or property's value is to be retrieved.
-	/// Use <c>null</c> for static field or property.
+	/// Use <see langword="null"/> for static field or property.
 	/// </param>
 	/// <returns>The value of the instance field or property.</returns>
 	public delegate object MemberGetter(object obj);
@@ -33,7 +33,7 @@ namespace Fasterflect
 	/// </summary>
 	/// <param name="obj">
 	/// The object whose field's or property's value is to be set.
-	/// Use <c>null</c> for static field or property.
+	/// Use <see langword="null"/> for static field or property.
 	/// </param>
 	/// <param name="value">The value to be set to the field or property.</param>
 	public delegate void MemberSetter(object obj, object value);
@@ -59,7 +59,7 @@ namespace Fasterflect
 	/// </summary>
 	/// <param name="obj">
 	/// The object whose method or indexer is to be invoked on.
-	/// Use <c>null</c> for static method.</param>
+	/// Use <see langword="null"/> for static method.</param>
 	/// <param name="parameters">The properly-ordered parameter list of the method/indexer.  
 	/// For indexer-set operation, the parameter array include parameters for the indexer plus
 	/// the value to be set to the indexer.</param>
@@ -85,7 +85,7 @@ namespace Fasterflect
 	/// A delegate to set multiple field/property values of an object.
 	/// </summary>
 	/// <param name="obj">The object whose field's or property's value is to be set.
-	/// Use <c>null</c> if all fields and properties are static.</param>
+	/// Use <see langword="null"/> if all fields and properties are static.</param>
 	/// <param name="values">The value to be set to the field or property.</param>
 	public delegate void MultiSetter(object obj, params object[] values);
 }

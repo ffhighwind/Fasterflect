@@ -128,7 +128,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
 		/// <param name="names">The optional list of names against which to filter the result. If this parameter is
-		/// <c>null</c> or empty no name filtering will be applied. This method will check for an exact, 
+		/// <see langword="null"/> or empty no name filtering will be applied. This method will check for an exact, 
 		/// case-sensitive match.</param>
 		/// <returns>A list of all instance fields on the type. This value will never be null.</returns>
 		public static IList<FieldInfo> Fields(Type type, params string[] names)
@@ -143,10 +143,10 @@ namespace Fasterflect
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
 		/// the search behavior and result filtering.</param>
 		/// <param name="names">The optional list of names against which to filter the result. If this parameter is
-		/// <c>null</c> or empty no name filtering will be applied. The default behavior is to check for an exact, 
-		/// case-sensitive match. Pass <see href="Flags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
-		/// interface members, <see href="Flags.PartialNameMatch"/> to locate by substring, and 
-		/// <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		/// <see langword="null"/> or empty no name filtering will be applied. The default behavior is to check for an exact, 
+		/// case-sensitive match. Pass <see cref="FasterflectFlags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
+		/// interface members, <see cref="FasterflectFlags.PartialNameMatch"/> to locate by substring, and 
+		/// <see cref="FasterflectFlags.IgnoreCase"/>  to ignore case.</param>
 		/// <returns>A list of all matching fields on the type. This value will never be null.</returns>
 		public static IList<FieldInfo> Fields(Type type, FasterflectFlags bindingFlags, params string[] names)
 		{
@@ -237,7 +237,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <returns>A list of matching instance properties on the type.</returns>
 		/// <param name="type">The type whose public properties are to be retrieved.</param>
-		/// <param name="names">A list of names of properties to be retrieved. If this is <c>null</c>, 
+		/// <param name="names">A list of names of properties to be retrieved. If this is <see langword="null"/>, 
 		/// all properties are returned.</param>
 		/// <returns>A list of all public properties on the type filted by <paramref name="names"/>.
 		/// This value will never be null.</returns>
@@ -251,7 +251,7 @@ namespace Fasterflect
 		/// including properties defined on base types.
 		/// </summary>
 		/// <param name="type">The type whose public properties are to be retrieved.</param>
-		/// <param name="names">A list of names of properties to be retrieved. If this is <c>null</c>, 
+		/// <param name="names">A list of names of properties to be retrieved. If this is <see langword="null"/>, 
 		/// all properties are returned.</param>
 		/// <param name="bindingFlags"></param>
 		/// <returns>A list of all matching properties on the type. This value will never be null.</returns>
@@ -312,9 +312,8 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
 		/// <param name="name">The name of the method to search for. This argument must be supplied. The 
-		/// default behavior is to check for an exact, case-sensitive match. Pass <see href="Flags.ExplicitNameMatch"/> 
-		/// to include explicitly implemented interface members, <see href="Flags.PartialNameMatch"/> to locate
-		/// by substring, and <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		/// default behavior is to check for an exact, case-sensitive match. Pass <see cref="FasterflectFlags.PartialNameMatch"/> 
+		/// to locate by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		/// <returns>The specified method or null if no method was found. If there are multiple matches
 		/// due to method overloading the first found match will be returned.</returns>
 		public static MethodInfo Method(Type type, string name)
@@ -364,8 +363,8 @@ namespace Fasterflect
 		/// <param name="type">The type on which to reflect.</param>
 		/// <param name="name">The name of the method to search for. This argument must be supplied. The 
 		/// default behavior is to check for an exact, case-sensitive match. Pass <see href="Flags.ExplicitNameMatch"/> 
-		/// to include explicitly implemented interface members, <see href="Flags.PartialNameMatch"/> to locate
-		/// by substring, and <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		/// to include explicitly implemented interface members, <see cref="FasterflectFlags.PartialNameMatch"/> to locate
+		/// by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
 		/// the search behavior and result filtering.</param>
 		/// <returns>The specified method or null if no method was found. If there are multiple matches
@@ -392,11 +391,11 @@ namespace Fasterflect
 		/// <param name="type">The type on which to reflect.</param>
 		/// <param name="name">The name of the method to search for. This argument must be supplied. The 
 		///   default behavior is to check for an exact, case-sensitive match. Pass <see href="Flags.ExplicitNameMatch"/> 
-		///   to include explicitly implemented interface members, <see href="Flags.PartialNameMatch"/> to locate
-		///   by substring, and <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		///   to include explicitly implemented interface members, <see cref="FasterflectFlags.PartialNameMatch"/> to locate
+		///   by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		/// <param name="parameterTypes">If this parameter is supplied then only methods with the same parameter signature
 		///   will be included in the result. The default behavior is to check only for assignment compatibility,
-		///   but this can be changed to exact matching by passing <see href="Flags.ExactBinding"/>.</param>
+		///   but this can be changed to exact matching by passing <see cref="FasterflectFlags.ExactBinding"/>.</param>
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
 		///   the search behavior and result filtering.</param>
 		/// <returns>The specified method or null if no method was found. If there are multiple matches
@@ -415,11 +414,11 @@ namespace Fasterflect
 		/// <param name="genericTypes">Type parameters if this is a generic method.</param>
 		/// <param name="name">The name of the method to search for. This argument must be supplied. The 
 		///   default behavior is to check for an exact, case-sensitive match. Pass <see href="Flags.ExplicitNameMatch"/> 
-		///   to include explicitly implemented interface members, <see href="Flags.PartialNameMatch"/> to locate
-		///   by substring, and <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		///   to include explicitly implemented interface members, <see cref="FasterflectFlags.PartialNameMatch"/> to locate
+		///   by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		/// <param name="parameterTypes">If this parameter is supplied then only methods with the same parameter signature
 		///   will be included in the result. The default behavior is to check only for assignment compatibility,
-		///   but this can be changed to exact matching by passing <see href="Flags.ExactBinding"/>.</param>
+		///   but this can be changed to exact matching by passing <see cref="FasterflectFlags.ExactBinding"/>.</param>
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
 		///   the search behavior and result filtering.</param>
 		/// <returns>The specified method or null if no method was found. If there are multiple matches
@@ -461,10 +460,10 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
 		/// <param name="names">The optional list of names against which to filter the result. If this parameter is
-		/// <c>null</c> or empty no name filtering will be applied. The default behavior is to check for an exact, 
-		/// case-sensitive match. Pass <see href="Flags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
-		/// interface members, <see href="Flags.PartialNameMatch"/> to locate by substring, and 
-		/// <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		/// <see langword="null"/> or empty no name filtering will be applied. The default behavior is to check for an exact, 
+		/// case-sensitive match. Pass <see cref="FasterflectFlags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
+		/// interface members, <see cref="FasterflectFlags.PartialNameMatch"/> to locate by substring, and 
+		/// <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		/// <returns>A list of all matching methods. This value will never be null.</returns>
 		public static IList<MethodInfo> Methods(Type type, params string[] names)
 		{
@@ -479,10 +478,10 @@ namespace Fasterflect
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
 		/// the search behavior and result filtering.</param>
 		/// <param name="names">The optional list of names against which to filter the result. If this parameter is
-		/// <c>null</c> or empty no name filtering will be applied. The default behavior is to check for an exact, 
-		/// case-sensitive match. Pass <see href="Flags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
-		/// interface members, <see href="Flags.PartialNameMatch"/> to locate by substring, and 
-		/// <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		/// <see langword="null"/> or empty no name filtering will be applied. The default behavior is to check for an exact, 
+		/// case-sensitive match. Pass <see cref="FasterflectFlags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
+		/// interface members, <see cref="FasterflectFlags.PartialNameMatch"/> to locate by substring, and 
+		/// <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		/// <returns>A list of all matching methods. This value will never be null.</returns>
 		public static IList<MethodInfo> Methods(Type type, FasterflectFlags bindingFlags, params string[] names)
 		{
@@ -497,7 +496,7 @@ namespace Fasterflect
 		/// <param name="parameterTypes">If this parameter is supplied then only methods with the same parameter 
 		/// signature will be included in the result.</param>
 		/// <param name="names">The optional list of names against which to filter the result. If this parameter is
-		/// <c>null</c> or empty no name filtering will be applied. The default behavior is to check for an exact, 
+		/// <see langword="null"/> or empty no name filtering will be applied. The default behavior is to check for an exact, 
 		/// case-sensitive match.</param>
 		/// <returns>A list of all matching methods. This value will never be null.</returns>
 		public static IList<MethodInfo> Methods(Type type, Type[] parameterTypes, params string[] names)
@@ -511,14 +510,14 @@ namespace Fasterflect
 		/// <param name="type">The type on which to reflect.</param>
 		/// <param name="parameterTypes">If this parameter is supplied then only methods with the same parameter signature
 		/// will be included in the result. The default behavior is to check only for assignment compatibility,
-		/// but this can be changed to exact matching by passing <see href="Flags.ExactBinding"/>.</param>
+		/// but this can be changed to exact matching by passing <see cref="FasterflectFlags.ExactBinding"/>.</param>
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
 		/// the search behavior and result filtering.</param>
 		/// <param name="names">The optional list of names against which to filter the result. If this parameter is
-		/// <c>null</c> or empty no name filtering will be applied. The default behavior is to check for an exact, 
-		/// case-sensitive match. Pass <see href="Flags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
-		/// interface members, <see href="Flags.PartialNameMatch"/> to locate by substring, and 
-		/// <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		/// <see langword="null"/> or empty no name filtering will be applied. The default behavior is to check for an exact, 
+		/// case-sensitive match. Pass <see cref="FasterflectFlags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
+		/// interface members, <see cref="FasterflectFlags.PartialNameMatch"/> to locate by substring, and 
+		/// <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		/// <returns>A list of all matching methods. This value will never be null.</returns>
 		public static IList<MethodInfo> Methods(Type type, Type[] parameterTypes, FasterflectFlags bindingFlags, params string[] names)
 		{
@@ -531,17 +530,17 @@ namespace Fasterflect
 		/// <param name="type">The type on which to reflect.</param>
 		/// <param name="genericTypes">If this parameter is supplied then only methods with the same generic parameter 
 		/// signature will be included in the result. The default behavior is to check only for assignment compatibility,
-		/// but this can be changed to exact matching by passing <see href="Flags.ExactBinding"/>.</param>
+		/// but this can be changed to exact matching by passing <see cref="FasterflectFlags.ExactBinding"/>.</param>
 		/// <param name="parameterTypes">If this parameter is supplied then only methods with the same parameter signature
 		/// will be included in the result. The default behavior is to check only for assignment compatibility,
-		/// but this can be changed to exact matching by passing <see href="Flags.ExactBinding"/>.</param>
+		/// but this can be changed to exact matching by passing <see cref="FasterflectFlags.ExactBinding"/>.</param>
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
 		/// the search behavior and result filtering.</param>
 		/// <param name="names">The optional list of names against which to filter the result. If this parameter is
-		/// <c>null</c> or empty no name filtering will be applied. The default behavior is to check for an exact, 
-		/// case-sensitive match. Pass <see href="Flags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
-		/// interface members, <see href="Flags.PartialNameMatch"/> to locate by substring, and 
-		/// <see href="Flags.IgnoreCase"/> to ignore case.</param>
+		/// <see langword="null"/> or empty no name filtering will be applied. The default behavior is to check for an exact, 
+		/// case-sensitive match. Pass <see cref="FasterflectFlags.ExcludeExplicitlyImplemented"/> to exclude explicitly implemented 
+		/// interface members, <see cref="FasterflectFlags.PartialNameMatch"/> to locate by substring, and 
+		/// <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		/// <returns>A list of all matching methods. This value will never be null.</returns>
 		public static IList<MethodInfo> Methods(Type type, Type[] genericTypes, Type[] parameterTypes, FasterflectFlags bindingFlags,
 			params string[] names)
@@ -589,6 +588,5 @@ namespace Fasterflect
 			return methods;
 		}
 		#endregion
-
 	}
 }

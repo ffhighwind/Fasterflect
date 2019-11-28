@@ -36,9 +36,9 @@ namespace Fasterflect.Extensions
 		/// Leave <paramref name="parameters"/> empty if the constructor has no argument.
 		/// </summary>
 		/// <remarks>
-		/// All elements of <paramref name="parameters"/> must not be <c>null</c>.  Otherwise, 
+		/// All elements of <paramref name="parameters"/> must not be <see langword="null"/>.  Otherwise, 
 		/// <see cref="NullReferenceException"/> is thrown.  If you are not sure as to whether
-		/// any element is <c>null</c> or not, use the overload that accepts <c>paramTypes</c> array.
+		/// any element is <see langword="null"/> or not, use the overload that accepts params <see cref="Type"/> array.
 		/// </remarks>
 		/// <seealso cref="CreateInstance(Type, Type[], object[])"/>
 		public static object CreateInstance(this Type type, params object[] parameters)
@@ -62,9 +62,9 @@ namespace Fasterflect.Extensions
 		/// Leave <paramref name="parameters"/> empty if the constructor has no argument.
 		/// </summary>
 		/// <remarks>
-		/// All elements of <paramref name="parameters"/> must not be <c>null</c>.  Otherwise, 
+		/// All elements of <paramref name="parameters"/> must not be <see langword="null"/>.  Otherwise, 
 		/// <see cref="NullReferenceException"/> is thrown.  If you are not sure as to whether
-		/// any element is <c>null</c> or not, use the overload that accepts <c>paramTypes</c> array.
+		/// any element is <see langword="null"/> or not, use the overload that accepts params <see cref="Type"/> array.
 		/// </remarks>
 		/// <seealso cref="CreateInstance(System.Type,System.Type[],Fasterflect.FasterflectFlags,object[])"/>
 		public static object CreateInstance(this Type type, FasterflectFlags bindingFlags, params object[] parameters)

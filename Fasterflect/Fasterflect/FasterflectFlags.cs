@@ -71,43 +71,43 @@ namespace Fasterflect
 
 		#region BindingFlags
 		/// <summary>
-		/// This value corresponds to the <see href="BindingFlags.Default"/> value.
+		/// This value corresponds to the <see cref="BindingFlags.Default"/> value.
 		/// </summary>
 		public static readonly FasterflectFlags None = new FasterflectFlags((long) BindingFlags.Default);
 
 		/// <summary>
-		/// This value corresponds to the <see href="BindingFlags.IgnoreCase"/> value.
+		/// This value corresponds to the <see cref="BindingFlags.IgnoreCase"/> value.
 		/// </summary>
 		public static readonly FasterflectFlags IgnoreCase = new FasterflectFlags((long) BindingFlags.IgnoreCase);
 
 		/// <summary>
-		/// This value corresponds to the <see href="BindingFlags.DeclaredOnly"/> value.
+		/// This value corresponds to the <see cref="BindingFlags.DeclaredOnly"/> value.
 		/// </summary>
 		public static readonly FasterflectFlags DeclaredOnly = new FasterflectFlags((long) BindingFlags.DeclaredOnly);
 
 		/// <summary>
-		/// This value corresponds to the <see href="BindingFlags.ExactBinding"/> value. 
+		/// This value corresponds to the <see cref="BindingFlags.ExactBinding"/> value. 
 		/// Note that this value is respected even in cases where normal Reflection calls would ignore it.
 		/// </summary>
 		public static readonly FasterflectFlags ExactBinding = new FasterflectFlags((long) BindingFlags.ExactBinding);
 
 		/// <summary>
-		/// This value corresponds to the <see href="BindingFlags.Public"/> value.
+		/// This value corresponds to the <see cref="BindingFlags.Public"/> value.
 		/// </summary>
 		public static readonly FasterflectFlags Public = new FasterflectFlags((long) BindingFlags.Public);
 
 		/// <summary>
-		/// This value corresponds to the <see href="BindingFlags.NonPublic"/> value.
+		/// This value corresponds to the <see cref="BindingFlags.NonPublic"/> value.
 		/// </summary>
 		public static readonly FasterflectFlags NonPublic = new FasterflectFlags((long) BindingFlags.NonPublic);
 
 		/// <summary>
-		/// This value corresponds to the <see href="BindingFlags.Instance"/> value.
+		/// This value corresponds to the <see cref="BindingFlags.Instance"/> value.
 		/// </summary>
 		public static readonly FasterflectFlags Instance = new FasterflectFlags((long) BindingFlags.Instance);
 
 		/// <summary>
-		/// This value corresponds to the <see href="BindingFlags.Static"/> value.
+		/// This value corresponds to the <see cref="BindingFlags.Static"/> value.
 		/// </summary>
 		public static readonly FasterflectFlags Static = new FasterflectFlags((long) BindingFlags.Static);
 		#endregion
@@ -115,10 +115,10 @@ namespace Fasterflect
 		#region FasterflectFlags
 		/// <summary>
 		/// If this option is specified the search for a named member will perform a partial match instead
-		/// of an exact match. If <see href="TrimExplicitlyImplemented"/> is specified the trimmed name is
-		/// used instead of the original member name. If <see href="IgnoreCase"/> is specified the 
-		/// comparison uses <see href="StringComparison.OrginalIgnoreCase"/> and otherwise
-		/// uses <see href="StringComparison.Ordinal"/>.
+		/// of an exact match. If <see cref="TrimExplicitlyImplemented"/> is specified the trimmed name is
+		/// used instead of the original member name. If <see cref="IgnoreCase"/> is specified the 
+		/// comparison uses <see cref="StringComparison.OrdinalIgnoreCase"/> and otherwise
+		/// uses <see cref="StringComparison.Ordinal"/>.
 		/// </summary>
 		public static readonly FasterflectFlags PartialNameMatch = new FasterflectFlags(1L << 32);
 

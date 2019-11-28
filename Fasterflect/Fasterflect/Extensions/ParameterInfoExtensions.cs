@@ -61,7 +61,7 @@ namespace Fasterflect.Extensions
 
 		/// <summary>
 		/// Determines whether the given <paramref name="parameter"/> has an associated default value as
-		/// supplied by an <see href="DefaultValueAttribute"/>. This method does not read the value of
+		/// supplied by an <see cref="DefaultValueAttribute"/>. This method does not read the value of
 		/// the attribute. It also does not support C# 4.0 default parameter specifications.
 		/// </summary>
 		/// <returns>True if the attribute was detected, false otherwise.</returns>
@@ -73,7 +73,7 @@ namespace Fasterflect.Extensions
 
 		/// <summary>
 		/// Gets the default value associated with the given <paramref name="parameter"/>. The value is
-		/// obtained from the <see href="DefaultValueAttribute"/> if present on the parameter. This method 
+		/// obtained from the <see cref="DefaultValueAttribute"/> if present on the parameter. This method 
 		/// does not support C# 4.0 default parameter specifications.
 		/// </summary>
 		/// <returns>The default value if one could be obtained and converted into the type of the parameter,

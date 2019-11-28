@@ -35,7 +35,7 @@ namespace Fasterflect.Extensions
 		/// as arguments.  Leave <paramref name="parameters"/> empty if the method has no argument.
 		/// </summary>
 		/// <returns>The return value of the method.</returns>
-		/// <remarks>If the method has no return type, <c>null</c> is returned.</remarks>
+		/// <remarks>If the method has no return type, <see langword="null"/> is returned.</remarks>
 		public static object Call(this MethodInfo methodInfo, params object[] parameters)
 		{
 			return Reflect.Method(methodInfo)(null, parameters);
@@ -47,7 +47,7 @@ namespace Fasterflect.Extensions
 		/// Leave <paramref name="parameters"/> empty if the method has no argument.
 		/// </summary>
 		/// <returns>The return value of the method.</returns>
-		/// <remarks>If the method has no return type, <c>null</c> is returned.</remarks>
+		/// <remarks>If the method has no return type, <see langword="null"/> is returned.</remarks>
 		public static object Call(this MethodInfo methodInfo, object obj, params object[] parameters)
 		{
 			return Reflect.Method(methodInfo)(obj, parameters);

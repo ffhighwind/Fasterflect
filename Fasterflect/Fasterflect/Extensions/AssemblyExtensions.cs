@@ -35,7 +35,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		/// <param name="assembly">The assembly in which to look for types.</param>
 		/// <param name="names">An optional list of names against which to filter the result.  If this is
-		/// <c>null</c> or left empty, all types are returned.</param>
+		/// <see langword="null"/> or left empty, all types are returned.</param>
 		/// <returns>A list of all matching types. This method never returns null.</returns>
 		public static IList<Type> Types(this Assembly assembly, params string[] names)
 		{
@@ -48,10 +48,10 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		/// <param name="assembly">The assembly in which to look for types.</param>
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> used to customize how results
-		/// are filters. If the <see href="Flags.PartialNameMatch"/> option is specified any name
-		/// comparisons will use <see href="String.Contains"/> instead of <see href="String.Equals"/>.</param>
+		/// are filters. If the <see cref="FasterflectFlags.PartialNameMatch"/> option is specified any name
+		/// comparisons will use <see cref="String.Contains(String)"/> instead of <see cref="String.Equals(string)"/>.</param>
 		/// <param name="names">An optional list of names against which to filter the result.  If this is
-		/// <c>null</c> or left empty, all types are returned.</param>
+		/// <see langword="null"/> or left empty, all types are returned.</param>
 		/// <returns>A list of all matching types. This method never returns null.</returns>
 		public static IList<Type> Types(this Assembly assembly, FasterflectFlags bindingFlags, params string[] names)
 		{
@@ -83,7 +83,7 @@ namespace Fasterflect.Extensions
 		#region TypesWith Lookup
 		/// <summary>
 		/// Gets all types in the given <paramref name="assembly"/> that are decorated with an
-		/// <see href="Attribute"/> of the given <paramref name="attributeType"/>.
+		/// <see cref="System.Attribute"/> of the given <paramref name="attributeType"/>.
 		/// </summary>
 		/// <returns>A list of all matching types. This value will never be null.</returns>
 		public static IList<Type> TypesWith(this Assembly assembly, Type attributeType)
@@ -96,7 +96,7 @@ namespace Fasterflect.Extensions
 
 		/// <summary>
 		/// Gets all types in the given <paramref name="assembly"/> that are decorated with an
-		/// <see href="Attribute"/> of the given type <typeparamref name="T"/>.
+		/// <see cref="System.Attribute"/> of the given type <typeparamref name="T"/>.
 		/// </summary>
 		/// <returns>A list of all matching types. This value will never be null.</returns>
 		public static IList<Type> TypesWith<T>(this Assembly assembly) where T : Attribute

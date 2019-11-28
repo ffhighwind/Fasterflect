@@ -30,7 +30,7 @@ namespace Fasterflect.Extensions.Services
 		#region ToXml
 		/// <summary>
 		/// Generates a string representation of the given <paramref name="obj"/> using the default
-		/// <see href="FormatOptions" />. The output will contain one element for every readable
+		/// <see cref="XmlFormatOptions" />. The output will contain one element for every readable
 		/// property on <paramref name="obj"/> and process reference properties (other than strings)
 		/// recursively. This method does not handle cyclic references - passing in such an object
 		/// graph will cause an infinite loop. 
@@ -44,7 +44,7 @@ namespace Fasterflect.Extensions.Services
 
 		/// <summary>
 		/// Generates a string representation of the given <paramref name="obj"/> using the default
-		/// <see href="FormatOptions" />. The output will contain one element for every readable
+		/// <see cref="XmlFormatOptions"/>. The output will contain one element for every readable
 		/// property on <paramref name="obj"/> and process reference properties (other than strings)
 		/// recursively. This method does not handle cyclic references - passing in such an object
 		/// graph will cause an infinite loop. 

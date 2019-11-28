@@ -30,7 +30,7 @@ namespace Fasterflect.Extensions
 	{
 		#region Attribute Lookup (Single)
 		/// <summary>
-		/// Gets the first <see href="Attribute"/> associated with the <paramref name="provider"/>.
+		/// Gets the first <see cref="System.Attribute"/> associated with the <paramref name="provider"/>.
 		/// </summary>
 		/// <returns>The first attribute found on the source element.</returns>
 		public static Attribute Attribute(this ICustomAttributeProvider provider)
@@ -39,7 +39,7 @@ namespace Fasterflect.Extensions
 		}
 
 		/// <summary>
-		/// Gets the first <see href="Attribute"/> of type <paramref name="attributeType"/> associated with the <paramref name="provider"/>.
+		/// Gets the first <see cref="System.Attribute"/> of type <paramref name="attributeType"/> associated with the <paramref name="provider"/>.
 		/// </summary>
 		/// <returns>The first attribute found on the source element.</returns>
 		public static Attribute Attribute(this ICustomAttributeProvider provider, Type attributeType)
@@ -48,7 +48,7 @@ namespace Fasterflect.Extensions
 		}
 
 		/// <summary>
-		/// Gets the first <see href="Attribute"/> of type <typeparamref name="T"/> associated with the <paramref name="provider"/>.
+		/// Gets the first <see cref="System.Attribute"/> of type <typeparamref name="T"/> associated with the <paramref name="provider"/>.
 		/// </summary>
 		/// <returns>The first attribute found on the source element.</returns>
 		public static T Attribute<T>(this ICustomAttributeProvider provider) where T : Attribute
@@ -57,7 +57,7 @@ namespace Fasterflect.Extensions
 		}
 
 		/// <summary>
-		/// Gets the first <see href="Attribute"/> of type <typeparamref name="T"/> associated with the 
+		/// Gets the first <see cref="System.Attribute"/> of type <typeparamref name="T"/> associated with the 
 		/// enumeration value given in the <paramref name="provider"/> parameter.
 		/// </summary>
 		/// <typeparam name="T">The attribute type to search for.</typeparam>
@@ -69,7 +69,7 @@ namespace Fasterflect.Extensions
 		}
 
 		/// <summary>
-		/// Gets the first <see href="Attribute"/> of type <paramref name="attributeType"/> associated with the 
+		/// Gets the first <see cref="System.Attribute"/> of type <paramref name="attributeType"/> associated with the 
 		/// enumeration value given in the <paramref name="provider"/> parameter.
 		/// </summary>
 		/// <param name="provider">An enumeration value on which to search for the attribute.</param>
@@ -85,7 +85,7 @@ namespace Fasterflect.Extensions
 
 		#region Attribute Lookup (Multiple)
 		/// <summary>
-		/// Gets the <see href="Attribute"/>s associated with the <paramref name="provider"/>. The resulting
+		/// Gets the <see cref="System.Attribute"/>s associated with the <paramref name="provider"/>. The resulting
 		/// list of attributes can optionally be filtered by suppliying a list of <paramref name="attributeTypes"/>
 		/// to include.
 		/// </summary>
@@ -103,7 +103,7 @@ namespace Fasterflect.Extensions
 		}
 
 		/// <summary>
-		/// Gets all <see href="Attribute"/>s of type <typeparamref name="T"/> associated with the <paramref name="provider"/>.
+		/// Gets all <see cref="System.Attribute"/>s of type <typeparamref name="T"/> associated with the <paramref name="provider"/>.
 		/// </summary>
 		/// <returns>A list of the attributes found on the source element. This value will never be null.</returns>
 		public static IList<T> Attributes<T>(this ICustomAttributeProvider provider) where T : Attribute
@@ -112,7 +112,7 @@ namespace Fasterflect.Extensions
 		}
 
 		/// <summary>
-		/// Gets the <see href="Attribute"/>s associated with the enumeration given in <paramref name="provider"/>. 
+		/// Gets the <see cref="System.Attribute"/>s associated with the enumeration given in <paramref name="provider"/>. 
 		/// </summary>
 		/// <typeparam name="T">The attribute type to search for.</typeparam>
 		/// <param name="provider">An enumeration on which to search for attributes of the given type.</param>
@@ -123,7 +123,7 @@ namespace Fasterflect.Extensions
 		}
 
 		/// <summary>
-		/// Gets the <see href="Attribute"/>s associated with the enumeration given in <paramref name="provider"/>. 
+		/// Gets the <see cref="System.Attribute"/>s associated with the enumeration given in <paramref name="provider"/>. 
 		/// The resulting list of attributes can optionally be filtered by suppliying a list of <paramref name="attributeTypes"/>
 		/// to include.
 		/// </summary>
@@ -138,7 +138,7 @@ namespace Fasterflect.Extensions
 
 		#region HasAttribute Lookup (Presence Detection)
 		/// <summary>
-		/// Determines whether the <paramref name="provider"/> element has an associated <see href="Attribute"/>
+		/// Determines whether the <paramref name="provider"/> element has an associated <see cref="System.Attribute"/>
 		/// of type <paramref name="attributeType"/>.
 		/// </summary>
 		/// <returns>True if the source element has the associated attribute, false otherwise.</returns>
@@ -148,7 +148,7 @@ namespace Fasterflect.Extensions
 		}
 
 		/// <summary>
-		/// Determines whether the <paramref name="provider"/> element has an associated <see href="Attribute"/>
+		/// Determines whether the <paramref name="provider"/> element has an associated <see cref="System.Attribute"/>
 		/// of type <typeparamref name="T"/>.
 		/// </summary>
 		/// <returns>True if the source element has the associated attribute, false otherwise.</returns>
@@ -158,12 +158,12 @@ namespace Fasterflect.Extensions
 		}
 
 		/// <summary>
-		/// Determines whether the <paramref name="provider"/> element has an associated <see href="Attribute"/>
+		/// Determines whether the <paramref name="provider"/> element has an associated <see cref="System.Attribute"/>
 		/// of any of the types given in <paramref name="attributeTypes"/>.
 		/// </summary>
 		/// <param name="provider"></param>
-		/// <param name="attributeTypes">The list of attribute types to look for. If this list is <c>null</c> or
-		/// empty an <see href="ArgumentException"/> will be thrown.</param>
+		/// <param name="attributeTypes">The list of attribute types to look for. If this list is <see langword="null"/> or
+		/// empty an <see cref="ArgumentException"/> will be thrown.</param>
 		/// <returns>True if the source element has at least one of the specified attribute types, false otherwise.</returns>
 		public static bool HasAnyAttribute(this ICustomAttributeProvider provider, params Type[] attributeTypes)
 		{
@@ -171,7 +171,7 @@ namespace Fasterflect.Extensions
 		}
 
 		/// <summary>
-		/// Determines whether the <paramref name="provider"/> element has an associated <see href="Attribute"/>
+		/// Determines whether the <paramref name="provider"/> element has an associated <see cref="System.Attribute"/>
 		/// of all of the types given in <paramref name="attributeTypes"/>.
 		/// </summary>
 		/// <returns>True if the source element has all of the specified attribute types, false otherwise.</returns>
@@ -190,9 +190,9 @@ namespace Fasterflect.Extensions
 		/// these will be included.
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
-		/// <param name="memberTypes">The <see href="MemberTypes"/> to include in the search.</param>
+		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the search.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
-		/// be decorated. If this parameter is <c>null</c> or empty then all fields and properties
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all fields and properties
 		/// will be included in the result.</param>
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> MembersWith(this Type type, MemberTypes memberTypes,
@@ -204,10 +204,10 @@ namespace Fasterflect.Extensions
 		/// <summary>
 		/// Gets all members of the given <paramref name="memberTypes"/> on the given <paramref name="type"/> 
 		/// that match the specified <paramref name="bindingFlags"/> and are decorated with an
-		/// <see href="Attribute"/> of the given type <typeparamref name="T"/>.
+		/// <see cref="System.Attribute"/> of the given type <typeparamref name="T"/>.
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
-		/// <param name="memberTypes">The <see href="MemberTypes"/> to include in the search.</param>
+		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the search.</param>
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
@@ -224,11 +224,11 @@ namespace Fasterflect.Extensions
 		/// these will be included.
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
-		/// <param name="memberTypes">The <see href="MemberTypes"/> to include in the search.</param>
+		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the search.</param>
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
-		/// be decorated. If this parameter is <c>null</c> or empty then all fields and properties
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all fields and properties
 		/// matching the given <paramref name="bindingFlags"/> will be included in the result.</param>
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> MembersWith(this Type type, MemberTypes memberTypes, FasterflectFlags bindingFlags,
@@ -251,7 +251,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		/// <param name="type">The type on which to reflect.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
-		/// be decorated. If this parameter is <c>null</c> or empty then all fields and properties
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all fields and properties
 		/// will be included in the result.</param>
 		/// <returns>A list of all matching fields and properties on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> FieldsAndPropertiesWith(this Type type, params Type[] attributeTypes)
@@ -270,7 +270,7 @@ namespace Fasterflect.Extensions
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
-		/// be decorated. If this parameter is <c>null</c> or empty then all fields and properties
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all fields and properties
 		/// matching the given <paramref name="bindingFlags"/> will be included in the result.</param>
 		/// <returns>A list of all matching fields and properties on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> FieldsAndPropertiesWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
@@ -288,7 +288,7 @@ namespace Fasterflect.Extensions
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
-		/// be decorated. If this parameter is <c>null</c> or empty then all fields matching the given 
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all fields matching the given 
 		/// <paramref name="bindingFlags"/> will be included in the result.</param>
 		/// <returns>A list of all matching fields on the type. This value will never be null.</returns>
 		public static IList<FieldInfo> FieldsWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
@@ -306,7 +306,7 @@ namespace Fasterflect.Extensions
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
-		/// be decorated. If this parameter is <c>null</c> or empty then all properties matching the given 
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all properties matching the given 
 		/// <paramref name="bindingFlags"/> will be included in the result.</param>
 		/// <returns>A list of all matching properties on the type. This value will never be null.</returns>
 		public static IList<PropertyInfo> PropertiesWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
@@ -326,7 +326,7 @@ namespace Fasterflect.Extensions
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
-		/// be decorated. If this parameter is <c>null</c> or empty then all methods matching the given 
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all methods matching the given 
 		/// <paramref name="bindingFlags"/> will be included in the result.</param>
 		/// <returns>A list of all matching methods on the type. This value will never be null.</returns>
 		public static IList<MethodInfo> MethodsWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
@@ -344,7 +344,7 @@ namespace Fasterflect.Extensions
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
 		/// used to define the search behavior and result filtering.</param>
 		/// <param name="attributeTypes">The optional list of attribute types with which members should
-		/// be decorated. If this parameter is <c>null</c> or empty then all constructors matching the given 
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all constructors matching the given 
 		/// <paramref name="bindingFlags"/> will be included in the result.</param>
 		/// <returns>A list of all matching constructors on the type. This value will never be null.</returns>
 		public static IList<ConstructorInfo> ConstructorsWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)

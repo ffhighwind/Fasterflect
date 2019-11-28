@@ -77,7 +77,7 @@ namespace Fasterflect.Extensions
 		/// the type of the indexer.</param>
 		/// <returns>A delegate which can set an indexer.</returns>
 		/// <example>
-		/// If the indexer is of type <c>string</c> and accepts one parameter of type <c>int</c>, this 
+		/// If the indexer is of type <see cref="string"/> and accepts one parameter of type <see langword="int"/>, this 
 		/// method should be invoked as follow:
 		/// <code>
 		/// MethodInvoker invoker = type.DelegateForSetIndexer(new Type[]{typeof(int), typeof(string)});
@@ -108,7 +108,7 @@ namespace Fasterflect.Extensions
 		/// the type of the indexer.</param>
 		/// <returns>A delegate which can set an indexer.</returns>
 		/// <example>
-		/// If the indexer is of type <c>string</c> and accepts one parameter of type <c>int</c>, this 
+		/// If the indexer is of type <see cref="string"/> and accepts one parameter of type <see langword="int"/>, this 
 		/// method should be invoked as follow:
 		/// <code>
 		/// MethodInvoker invoker = type.DelegateForSetIndexer(new Type[]{typeof(int), typeof(string)});
@@ -162,7 +162,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		/// <returns>A list of matching instance properties on the type.</returns>
 		/// <param name="type">The type whose public properties are to be retrieved.</param>
-		/// <param name="names">A list of names of properties to be retrieved. If this is <c>null</c>, 
+		/// <param name="names">A list of names of properties to be retrieved. If this is <see langword="null"/>, 
 		/// all properties are returned.</param>
 		/// <returns>A list of all public properties on the type filted by <paramref name="names"/>.
 		/// This value will never be null.</returns>
@@ -266,12 +266,12 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		/// <param name="obj">The object whose indexer is to be set.</param>
 		/// <param name="parameters">The list of the indexer parameters plus the value to be set to the indexer.
-		/// The parameter types are determined from these parameters, therefore no parameter can be <c>null</c>.
-		/// If any parameter is <c>null</c> (or you can't be sure of that, i.e. receive from a variable), 
+		/// The parameter types are determined from these parameters, therefore no parameter can be <see langword="null"/>.
+		/// If any parameter is <see langword="null"/> (or you can't be sure of that, i.e. receive from a variable), 
 		/// use a different overload of this method.</param>
 		/// <returns>The object whose indexer is to be set.</returns>
 		/// <example>
-		/// If the indexer is of type <c>string</c> and accepts one parameter of type <c>int</c>, this 
+		/// If the indexer is of type <see cref="string"/> and accepts one parameter of type <see langword="int"/>, this 
 		/// method should be invoked as follow:
 		/// <code>
 		/// obj.SetIndexer(new Type[]{typeof(int), typeof(string)}, new object[]{1, "a"});
@@ -293,7 +293,7 @@ namespace Fasterflect.Extensions
 		/// This list must match with the <paramref name="parameterTypes"/> list.</param>
 		/// <returns>The object whose indexer is to be set.</returns>
 		/// <example>
-		/// If the indexer is of type <c>string</c> and accepts one parameter of type <c>int</c>, this 
+		/// If the indexer is of type <see cref="string"/> and accepts one parameter of type <see langword="int"/>, this 
 		/// method should be invoked as follow:
 		/// <code>
 		/// obj.SetIndexer(new Type[]{typeof(int), typeof(string)}, new object[]{1, "a"});
@@ -337,12 +337,12 @@ namespace Fasterflect.Extensions
 		/// <param name="obj">The object whose indexer is to be set.</param>
 		/// <param name="bindingFlags">The binding flags used to lookup the indexer.</param>
 		/// <param name="parameters">The list of the indexer parameters plus the value to be set to the indexer.
-		/// The parameter types are determined from these parameters, therefore no parameter can be <c>null</c>.
-		/// If any parameter is <c>null</c> (or you can't be sure of that, i.e. receive from a variable), 
+		/// The parameter types are determined from these parameters, therefore no parameter can be <see langword="null"/>.
+		/// If any parameter is <see langword="null"/> (or you can't be sure of that, i.e. receive from a variable), 
 		/// use a different overload of this method.</param>
 		/// <returns>The object whose indexer is to be set.</returns>
 		/// <example>
-		/// If the indexer is of type <c>string</c> and accepts one parameter of type <c>int</c>, this 
+		/// If the indexer is of type <see cref="string"/> and accepts one parameter of type <see langword="int"/>, this 
 		/// method should be invoked as follow:
 		/// <code>
 		/// obj.SetIndexer(new Type[]{typeof(int), typeof(string)}, new object[]{1, "a"});
@@ -366,7 +366,7 @@ namespace Fasterflect.Extensions
 		///   This list must match with the <paramref name="parameterTypes"/> list.</param>
 		/// <returns>The object whose indexer is to be set.</returns>
 		/// <example>
-		/// If the indexer is of type <c>string</c> and accepts one parameter of type <c>int</c>, this 
+		/// If the indexer is of type <see cref="string"/> and accepts one parameter of type <see langword="int"/>, this 
 		/// method should be invoked as follow:
 		/// <code>
 		/// obj.SetIndexer(new Type[]{typeof(int), typeof(string)}, new object[]{1, "a"});
