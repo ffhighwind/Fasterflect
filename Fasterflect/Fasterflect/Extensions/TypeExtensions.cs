@@ -1,6 +1,7 @@
 #region License
 // Copyright 2010 Buu Nguyen, Morten Mertner
-// 
+// Copyright 2018 Wesley Hamilton
+//
 // Licensed under the Apache License, Version 2.0 (the "License"); 
 // you may not use this file except in compliance with the License. 
 // You may obtain a copy of the License at 
@@ -27,6 +28,76 @@ namespace Fasterflect.Extensions
 	/// </summary>
 	public static class TypeExtensions
 	{
+		#region Nullable
+		/// <summary>
+		/// Converts a <see cref="Type"/> to its <see cref="Nullable{T}"/> equivalent.
+		/// </summary>
+		/// <param name="type">The <see cref="Type"/> to convert to <see cref="Nullable{T}"/>.</param>
+		/// <returns>The <see cref="Nullable{T}"/> equivalent of the <see cref="Type"/>.</returns>
+		public static Type AsNullable(this Type type)
+		{
+			return typeof(Nullable<>).MakeGenericType(type);
+		}
+
+		/// <summary>
+		/// Determines if a <see cref="Type"/> is <see cref="Nullable{T}"/>.
+		/// </summary>
+		/// <param name="type">The <see cref="Type"/> to determine if it is <see cref="Nullable{T}"/>.</param>
+		/// <returns>True if the <see cref="Type"/> is <see cref="Nullable{T}"/>. False otherwise.</returns>
+		public static bool IsNullable(this Type type)
+		{
+			return (!type.IsValueType && Nullable.GetUnderlyingType(type) != null) || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>));
+		}
+		#endregion Nullable
+
+		#region Numeric
+		private static readonly HashSet<Type> NumericTypes = new HashSet<Type>
+		{
+			typeof(float), typeof(double), typeof(decimal),
+			typeof(long), typeof(short), typeof(sbyte),
+			typeof(byte), typeof(ulong), typeof(ushort),
+			typeof(uint), typeof(int),
+		};
+
+		private static readonly HashSet<Type> IntTypes = new HashSet<Type>
+		{
+			typeof(int), typeof(long), typeof(short),
+			typeof(sbyte), typeof(byte), typeof(ulong),
+			typeof(ushort), typeof(uint),
+		};
+
+		/// <summary>
+		/// Determines if a <see cref="Type"/> is an integral numeric type.
+		/// </summary>
+		/// <param name="type">The <see cref="Type"/> to check.</param>
+		/// <returns>True if the <see cref="Type"/> is an integral type. False otherwise.</returns>
+		public static bool IsIntegral(this Type type)
+		{
+			return IntTypes.Contains(Nullable.GetUnderlyingType(type) ?? type);
+		}
+
+		/// <summary>
+		/// Determines if a <see cref="Type"/> is a floating-point numeric type.
+		/// </summary>
+		/// <param name="type">The <see cref="Type"/> to check.</param>
+		/// <returns>True if the <see cref="Type"/> is a floating-point type. False otherwise.</returns>
+		public static bool IsFloatingPoint(this Type type)
+		{
+			Type ty = Nullable.GetUnderlyingType(type) ?? type;
+			return ty == typeof(double) || ty == typeof(decimal) || ty == typeof(float);
+		}
+
+		/// <summary>
+		/// Determines if a <see cref="Type"/> is numeric.
+		/// </summary>
+		/// <param name="type">The <see cref="Type"/> to check.</param>
+		/// <returns>True if the <see cref="Type"/> is numeric. False otherwise.</returns>
+		public static bool IsNumeric(this Type type)
+		{
+			return NumericTypes.Contains(Nullable.GetUnderlyingType(type) ?? type);
+		}
+		#endregion Numeric
+
 		#region Implements
 		/// <summary>
 		/// Returns true if the supplied <paramref name="type"/> implements the given interface <typeparamref name="T"/>.

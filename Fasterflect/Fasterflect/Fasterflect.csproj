@@ -38,6 +38,14 @@
     <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Emitter\ShallowClonerCallInfo.cs" />
+    <Compile Remove="Emitter\ShallowClonerEmitter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Emitter\ShallowClonerCallInfo.cs" />
+    <None Include="Emitter\ShallowClonerEmitter.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="System.Reflection.Emit" Version="4.6.0" />
     <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.6.0" />
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.6.0" />

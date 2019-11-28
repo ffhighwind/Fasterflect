@@ -534,33 +534,6 @@ namespace Fasterflect
 				System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
 			return (T) inst?.Invoke(obj, null);
 		}
-
-		/**
-		/// <summary>
-		/// Creates a delegate that clones an object via shallow copy.
-		/// </summary>
-		/// <typeparam name="T">The type of object to clone.</typeparam>
-		/// <returns>A delegate that clones an object via shallow copy.</returns>
-		public static Func<T, T> ShallowCloner<T>()
-			where T : new()
-		{
-			ShallowClonerEmitter<T> emitter = new ShallowClonerEmitter<T>();
-			return (Func<T, T>) emitter.GetDelegate();
-		}
-
-		/// <summary>
-		/// Creates a delegate that clones an object via shallow copy using the properties and fields matching <paramref name="bindingFlags"/>.
-		/// </summary>
-		/// <typeparam name="T">The type of object to clone.</typeparam>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> used to define the scope when locating members.</param>
-		/// <returns>A delegate that clones an object via shallow copy.</returns>
-		public static Func<T, T> ShallowCloner<T>(FasterflectFlags bindingFlags)
-			where T : new()
-		{
-			ShallowClonerEmitter<T> emitter = new ShallowClonerEmitter<T>(bindingFlags);
-			return (Func<T, T>) emitter.GetDelegate();
-		}
-		*/
 		#endregion
 	}
 }
