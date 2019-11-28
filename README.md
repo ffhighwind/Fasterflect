@@ -1,6 +1,6 @@
 # Intro
 
-[Nuget: fasterflect.reflect](https://www.nuget.org/packages/fasterflect.reflect/)
+[Nuget: Fasterflect.Reflect](https://www.nuget.org/packages/fasterflect.reflect/)
 
 This framework is based on [Fasterflect](https://github.com/buunguyen/fasterflect), which was originally developed by Buu Nguyen and Morten Mertner. The extension methods in this version have been moved to a separate namespace to ensure that they do not clutter intellisense and auto-complete. Most of the search methods have been moved to ReflectLookup instead. It also includes one new feature: MultiSetter.
 
