@@ -1,7 +1,7 @@
 ﻿#region License
 
-// Copyright 2010 Buu Nguyen, Morten Mertner
-// Copyright 2018 Wesley Hamilton
+// Copyright © 2010 Buu Nguyen, Morten Mertner
+// Copyright © 2018 Wesley Hamilton
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
 // you may not use this file except in compliance with the License. 
