@@ -171,7 +171,7 @@ This is based on FastMember's [ObjectReader](https://github.com/mgravell/fast-me
 
 ## [Emitter.EmitHelper](https://github.com/ffhighwind/Fasterflect/blob/master/Fasterflect/Emitter/EmitHelper.cs)
 
-This is a wrapper around System.Reflection.Emit.IlGenerator that is easier to read and simple to use. Instead of typing ilgen.Emit(OpCodes.XXX, yyy) you would type emitter.xxx(yyy).
+This is a wrapper around System.Reflection.Emit.IlGenerator that is easier to read and simple to use.
 
 # License
 
