@@ -9,10 +9,10 @@
     <PackageReleaseNotes>Added more framework support. Added DataReaderFactory.</PackageReleaseNotes>
     <PackageTags>reflection reflection-emit dynamic-method .net35 .net45 .netstandard2 .netstandard2.1 .netcoreapp2.0 </PackageTags>
     <PackageLicense>Apache-2.0</PackageLicense>
-    <PackageProjectUrl>https://github.com/ffhighwind/fasterflect</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/ffhighwind/Fasterflect</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Copyright (c) 2010 Buu Nguyen, Morten Mertner, Copyright (c) 2018 Wesley Hamilton</Copyright>
-    <RepositoryUrl>https://github.com/ffhighwind/fasterflect</RepositoryUrl>
+    <RepositoryUrl>https://github.com/ffhighwind/Fasterflect</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
