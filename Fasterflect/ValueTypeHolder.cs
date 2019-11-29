@@ -36,7 +36,7 @@ namespace Fasterflect
 		/// Must be a derivative of <code>ValueType</code>.</param>
 		public ValueTypeHolder(object value)
 		{
-			Value = (ValueType) value;
+			Value = (ValueType)value;
 		}
 
 		/// <summary>

@@ -95,8 +95,7 @@ namespace Fasterflect.Extensions
 			bool hasTypes = attributeTypes != null && attributeTypes.Length > 0;
 			return provider.GetCustomAttributes(true).Cast<Attribute>()
 				.Where(attr => !hasTypes ||
-					   attributeTypes.Any(at =>
-					   {
+					   attributeTypes.Any(at => {
 						   Type type = attr.GetType();
 						   return at == type || at.IsSubclassOf(type);
 					   })).ToList();

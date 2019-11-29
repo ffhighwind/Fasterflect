@@ -16,12 +16,12 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 #endregion
 
+using Fasterflect.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Fasterflect.Extensions;
 
 namespace Fasterflect.Emitter
 {
@@ -95,7 +95,7 @@ namespace Fasterflect.Emitter
 				Generator.ldfld(field);
 			}
 			else {
-				MethodInfo method = ((PropertyInfo) member).GetGetMethod(true);
+				MethodInfo method = ((PropertyInfo)member).GetGetMethod(true);
 				Generator.callvirt(method, null);
 			}
 		}
@@ -106,7 +106,7 @@ namespace Fasterflect.Emitter
 				Generator.stfld(field);
 			}
 			else {
-				MethodInfo method = ((PropertyInfo) member).GetSetMethod(true);
+				MethodInfo method = ((PropertyInfo)member).GetSetMethod(true);
 				Generator.callvirt(method, null);
 			}
 		}

@@ -19,15 +19,10 @@
 
 #endregion
 
+using Fasterflect.Extensions;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using Fasterflect.Extensions;
 
 namespace Fasterflect.Emitter
 {
@@ -46,7 +41,7 @@ namespace Fasterflect.Emitter
 
 		protected internal override Delegate CreateDelegate()
 		{
-			MultiSetCallInfo callinfo = (MultiSetCallInfo) CallInfo;
+			MultiSetCallInfo callinfo = (MultiSetCallInfo)CallInfo;
 			MemberInfo[] members = callinfo.members;
 			callinfo.IsStatic = true;
 			for (int i = 0, count = members.Length; i < count; i++) {
@@ -89,7 +84,7 @@ namespace Fasterflect.Emitter
 					Generator.stfld(field.IsStatic, field);             // (this|tmpStr).field = value-to-be-set;
 				}
 				else {
-					PropertyInfo property = (PropertyInfo) method;
+					PropertyInfo property = (PropertyInfo)method;
 					MethodInfo setMethod = property.GetSetMethod(true);
 					if (!setMethod.IsStatic) {
 						if (handleInnerStruct) {

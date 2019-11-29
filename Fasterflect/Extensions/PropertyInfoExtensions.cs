@@ -17,7 +17,6 @@
 #endregion
 
 using System.Reflection;
-using Fasterflect.Emitter;
 
 namespace Fasterflect.Extensions
 {

@@ -19,10 +19,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
-using Fasterflect.Extensions;
 
 namespace Fasterflect.Extensions.DeepClone
 {
@@ -77,10 +75,10 @@ namespace Fasterflect.Extensions.DeepClone
 		private static T CloneArray<T>(this T source, Dictionary<object, object> map) where T : class, new()
 		{
 			Type type = source.GetType();
-			T clone = Activator.CreateInstance(type, ((ICollection) source).Count) as T;
+			T clone = Activator.CreateInstance(type, ((ICollection)source).Count) as T;
 			map[source] = clone;
-			IList sourceList = (IList) source;
-			IList cloneList = (IList) clone;
+			IList sourceList = (IList)source;
+			IList cloneList = (IList)clone;
 			for (int i = 0; i < sourceList.Count; i++) {
 				object element = sourceList[i];
 				cloneList[i] = element.ShouldClone() ? element.DeepClone(map) : element;

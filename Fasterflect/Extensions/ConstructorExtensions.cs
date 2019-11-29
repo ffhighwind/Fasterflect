@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Fasterflect.Emitter;
 
 namespace Fasterflect.Extensions
 {
@@ -117,7 +116,7 @@ namespace Fasterflect.Extensions
 		{
 			IEnumerable<T> query = from type in assembly.TypesImplementing<T>()
 								   where type.IsClass && !type.IsAbstract && type.Constructor() != null
-								   select (T) type.CreateInstance();
+								   select (T)type.CreateInstance();
 			return query.ToList();
 		}
 		#endregion

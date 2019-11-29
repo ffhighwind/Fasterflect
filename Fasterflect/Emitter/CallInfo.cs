@@ -129,7 +129,7 @@ namespace Fasterflect.Emitter
 
 		public override int GetHashCode()
 		{
-			int hash = TargetType.GetHashCode() + (int) MemberTypes * Name.GetHashCode() + BindingFlags.GetHashCode() + IsReadOperation.GetHashCode();
+			int hash = TargetType.GetHashCode() + (int)MemberTypes * Name.GetHashCode() + BindingFlags.GetHashCode() + IsReadOperation.GetHashCode();
 			for (int i = 0; i < ParamTypes.Length; i++) {
 				hash += ParamTypes[i].GetHashCode() * (i + 1);
 			}

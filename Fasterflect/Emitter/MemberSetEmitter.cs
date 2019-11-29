@@ -18,10 +18,10 @@
 
 #endregion
 
+using Fasterflect.Extensions;
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using Fasterflect.Extensions;
 
 namespace Fasterflect.Emitter
 {

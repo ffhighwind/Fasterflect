@@ -16,9 +16,9 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 #endregion
 
+using Fasterflect.Emitter;
 using System;
 using System.Reflection;
-using Fasterflect.Emitter;
 
 namespace Fasterflect.Extensions
 {
@@ -79,7 +79,7 @@ namespace Fasterflect.Extensions
 							   FasterflectFlags bindingFlags, params string[] names)
 		{
 			MapEmitter emitter = new MapEmitter(sourceType, targetType, sourceTypes, targetTypes, bindingFlags, names);
-			return (ObjectMapper) emitter.GetDelegate();
+			return (ObjectMapper)emitter.GetDelegate();
 		}
 		#endregion
 	}

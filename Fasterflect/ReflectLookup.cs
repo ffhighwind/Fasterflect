@@ -19,13 +19,12 @@
 
 #endregion
 
+using Fasterflect.Emitter;
+using Fasterflect.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using Fasterflect.Emitter;
-using Fasterflect.Extensions;
 namespace Fasterflect
 {
 	/// <summary>

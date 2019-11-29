@@ -27,7 +27,7 @@ namespace Fasterflect
 	{
 		private readonly Dictionary<string, object> members = new Dictionary<string, object>();
 
-		#region DynamicObject Overrides
+#region DynamicObject Overrides
 		/// <summary>
 		/// Assigns the given value to the specified member, overwriting any previous definition if one existed.
 		/// </summary>     
@@ -71,7 +71,7 @@ namespace Fasterflect
 		{
 			return members.Keys;
 		}
-		#endregion
+#endregion
 	}
 }
 #endif

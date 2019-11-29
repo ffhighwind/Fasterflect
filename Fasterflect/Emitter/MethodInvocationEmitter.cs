@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
+
 namespace Fasterflect.Emitter
 {
 	internal class MethodInvocationEmitter : InvocationEmitter
@@ -51,7 +52,7 @@ namespace Fasterflect.Emitter
 
 		protected internal override Delegate CreateDelegate()
 		{
-			MethodInfo method = (MethodInfo) CallInfo.MemberInfo ?? LookupUtils.GetMethod(CallInfo);
+			MethodInfo method = (MethodInfo)CallInfo.MemberInfo ?? LookupUtils.GetMethod(CallInfo);
 			CallInfo.IsStatic = method.IsStatic;
 			const byte paramArrayIndex = 1;
 			bool hasReturnType = method.ReturnType != typeof(void);
@@ -63,7 +64,7 @@ namespace Fasterflect.Emitter
 				Generator.DeclareLocal(hasReturnType
 											? method.ReturnType
 											: typeof(object)); // T result;
-				GenerateInvocation(method, paramArrayIndex, (byte) (startUsableLocalIndex + 1));
+				GenerateInvocation(method, paramArrayIndex, (byte)(startUsableLocalIndex + 1));
 				if (hasReturnType) {
 					Generator.stloc(startUsableLocalIndex); // result = <stack>;
 				}
@@ -73,14 +74,14 @@ namespace Fasterflect.Emitter
 				Generator.DeclareLocal(hasReturnType
 											? method.ReturnType
 											: typeof(object)); // T result;
-				GenerateInvocation(method, paramArrayIndex, (byte) (startUsableLocalIndex + 1));
+				GenerateInvocation(method, paramArrayIndex, (byte)(startUsableLocalIndex + 1));
 				if (hasReturnType) {
 					Generator.stloc(startUsableLocalIndex); // result = <stack>;
 				}
 			}
 
 			if (CallInfo.ShouldHandleInnerStruct) {
-				StoreLocalToInnerStruct((byte) (startUsableLocalIndex + 1)); // ((ValueTypeHolder)this)).Value = tmpStr; 
+				StoreLocalToInnerStruct((byte)(startUsableLocalIndex + 1)); // ((ValueTypeHolder)this)).Value = tmpStr; 
 			}
 			if (hasReturnType) {
 				Generator.ldloc(startUsableLocalIndex) // push result;

@@ -19,10 +19,10 @@
 
 #endregion
 
-using System;
-using System.Reflection;
 using Fasterflect.Emitter;
 using Fasterflect.Extensions;
+using System;
+using System.Reflection;
 
 namespace Fasterflect
 {
@@ -52,7 +52,7 @@ namespace Fasterflect
 		/// <returns>A <see cref="ConstructorInvoker"/> which invokes the given <see cref="ConstructorInfo"/>.</returns>
 		public static ConstructorInvoker Constructor(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
-			return (ConstructorInvoker) new CtorInvocationEmitter(type, bindingFlags, parameterTypes).GetDelegate();
+			return (ConstructorInvoker)new CtorInvocationEmitter(type, bindingFlags, parameterTypes).GetDelegate();
 		}
 
 		/// <summary>
@@ -62,14 +62,14 @@ namespace Fasterflect
 		/// <returns>A <see cref="ConstructorInvoker"/>gate which invokes the given <see cref="ConstructorInfo"/>.</returns>
 		public static ConstructorInvoker Constructor(ConstructorInfo ctor)
 		{
-			return (ConstructorInvoker) new CtorInvocationEmitter(ctor, FasterflectFlags.InstanceAnyDeclaredOnly).GetDelegate();
+			return (ConstructorInvoker)new CtorInvocationEmitter(ctor, FasterflectFlags.InstanceAnyDeclaredOnly).GetDelegate();
 		}
 		#endregion
 
 		#region Getters
 		internal static MemberGetter Getter(Type type, string name, MemberTypes memberType, FasterflectFlags bindingFlags)
 		{
-			return (MemberGetter) new MemberGetEmitter(type, bindingFlags, memberType, name).GetDelegate();
+			return (MemberGetter)new MemberGetEmitter(type, bindingFlags, memberType, name).GetDelegate();
 		}
 
 		/// <summary>
@@ -96,6 +96,17 @@ namespace Fasterflect
 		}
 
 		/// <summary>
+		/// Creates a <see cref="MemberGetter"/> which gets the value of the given member.
+		/// </summary>
+		/// <param name="memberInfo">The <see cref="MemberInfo"/> whos value will be returned.</param>
+		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given member.</returns>
+		public static MemberGetter Getter(MemberInfo memberInfo)
+		{
+			FasterflectFlags bindingFlags = memberInfo.IsStatic() ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
+			return (MemberGetter)new MemberGetEmitter(memberInfo, bindingFlags).GetDelegate();
+		}
+
+		/// <summary>
 		/// Creates a <see cref="MemberGetter"/> which gets the value of the given <see cref="FieldInfo"/>.
 		/// </summary>
 		/// <param name="fieldInfo">The <see cref="FieldInfo"/> whose value will be returned.</param>
@@ -103,7 +114,7 @@ namespace Fasterflect
 		public static MemberGetter FieldGetter(FieldInfo fieldInfo)
 		{
 			FasterflectFlags bindingFlags = fieldInfo.IsStatic ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
-			return (MemberGetter) new MemberGetEmitter(fieldInfo, bindingFlags).GetDelegate();
+			return (MemberGetter)new MemberGetEmitter(fieldInfo, bindingFlags).GetDelegate();
 		}
 
 		/// <summary>
@@ -114,7 +125,7 @@ namespace Fasterflect
 		public static MemberGetter PropertyGetter(PropertyInfo propInfo)
 		{
 			FasterflectFlags bindingFlags = propInfo.IsStatic() ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
-			return (MemberGetter) new MemberGetEmitter(propInfo, bindingFlags).GetDelegate();
+			return (MemberGetter)new MemberGetEmitter(propInfo, bindingFlags).GetDelegate();
 		}
 
 		/// <summary>
@@ -168,7 +179,7 @@ namespace Fasterflect
 		internal static MemberSetter Setter(Type type, string name, MemberTypes memberType, FasterflectFlags bindingFlags)
 		{
 			CallInfo callInfo = new CallInfo(type, null, bindingFlags, memberType, name, null, null, false);
-			return (MemberSetter) new MemberSetEmitter(callInfo).GetDelegate();
+			return (MemberSetter)new MemberSetEmitter(callInfo).GetDelegate();
 		}
 
 		/// <summary>
@@ -202,7 +213,7 @@ namespace Fasterflect
 		public static MemberSetter FieldSetter(FieldInfo fieldInfo)
 		{
 			FasterflectFlags bindingFlags = fieldInfo.IsStatic ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
-			return (MemberSetter) new MemberSetEmitter(fieldInfo, bindingFlags).GetDelegate();
+			return (MemberSetter)new MemberSetEmitter(fieldInfo, bindingFlags).GetDelegate();
 		}
 
 		/// <summary>
@@ -213,7 +224,7 @@ namespace Fasterflect
 		public static MemberSetter PropertySetter(PropertyInfo propInfo)
 		{
 			FasterflectFlags bindingFlags = propInfo.IsStatic() ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
-			return (MemberSetter) new MemberSetEmitter(propInfo, bindingFlags).GetDelegate();
+			return (MemberSetter)new MemberSetEmitter(propInfo, bindingFlags).GetDelegate();
 		}
 
 		/// <summary>
@@ -224,7 +235,7 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given <see cref="PropertyInfo"/>.</returns>
 		public static MemberSetter PropertySetter(PropertyInfo propInfo, FasterflectFlags bindingFlags)
 		{
-			return (MemberSetter) new MemberSetEmitter(propInfo, bindingFlags).GetDelegate();
+			return (MemberSetter)new MemberSetEmitter(propInfo, bindingFlags).GetDelegate();
 		}
 
 		/// <summary>
@@ -295,7 +306,7 @@ namespace Fasterflect
 		/// <returns>A <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.</returns>
 		public static MultiSetter MultiSetter(Type type, FasterflectFlags bindingFlags, params string[] memberNames)
 		{
-			return (MultiSetter) new MultiSetEmitter(type, bindingFlags, memberNames).GetDelegate();
+			return (MultiSetter)new MultiSetEmitter(type, bindingFlags, memberNames).GetDelegate();
 		}
 		#endregion
 
@@ -320,7 +331,7 @@ namespace Fasterflect
 		/// <returns>The delegate which can get the value of an indexer.</returns>
 		public static MethodInvoker IndexerGetter(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
-			return (MethodInvoker) new MethodInvocationEmitter(type, bindingFlags, Constants.IndexerGetterName, parameterTypes).GetDelegate();
+			return (MethodInvoker)new MethodInvocationEmitter(type, bindingFlags, Constants.IndexerGetterName, parameterTypes).GetDelegate();
 		}
 
 		/// <summary>
@@ -359,7 +370,7 @@ namespace Fasterflect
 		/// </example>
 		public static MethodInvoker IndexerSetter(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
-			return (MethodInvoker) new MethodInvocationEmitter(type, bindingFlags, Constants.IndexerSetterName, parameterTypes).GetDelegate();
+			return (MethodInvoker)new MethodInvocationEmitter(type, bindingFlags, Constants.IndexerSetterName, parameterTypes).GetDelegate();
 		}
 		#endregion
 
@@ -372,7 +383,7 @@ namespace Fasterflect
 		public static MethodInvoker Method(MethodInfo methodInfo)
 		{
 			FasterflectFlags bindingFlags = methodInfo.IsStatic ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
-			return (MethodInvoker) new MethodInvocationEmitter(methodInfo, bindingFlags).GetDelegate();
+			return (MethodInvoker)new MethodInvocationEmitter(methodInfo, bindingFlags).GetDelegate();
 		}
 
 		/// <summary>
@@ -425,7 +436,7 @@ namespace Fasterflect
 		public static MethodInvoker Method(Type type, Type[] genericTypes, string name, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
 			CallInfo callInfo = new CallInfo(type, genericTypes, bindingFlags, MemberTypes.Method, name, parameterTypes, null, true);
-			return (MethodInvoker) new MethodInvocationEmitter(callInfo).GetDelegate();
+			return (MethodInvoker)new MethodInvocationEmitter(callInfo).GetDelegate();
 		}
 		#endregion
 
@@ -437,7 +448,7 @@ namespace Fasterflect
 		/// <returns>An <see cref="ArrayElementGetter"/> which retrieves an element of an array.</returns>
 		public static ArrayElementGetter ArrayGetter(Type arrayType)
 		{
-			return (ArrayElementGetter) new ArrayGetEmitter(arrayType).GetDelegate();
+			return (ArrayElementGetter)new ArrayGetEmitter(arrayType).GetDelegate();
 		}
 
 		/// <summary>
@@ -447,7 +458,7 @@ namespace Fasterflect
 		/// <returns>An <see cref="ArrayElementGetter"/> which sets an element of an array.</returns>
 		public static ArrayElementSetter ArraySetter(Type arrayType)
 		{
-			return (ArrayElementSetter) new ArraySetEmitter(arrayType).GetDelegate();
+			return (ArrayElementSetter)new ArraySetEmitter(arrayType).GetDelegate();
 		}
 		#endregion
 
@@ -503,7 +514,7 @@ namespace Fasterflect
 							   FasterflectFlags bindingFlags, params string[] names)
 		{
 			MapEmitter emitter = new MapEmitter(sourceType, targetType, sourceTypes, targetTypes, bindingFlags, names);
-			return (ObjectMapper) emitter.GetDelegate();
+			return (ObjectMapper)emitter.GetDelegate();
 		}
 		#endregion
 
@@ -532,7 +543,7 @@ namespace Fasterflect
 				return null;
 			System.Reflection.MethodInfo inst = obj.GetType().GetMethod("MemberwiseClone",
 				System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-			return (T) inst?.Invoke(obj, null);
+			return (T)inst?.Invoke(obj, null);
 		}
 		#endregion
 	}

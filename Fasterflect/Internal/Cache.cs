@@ -17,9 +17,10 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 
 #endregion
+
 namespace Fasterflect
 {
-#if DOT_NET_4
+#if (NET45 || NETSTANDARD || NETCOREAPP)
 	using System;
 	using System.Collections.Concurrent;
 	using System.Collections.Generic;
@@ -151,8 +152,8 @@ namespace Fasterflect
 		}
 		#endregion
 	}
-#elif DOT_NET_35
-    using System;
+#elif NET35
+	using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -248,8 +249,7 @@ namespace Fasterflect
 			entries.TryGetValue(key, out entry);
 			if(current != Interlocked.Exchange(ref owner, 0))
 				throw new UnauthorizedAccessException("Thread had access to cache even though it shouldn't have.");
-			var wr = entry as WeakReference;
-			return (TValue) (wr != null ? wr.Target : entry);
+			return (TValue)(entry is WeakReference wr ? wr.Target : entry);
 		}
 	#endregion
 
@@ -312,6 +312,6 @@ namespace Fasterflect
 	#endregion
 	}
 #else
-#error At least one of the compilation symbols DOT_NET_4 or DOT_NET_35 must be defined. 
+#error At least one of the compilation symbols NET45, NET35, or NETSTANDARD2_0 must be defined. 
 #endif
 }

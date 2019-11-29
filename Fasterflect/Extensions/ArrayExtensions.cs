@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using Fasterflect.Emitter;
 
 namespace Fasterflect.Extensions
 {
@@ -57,7 +56,7 @@ namespace Fasterflect.Extensions
 		/// <returns><paramref name="array"/>.</returns>
 		internal static object SetElement(this object array, long index, object value)
 		{
-			((Array) array).SetValue(value, index);
+			((Array)array).SetValue(value, index);
 			return array;
 		}
 
@@ -66,7 +65,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		internal static object GetElement(this object array, long index)
 		{
-			return ((Array) array).GetValue(index);
+			return ((Array)array).GetValue(index);
 		}
 		#endregion
 	}

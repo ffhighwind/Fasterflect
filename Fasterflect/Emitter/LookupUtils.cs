@@ -19,17 +19,17 @@
 
 #endregion
 
+using Fasterflect.Extensions;
 using System;
 using System.Reflection;
-using Fasterflect.Extensions;
+
 namespace Fasterflect.Emitter
 {
 	internal class LookupUtils
 	{
 		public static ConstructorInfo GetConstructor(CallInfo callInfo)
 		{
-			ConstructorInfo constructor = callInfo.MemberInfo as ConstructorInfo;
-			if (constructor != null)
+			if (callInfo.MemberInfo is ConstructorInfo constructor)
 				return constructor;
 
 			constructor = callInfo.TargetType.Constructor(callInfo.BindingFlags, callInfo.ParamTypes);
@@ -40,8 +40,7 @@ namespace Fasterflect.Emitter
 
 		public static MethodInfo GetMethod(CallInfo callInfo)
 		{
-			MethodInfo method = callInfo.MemberInfo as MethodInfo;
-			if (method != null)
+			if (callInfo.MemberInfo is MethodInfo method)
 				return method;
 			method = callInfo.TargetType.Method(callInfo.GenericTypes, callInfo.Name, callInfo.ParamTypes, callInfo.BindingFlags);
 			if (method == null) {
@@ -59,7 +58,7 @@ namespace Fasterflect.Emitter
 			if (member != null)
 				return member;
 
-			if (callInfo.MemberTypes.HasFlag(MemberTypes.Property)) {
+			if ((callInfo.MemberTypes & MemberTypes.Property) != 0) {
 				member = callInfo.TargetType.Property(callInfo.Name, callInfo.BindingFlags);
 				if (member != null) {
 					callInfo.MemberTypes = MemberTypes.Property;
@@ -67,7 +66,7 @@ namespace Fasterflect.Emitter
 					return member;
 				}
 			}
-			if (callInfo.MemberTypes.HasFlag(MemberTypes.Field)) {
+			if ((callInfo.MemberTypes & MemberTypes.Field) != 0) {
 				member = callInfo.TargetType.Field(callInfo.Name, callInfo.BindingFlags);
 				if (member == null) {
 					const string fmt = "No match for field with name {0} and flags {1} on type {2}.";
@@ -77,7 +76,7 @@ namespace Fasterflect.Emitter
 				callInfo.MemberInfo = member;
 				return member;
 			}
-			if (callInfo.MemberTypes.HasFlag(MemberTypes.Property)) {
+			if ((callInfo.MemberTypes & MemberTypes.Property) != 0) {
 				const string fmt = "No match for property with name {0} and flags {1} on type {2}.";
 				throw new MissingMemberException(string.Format(fmt, callInfo.Name, callInfo.BindingFlags, callInfo.TargetType));
 			}

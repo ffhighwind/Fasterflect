@@ -43,7 +43,7 @@ namespace Fasterflect
 		{
 			foreach (BindingFlags flag in Enum.GetValues(typeof(BindingFlags))) {
 				if (flag != BindingFlags.Default) {
-					flagNames[new FasterflectFlags((long) flag)] = flag.ToString();
+					flagNames[new FasterflectFlags((long)flag)] = flag.ToString();
 				}
 			}
 			flagNames[PartialNameMatch] = "PartialNameMatch"; // new Flags(1L << 32);
@@ -73,43 +73,43 @@ namespace Fasterflect
 		/// <summary>
 		/// This value corresponds to the <see cref="BindingFlags.Default"/> value.
 		/// </summary>
-		public static readonly FasterflectFlags None = new FasterflectFlags((long) BindingFlags.Default);
+		public static readonly FasterflectFlags None = new FasterflectFlags((long)BindingFlags.Default);
 
 		/// <summary>
 		/// This value corresponds to the <see cref="BindingFlags.IgnoreCase"/> value.
 		/// </summary>
-		public static readonly FasterflectFlags IgnoreCase = new FasterflectFlags((long) BindingFlags.IgnoreCase);
+		public static readonly FasterflectFlags IgnoreCase = new FasterflectFlags((long)BindingFlags.IgnoreCase);
 
 		/// <summary>
 		/// This value corresponds to the <see cref="BindingFlags.DeclaredOnly"/> value.
 		/// </summary>
-		public static readonly FasterflectFlags DeclaredOnly = new FasterflectFlags((long) BindingFlags.DeclaredOnly);
+		public static readonly FasterflectFlags DeclaredOnly = new FasterflectFlags((long)BindingFlags.DeclaredOnly);
 
 		/// <summary>
 		/// This value corresponds to the <see cref="BindingFlags.ExactBinding"/> value. 
 		/// Note that this value is respected even in cases where normal Reflection calls would ignore it.
 		/// </summary>
-		public static readonly FasterflectFlags ExactBinding = new FasterflectFlags((long) BindingFlags.ExactBinding);
+		public static readonly FasterflectFlags ExactBinding = new FasterflectFlags((long)BindingFlags.ExactBinding);
 
 		/// <summary>
 		/// This value corresponds to the <see cref="BindingFlags.Public"/> value.
 		/// </summary>
-		public static readonly FasterflectFlags Public = new FasterflectFlags((long) BindingFlags.Public);
+		public static readonly FasterflectFlags Public = new FasterflectFlags((long)BindingFlags.Public);
 
 		/// <summary>
 		/// This value corresponds to the <see cref="BindingFlags.NonPublic"/> value.
 		/// </summary>
-		public static readonly FasterflectFlags NonPublic = new FasterflectFlags((long) BindingFlags.NonPublic);
+		public static readonly FasterflectFlags NonPublic = new FasterflectFlags((long)BindingFlags.NonPublic);
 
 		/// <summary>
 		/// This value corresponds to the <see cref="BindingFlags.Instance"/> value.
 		/// </summary>
-		public static readonly FasterflectFlags Instance = new FasterflectFlags((long) BindingFlags.Instance);
+		public static readonly FasterflectFlags Instance = new FasterflectFlags((long)BindingFlags.Instance);
 
 		/// <summary>
 		/// This value corresponds to the <see cref="BindingFlags.Static"/> value.
 		/// </summary>
-		public static readonly FasterflectFlags Static = new FasterflectFlags((long) BindingFlags.Static);
+		public static readonly FasterflectFlags Static = new FasterflectFlags((long)BindingFlags.Static);
 		#endregion
 
 		#region FasterflectFlags
@@ -282,7 +282,7 @@ namespace Fasterflect
 		/// </summary>
 		public bool IsSet(BindingFlags mask)
 		{
-			return ((BindingFlags) flags & mask) == mask;
+			return ((BindingFlags)flags & mask) == mask;
 		}
 
 		/// <summary>
@@ -298,7 +298,7 @@ namespace Fasterflect
 		/// </summary>
 		public bool IsAnySet(BindingFlags mask)
 		{
-			return ((BindingFlags) flags & mask) != 0;
+			return ((BindingFlags)flags & mask) != 0;
 		}
 
 		/// <summary>
@@ -314,7 +314,7 @@ namespace Fasterflect
 		/// </summary>
 		public bool IsNotSet(BindingFlags mask)
 		{
-			return ((BindingFlags) flags & mask) == 0;
+			return ((BindingFlags)flags & mask) == 0;
 		}
 
 		/// <summary>
@@ -342,7 +342,7 @@ namespace Fasterflect
 		/// </summary>
 		public static FasterflectFlags SetOnlyIf(FasterflectFlags flags, FasterflectFlags mask, bool condition)
 		{
-			return condition ? flags | mask : (FasterflectFlags) (flags & ~mask);
+			return condition ? flags | mask : (FasterflectFlags)(flags & ~mask);
 		}
 
 		/// <summary>
@@ -352,7 +352,7 @@ namespace Fasterflect
 		/// </summary>
 		public static FasterflectFlags ClearIf(FasterflectFlags flags, FasterflectFlags mask, bool condition)
 		{
-			return condition ? (FasterflectFlags) (flags & ~mask) : flags;
+			return condition ? (FasterflectFlags)(flags & ~mask) : flags;
 		}
 		#endregion
 
@@ -363,7 +363,7 @@ namespace Fasterflect
 		/// </summary>
 		public override bool Equals(object obj)
 		{
-			return obj is FasterflectFlags && flags == ((FasterflectFlags) obj).flags;
+			return obj is FasterflectFlags && flags == ((FasterflectFlags)obj).flags;
 		}
 
 		/// <summary>
@@ -423,7 +423,7 @@ namespace Fasterflect
 		/// </summary>
 		public static implicit operator FasterflectFlags(BindingFlags m)
 		{
-			return new FasterflectFlags((long) m);
+			return new FasterflectFlags((long)m);
 		}
 
 		/// <summary>
@@ -439,7 +439,7 @@ namespace Fasterflect
 		/// </summary>
 		public static implicit operator BindingFlags(FasterflectFlags m)
 		{
-			return (BindingFlags) m.flags;
+			return (BindingFlags)m.flags;
 		}
 
 		/// <summary>

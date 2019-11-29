@@ -28,7 +28,7 @@ namespace Fasterflect
 	{
 		private readonly object target;
 
-		#region Constructors
+#region Constructors
 		public DynamicWrapper(object target)
 		{
 			this.target = target;
@@ -37,9 +37,9 @@ namespace Fasterflect
 		{
 			this.target = target.WrapIfValueType(); 
 		}
-		#endregion
+#endregion
 
-		#region DynamicObject Overrides
+#region DynamicObject Overrides
 		/// <summary>
 		/// Sets the member on the target to the given value. Returns true if the value was
 		/// actually written to the underlying member.
@@ -78,7 +78,7 @@ namespace Fasterflect
 		{
 			return target.GetType().Members().Select(m => m.Name);
 		}
-		#endregion
+#endregion
 	}
 }
 #endif

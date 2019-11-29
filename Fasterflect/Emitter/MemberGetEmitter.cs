@@ -18,10 +18,10 @@
 
 #endregion
 
+using Fasterflect.Extensions;
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using Fasterflect.Extensions;
 
 namespace Fasterflect.Emitter
 {
@@ -75,7 +75,7 @@ namespace Fasterflect.Emitter
 
 				if (field.DeclaringType.IsEnum) // special enum handling as ldsfld does not support enums
 				{
-					Generator.ldc_i4((int) field.GetValue(field.DeclaringType))
+					Generator.ldc_i4((int)field.GetValue(field.DeclaringType))
 							 .boxIfValueType(field.FieldType);
 				}
 				else {

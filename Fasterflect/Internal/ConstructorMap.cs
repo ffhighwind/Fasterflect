@@ -18,10 +18,9 @@
 
 #endregion
 
+using Fasterflect.Extensions;
 using System;
 using System.Reflection;
-using Fasterflect.Extensions;
-using Fasterflect.Probing;
 
 namespace Fasterflect
 {

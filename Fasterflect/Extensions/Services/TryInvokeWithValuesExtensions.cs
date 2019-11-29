@@ -16,11 +16,11 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 #endregion
 
+using Fasterflect.Probing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Fasterflect.Probing;
 
 namespace Fasterflect.Extensions.Services
 {
@@ -130,7 +130,7 @@ namespace Fasterflect.Extensions.Services
 									isMatch = false;
 									goto end_of_loop;
 								}
-								((Array) paramArg).SetValue(value, argIndex - paramIndex);
+								((Array)paramArg).SetValue(value, argIndex - paramIndex);
 							}
 						}
 						convertedArgs.Add(paramArg);
@@ -149,7 +149,7 @@ namespace Fasterflect.Extensions.Services
 				if (isMatch) {
 					parameterValues = convertedArgs.Count == 0 ? null : convertedArgs.ToArray();
 					return mb is ConstructorInfo
-							   ? ((ConstructorInfo) mb).Invoke(parameterValues)
+							   ? ((ConstructorInfo)mb).Invoke(parameterValues)
 							   : mb.Invoke(obj is Type ? null : obj, parameterValues);
 				}
 			} // foreach loop
@@ -258,7 +258,7 @@ namespace Fasterflect.Extensions.Services
 		internal static object TryCallMethodWithValues(this object obj, ParameterConverter converter, string methodName,
 			Type[] genericTypes, BindingFlags flags, params object[] parameterValues)
 		{
-			Type type = obj is Type ? (Type) obj : obj.GetType();
+			Type type = obj is Type ? (Type)obj : obj.GetType();
 			IEnumerable<MethodInfo> methods = type.Methods(genericTypes, null, flags, methodName)
 							  .Select(m => m.IsGenericMethodDefinition ? m.MakeGeneric(genericTypes) : m);
 			try {

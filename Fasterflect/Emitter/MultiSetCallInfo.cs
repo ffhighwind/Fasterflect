@@ -20,12 +20,9 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fasterflect.Emitter
 {
@@ -43,8 +40,15 @@ namespace Fasterflect.Emitter
 				useFields = true;
 			}
 			List<MemberInfo> memberList = new List<MemberInfo>(names.Length);
-			IList<FieldInfo> fields = useFields ? MemberFilter.Filter<FieldInfo>(targetType.GetRuntimeFields().ToList(), flags) : new List<FieldInfo>();
-			IList<PropertyInfo> properties = useProperties ? MemberFilter.Filter<PropertyInfo>(targetType.GetRuntimeProperties().ToList(), flags) : new List<PropertyInfo>();
+#if NET35
+			FieldInfo[] allFields = useFields ? new FieldInfo[0] : targetType.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetField | System.Reflection.BindingFlags.SetField);
+			PropertyInfo[] allProperties = useProperties ? new PropertyInfo[0] : targetType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.SetProperty);
+#else
+			IEnumerable<FieldInfo> allFields = targetType.GetRuntimeFields();
+			IEnumerable<PropertyInfo> allProperties = targetType.GetRuntimeProperties();
+#endif
+			List<FieldInfo> fields = MemberFilter.Filter<FieldInfo>(allFields, flags);
+			List<PropertyInfo> properties = MemberFilter.Filter<PropertyInfo>(allProperties, flags);
 			string[] arr = new string[1];
 			for (int i = 0, count = names.Length; i < count; i++) {
 				arr[0] = names[i];

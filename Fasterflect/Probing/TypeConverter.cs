@@ -19,12 +19,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using Fasterflect.Extensions;
 
 namespace Fasterflect.Probing
 {
@@ -178,7 +176,7 @@ namespace Fasterflect.Probing
 			if (targetType.IsEnum) {
 				if (sourceType == typeof(string)) {
 					// assume the string represents the name of the enumeration element
-					string source = (string) value;
+					string source = (string)value;
 					// first try to clean out unnecessary information (like assembly name and FQTN)
 					source = source.Split(',')[0];
 					int pos = source.LastIndexOf('.');
@@ -206,7 +204,7 @@ namespace Fasterflect.Probing
 			byte[] byteBuffer = new byte[16];
 			int nCurrByte = 0;
 			foreach (char currChar in charBuffer) {
-				byteBuffer[nCurrByte++] = (byte) currChar;
+				byteBuffer[nCurrByte++] = (byte)currChar;
 			}
 			return new Guid(byteBuffer);
 		}
@@ -218,7 +216,7 @@ namespace Fasterflect.Probing
 		{
 			StringBuilder sb = new StringBuilder(16);
 			foreach (byte currByte in guid.ToByteArray()) {
-				sb.Append((char) currByte);
+				sb.Append((char)currByte);
 			}
 			return sb.ToString();
 		}
@@ -237,11 +235,11 @@ namespace Fasterflect.Probing
 					return value != null ? new Guid(value) : Guid.Empty;
 				}
 				if (sourceType == typeof(byte[])) {
-					return new Guid((byte[]) sourceObj);
+					return new Guid((byte[])sourceObj);
 				}
 			}
 			else if (sourceType == typeof(Guid)) {
-				Guid g = (Guid) sourceObj;
+				Guid g = (Guid)sourceObj;
 				if (targetType == typeof(string)) {
 					return GuidToBinaryString(g);
 				}

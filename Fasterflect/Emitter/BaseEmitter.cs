@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
+
 namespace Fasterflect.Emitter
 {
 	internal abstract class BaseEmitter

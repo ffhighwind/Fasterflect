@@ -16,9 +16,8 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 #endregion
 
-using System;
-using System.Reflection;
 using Fasterflect.Emitter;
+using System.Reflection;
 
 namespace Fasterflect.Extensions
 {
@@ -41,7 +40,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static ConstructorInvoker DelegateForCreateInstance(this ConstructorInfo ctorInfo)
 		{
-			return (ConstructorInvoker) new CtorInvocationEmitter(ctorInfo, FasterflectFlags.InstanceAnyVisibility).GetDelegate();
+			return (ConstructorInvoker)new CtorInvocationEmitter(ctorInfo, FasterflectFlags.InstanceAnyVisibility).GetDelegate();
 		}
 	}
 }

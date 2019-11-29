@@ -37,7 +37,7 @@ namespace Fasterflect.Extensions.Services
 		/// <returns>The return value of the invocation.</returns>
 		public static object InvokeDelegate(this Type targetType, string delegateName, params object[] parameters)
 		{
-			return ((Delegate) targetType.GetFieldValue(delegateName)).DynamicInvoke(parameters);
+			return ((Delegate)targetType.GetFieldValue(delegateName)).DynamicInvoke(parameters);
 		}
 
 		/// <summary>
@@ -84,7 +84,7 @@ namespace Fasterflect.Extensions.Services
 			Expression[] convertedParameters = parameters.Select(parm => Expression.Convert(parm, typeof(object))).Cast<Expression>().ToArray();
 			MethodCallExpression call = Expression.Call(instance, func.Method, Expression.NewArrayInit(typeof(object), convertedParameters));
 			Expression body = invokeMethod.ReturnType == typeof(void)
-				? (Expression) call
+				? (Expression)call
 				: Expression.Convert(call, invokeMethod.ReturnType);
 			LambdaExpression expr = Expression.Lambda(delegateType, body, parameters);
 			return expr.Compile();
@@ -114,8 +114,8 @@ namespace Fasterflect.Extensions.Services
 				delegateType = fieldInfo.FieldType;
 				Delegate dynamicHandler = BuildDynamicHandler(delegateType, func);
 				Delegate field = assignHandler ? null : target == null
-								? (Delegate) fieldInfo.Get()
-								: (Delegate) fieldInfo.Get(target);
+								? (Delegate)fieldInfo.Get()
+								: (Delegate)fieldInfo.Get(target);
 				field = field == null
 							? dynamicHandler
 							: Delegate.Combine(field, dynamicHandler);
@@ -167,7 +167,7 @@ namespace Fasterflect.Extensions.Services
 		/// <returns>The return value of the invocation.</returns>
 		internal static object InvokeDelegate(this object target, string delegateName, params object[] parameters)
 		{
-			return ((Delegate) target.GetFieldValue(delegateName)).DynamicInvoke(parameters);
+			return ((Delegate)target.GetFieldValue(delegateName)).DynamicInvoke(parameters);
 		}
 	}
 }

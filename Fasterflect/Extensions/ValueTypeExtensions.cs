@@ -16,7 +16,6 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 #endregion
 
-using Fasterflect.Emitter;
 
 namespace Fasterflect.Extensions
 {

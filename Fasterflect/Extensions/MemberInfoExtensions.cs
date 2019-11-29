@@ -16,32 +16,32 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 #endregion
 
+using Fasterflect.Emitter;
 using System;
 using System.Reflection;
-using Fasterflect.Emitter;
 
 namespace Fasterflect.Extensions
 {
 	/// <summary>
 	/// Extension methods for inspecting and working with members.
 	/// </summary>
-	internal static class MemberInfoExtensions
+	public static class MemberInfoExtensions
 	{
 		/// <summary>
 		/// Gets the static field or property identified by <paramref name="memberInfo"/>.
 		/// </summary>
-		public static object Get(this MemberInfo memberInfo)
+		internal static object Get(this MemberInfo memberInfo)
 		{
-			MemberGetter @delegate = (MemberGetter) new MemberGetEmitter(memberInfo, FasterflectFlags.StaticAnyVisibility).GetDelegate();
+			MemberGetter @delegate = (MemberGetter)new MemberGetEmitter(memberInfo, FasterflectFlags.StaticAnyVisibility).GetDelegate();
 			return @delegate(null);
 		}
 
 		/// <summary>
 		/// Sets the static field or property identified by <paramref name="memberInfo"/> with <paramref name="value"/>.
 		/// </summary>
-		public static void Set(this MemberInfo memberInfo, object value)
+		internal static void Set(this MemberInfo memberInfo, object value)
 		{
-			MemberSetter @delegate = (MemberSetter) new MemberSetEmitter(memberInfo, FasterflectFlags.StaticAnyVisibility).GetDelegate();
+			MemberSetter @delegate = (MemberSetter)new MemberSetEmitter(memberInfo, FasterflectFlags.StaticAnyVisibility).GetDelegate();
 			@delegate(null, value);
 		}
 
@@ -49,9 +49,9 @@ namespace Fasterflect.Extensions
 		/// Gets the instance field or property identified by <paramref name="memberInfo"/> on
 		/// the <paramref name="obj"/>.
 		/// </summary>
-		public static object Get(this MemberInfo memberInfo, object obj)
+		internal static object Get(this MemberInfo memberInfo, object obj)
 		{
-			MemberGetter @delegate = (MemberGetter) new MemberGetEmitter(memberInfo, FasterflectFlags.InstanceAnyVisibility).GetDelegate();
+			MemberGetter @delegate = (MemberGetter)new MemberGetEmitter(memberInfo, FasterflectFlags.InstanceAnyVisibility).GetDelegate();
 			return @delegate(obj);
 		}
 
@@ -59,9 +59,9 @@ namespace Fasterflect.Extensions
 		/// Sets the instance field or property identified by <paramref name="memberInfo"/> on
 		/// the <paramref name="obj"/> object with <paramref name="value"/>.
 		/// </summary>
-		public static void Set(this MemberInfo memberInfo, object obj, object value)
+		internal static void Set(this MemberInfo memberInfo, object obj, object value)
 		{
-			MemberSetter @delegate = (MemberSetter) new MemberSetEmitter(memberInfo, FasterflectFlags.InstanceAnyVisibility).GetDelegate();
+			MemberSetter @delegate = (MemberSetter)new MemberSetEmitter(memberInfo, FasterflectFlags.InstanceAnyVisibility).GetDelegate();
 			@delegate(obj, value);
 		}
 
@@ -70,16 +70,12 @@ namespace Fasterflect.Extensions
 		/// Gets the system type of the field or property identified by the <paramref name="member"/>.
 		/// </summary>
 		/// <returns>The system type of the member.</returns>
-		public static Type Type(this MemberInfo member)
+		internal static Type Type(this MemberInfo member)
 		{
-			FieldInfo field = member as FieldInfo;
-			if (field != null) {
+			if (member is FieldInfo field)
 				return field.FieldType;
-			}
-			PropertyInfo property = member as PropertyInfo;
-			if (property != null) {
+			if (member is PropertyInfo property)
 				return property.PropertyType;
-			}
 			throw new NotSupportedException("Can only determine the type for fields and properties.");
 		}
 
@@ -121,14 +117,11 @@ namespace Fasterflect.Extensions
 		/// properties and methods. Throws an exception for all other <see cref="MemberTypes"/>.</returns>
 		public static bool IsStatic(this MemberInfo member)
 		{
-			FieldInfo field = member as FieldInfo;
-			if (field != null)
+			if(member is FieldInfo field)
 				return field.IsStatic;
-			PropertyInfo property = member as PropertyInfo;
-			if (property != null)
+			if(member is PropertyInfo property)
 				return property.CanRead ? property.GetGetMethod(true).IsStatic : property.GetSetMethod(true).IsStatic;
-			MethodInfo method = member as MethodInfo;
-			if (method != null)
+			if(member is MethodInfo method)
 				return method.IsStatic;
 			string message = string.Format("Unable to determine IsStatic for member {0}.{1}" +
 				"MemberType was {2} but only fields, properties and methods are supported.",
@@ -153,7 +146,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		/// <returns>True if the name is considered identical, false otherwise. If either parameter
 		/// is null an exception will be thrown.</returns>
-		public static bool HasName(this MemberInfo member, string name)
+		internal static bool HasName(this MemberInfo member, string name)
 		{
 			string memberName = member.Name.Length > 0 && member.Name[0] == '_'
 									? member.Name.Substring(1)

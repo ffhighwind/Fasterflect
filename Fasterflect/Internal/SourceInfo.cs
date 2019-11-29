@@ -18,10 +18,10 @@
 
 #endregion
 
+using Fasterflect.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Fasterflect.Extensions;
 
 namespace Fasterflect
 {

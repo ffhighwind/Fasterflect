@@ -1,8 +1,8 @@
 # Intro
 
-[Nuget: Fasterflect.Reflect](https://www.nuget.org/packages/fasterflect.reflect/)
+[Nuget: Fasterflect.Reflect](https://www.nuget.org/packages/Fasterflect.Reflect/)
 
-This framework is based on [Fasterflect](https://github.com/buunguyen/fasterflect), which was originally developed by Buu Nguyen and Morten Mertner. The extension methods in this version have been moved to a separate namespace to ensure that they do not clutter intellisense and auto-complete. Most of the methods been moved to Reflect and ReflectLookup static classes in order to achieve this. It also includes one new feature: MultiSetter.
+This framework is based on [Fasterflect](https://github.com/buunguyen/Fasterflect), which was originally developed by Buu Nguyen and Morten Mertner. The extension methods in this version have been moved to a separate namespace to ensure that they do not clutter intellisense and auto-complete. Most of the methods been moved to Reflect and ReflectLookup static classes in order to achieve this. It also includes two new features: MultiSetter and DataReaderFactory.
 
 ## Benchmarks
 
@@ -15,7 +15,6 @@ Fasterflect is 50x faster than .NET reflection, 8x faster than FastMember, and 2
 | **Fasterflect**                          | **3.0426 ns** | **1.000** |
 | Magnum (Expression.Compile)              |  10.6231 ns |   3.492 |
 | ILEmit (Func<T,string>)                  |  12.3850 ns |   4.071 |
-| ILEmit (MemberGetter)                    |  13.8618 ns |   4.556 |
 | ILEmit Func<object,object>               |  13.9188 ns |   4.574 |
 | FastMember                               |  30.7529 ns |  10.109 |
 | MethodInfo.Invoke                        | 124.4104 ns |  40.895 |
@@ -28,7 +27,6 @@ Fasterflect is 50x faster than .NET reflection, 8x faster than FastMember, and 2
 | Direct Access                              |   1.300 ns |   0.33 |
 | Delegate.CreateDelegate (Action<T,string>) |   3.036 ns |   0.78 |
 | ILEmit (Action<T,string>)                  |   3.081 ns |   0.79 |
-| ILEmit (MemberSetter)                      |   3.900 ns |   1.00 |
 | ILEmit (Action<object,object>)             |   3.905 ns |   1.00 |
 | **Fasterflect**                            | **3.907 ns** | **1.00** |
 | Magnum (Expression.Compile)                |  10.508 ns |   2.69 |
@@ -38,7 +36,7 @@ Fasterflect is 50x faster than .NET reflection, 8x faster than FastMember, and 2
 | PropertyInfo (uncached)                    | 259.840 ns |  66.51 |
 | Delegate.DynamicInvoke                     | 763.633 ns | 195.48 |
 
-[Other Benchmarks](https://github.com/ffhighwind/fasterflect/wiki/Benchmarks)
+[Other Benchmarks](https://github.com/ffhighwind/Fasterflect/wiki/Benchmarks)
 
 ## Example
 
@@ -89,7 +87,7 @@ public class Program
 
 ```
 
-## [Reflect](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/Reflect.cs)
+## [Reflect](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Reflect.cs)
 
 Reflect is the static factory for all reflection-based delegates. Every delegate that is generated is stored in a temporary cache (WeakReference). This allows delegates to be garbage collected but also ensures that you do cannot waste memory by creating multiple instances of the same delegate.
 
@@ -112,11 +110,11 @@ Reflect is the static factory for all reflection-based delegates. Every delegate
 | Reflect.DeepClone<T>() | Creates a deep clone of an object. |
 | Reflect.ShallowClone<T>() | Creates a shallow clone of an object using MemberwiseClone. This can throw an exception. |
 
-## [ReflectLookup](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/ReflectLookup.cs)
+## [ReflectLookup](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/ReflectLookup.cs)
 
 This allows searching for reflection based objects using Fasterflect flags instead of BindingFlags. This is up to 2x slower than normal reflection, but it allows partial matching (string.Contains) and case insensitive search.
 
-## [ValueTypeHolder](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/ValueTypeHolder.cs)
+## [ValueTypeHolder](https://github.com/ffhighwind/Fasterflect/blob/master/Fasterflect/ValueTypeHolder.cs)
 
 Value types (structs) must be wrapped with a ValueTypeHolder to work with the reflection delegates. The alternative to this approach would be to make the first argument of every delegate a ref. I have decided against this because value types are not supposed to be passed by reference and forcing the user to type ref for every call is tedious and it would reduce the performance for reference types.
 
@@ -167,9 +165,13 @@ public static class Program
 }
 ```
 
-## [Emitter.EmitHelper](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Fasterflect/Emitter/EmitHelper.cs)
+# [DataReaderFactory](https://github.com/ffhighwind/Fasterflect/blob/master/Fasterflect/DataReaderFactory.cs)
 
-This is a wrapper around System.Reflection.Emit.IlGenerator that is easier to read and simple to use. Instead of typing ilGenerator.Emit(OpCodes.XXX, yyy) you would type emitter.xxx(yyy).
+This is based on [FastMember's ObjectReader](https://github.com/mgravell/fast-member/blob/master/FastMember/ObjectReader.cs). It can be used with SqlBulkCopy which is 100x as fast as a loop of individual database inserts.
+
+## [Emitter.EmitHelper](https://github.com/ffhighwind/Fasterflect/blob/master/Fasterflect/Emitter/EmitHelper.cs)
+
+This is a wrapper around System.Reflection.Emit.IlGenerator that is easier to read and simple to use. Instead of typing ilgen.Emit(OpCodes.XXX, yyy) you would type emitter.xxx(yyy).
 
 # License
 

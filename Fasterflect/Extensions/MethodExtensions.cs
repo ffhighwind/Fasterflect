@@ -18,9 +18,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using Fasterflect.Emitter;
 
 namespace Fasterflect.Extensions
 {
@@ -317,7 +315,7 @@ namespace Fasterflect.Extensions
 		/// <remarks>
 		/// All elements of <paramref name="parameters"/> must not be <see langword="null"/>.  Otherwise, 
 		/// <see cref="NullReferenceException"/> is thrown.  If you are not sure as to whether
-		/// any element is <see langword="null"/> or not, use the overload that accepts <see cref="paramTypes"/> array.
+		/// any element is <see langword="null"/> or not, use the overload that accepts a <see cref="Type"/> array.
 		/// </remarks>
 		/// <seealso cref="CallMethod(object,string,System.Type[],object[])"/>
 		internal static object CallMethod(this object obj, string name, params object[] parameters)
@@ -369,7 +367,7 @@ namespace Fasterflect.Extensions
 		/// <remarks>
 		/// All elements of <paramref name="parameters"/> must not be <see langword="null"/>.  Otherwise, 
 		/// <see cref="NullReferenceException"/> is thrown.  If you are not sure as to whether
-		/// any element is <see langword="null"/> or not, use the overload that accepts <see cref="paramTypes"/> array.
+		/// any element is <see langword="null"/> or not, use the overload that accepts a <see cref="Type"/> array.
 		/// </remarks>
 		/// <seealso cref="CallMethod(object,string,System.Type[],Fasterflect.FasterflectFlags,object[])"/>
 		internal static object CallMethod(this object obj, string name, FasterflectFlags bindingFlags, params object[] parameters)

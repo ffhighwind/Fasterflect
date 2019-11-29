@@ -19,9 +19,7 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using Fasterflect.Emitter;
 
 namespace Fasterflect.Emitter
 {
