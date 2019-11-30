@@ -21,49 +21,49 @@
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.0'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|netcoreapp2.0'">
     <OutputPath>bin\lib\</OutputPath>
     <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='netcoreapp2.0'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.0'">
     <DefineConstants>NETCOREAPP;NETCOREAPP2_0</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|netstandard2.1'">
     <OutputPath>bin\lib\</OutputPath>
     <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='netstandard2.1'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
     <DefineConstants>NETSTANDARD;NETSTANDARD2_1</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|netstandard2.0'">
     <OutputPath>bin\lib\</OutputPath>
     <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='netstandard2.0'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DefineConstants>NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net45'">
     <OutputPath>bin\lib\</OutputPath>
     <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='net45'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
     <DefineConstants>NETFRAMEWORK;NET45</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net35'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net35'">
     <OutputPath>bin\lib\</OutputPath>
     <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='net35'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='net35'">
     <DefineConstants>NETFRAMEWORK;NET35</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Reflection.Emit" Version="4.6.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
-    <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.6.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
-    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.6.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <PackageReference Include="System.Reflection.Emit" Version="4.6.0" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.6.0" />
+    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.6.0" />
   </ItemGroup>
 </Project>
