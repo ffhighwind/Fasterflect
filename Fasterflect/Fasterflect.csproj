@@ -22,47 +22,42 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.0'">
-    <DefineConstants>NETCOREAPP;NETCOREAPP2_0</DefineConstants>
     <OutputPath>bin\lib\</OutputPath>
     <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.0'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='netcoreapp2.0'">
     <DefineConstants>NETCOREAPP;NETCOREAPP2_0</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1'">
-    <DefineConstants>NETSTANDARD;NETSTANDARD2_1</DefineConstants>
     <OutputPath>bin\lib\</OutputPath>
     <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='netstandard2.1'">
     <DefineConstants>NETSTANDARD;NETSTANDARD2_1</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0'">
-    <DefineConstants>NETSTANDARD;NETSTANDARD2_0</DefineConstants>
     <OutputPath>bin\lib\</OutputPath>
     <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='netstandard2.0'">
     <DefineConstants>NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45'">
-    <DefineConstants>NETFRAMEWORK;NET45</DefineConstants>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45'">
-    <DefineConstants>NETFRAMEWORK;NET45</DefineConstants>
     <OutputPath>bin\lib\</OutputPath>
     <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='net45'">
+    <DefineConstants>NETFRAMEWORK;NET45</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net35'">
-    <DefineConstants>NETFRAMEWORK;NET35</DefineConstants>
     <OutputPath>bin\lib\</OutputPath>
     <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net35'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='net35'">
     <DefineConstants>NETFRAMEWORK;NET35</DefineConstants>
   </PropertyGroup>
 
