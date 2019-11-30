@@ -42,7 +42,7 @@
     <DocumentationFile>bin\lib\Fasterflect.Reflect.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <DefineConstants>NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants>NETSTANDARD;NETSTANDARD1_3</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net45'">

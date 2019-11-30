@@ -850,7 +850,7 @@ namespace Fasterflect.Emitter
 		/// <seealso cref="System.Reflection.Emit.ILGenerator.EmitCalli(OpCode,CallingConvention,Type,Type[])"></seealso>
 		public EmitHelper calli(CallingConvention unmanagedCallConv, Type returnType, Type[] parameterTypes)
 		{
-#if NET45
+#if NET45 || NETSTANDARD2_1
 			ILGenerator.EmitCalli(OpCodes.Calli, unmanagedCallConv, returnType, parameterTypes);
 			return this;
 #else
