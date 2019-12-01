@@ -89,7 +89,7 @@ public class Program
 
 ## [Reflect](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Reflect.cs)
 
-Reflect is the static factory for all reflection-based delegates. Every delegate that is generated is stored in a temporary cache (WeakReference). This allows delegates to be garbage collected but also ensures that you do cannot waste memory by creating multiple instances of the same delegate.
+Reflect is the static factory for all reflection-based delegates. Every delegate that is generated is stored in a temporary cache which stores the delegate with a [WeakReference](https://docs.microsoft.com/en-us/dotnet/api/system.weakreference?view=netframework-4.8). This allows delegates to be garbage collected but also ensures that you do cannot waste memory by creating multiple instances of the same delegate.
 
 | Method | Description |
 | --- | --- |
@@ -108,11 +108,11 @@ Reflect is the static factory for all reflection-based delegates. Every delegate
 | Reflect.ArrayGetter() | value = array[index] |
 | Reflect.ArraySetter() | array[index] = value |
 | Reflect.DeepClone<T>() | Creates a deep clone of an object. |
-| Reflect.ShallowClone<T>() | Creates a shallow clone of an object using MemberwiseClone. This can throw an exception. |
+| Reflect.ShallowClone<T>() | Creates a shallow clone of an object using MemberwiseClone. This can potentially throw an security exception because it requires accessing a protected method. |
 
 ## [ReflectLookup](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/ReflectLookup.cs)
 
-This allows searching for reflection based objects using Fasterflect flags instead of BindingFlags. This is up to 2x slower then .NET reflection, but it allows partial matching (string.Contains) and case insensitive search (string.OrdinalIgnoreCase).
+This allows searching for reflection based objects using either FasterflectFlags or BindingFlags. This is up to 2x slower then .NET reflection, but it allows partial matching (string.Contains) and case insensitive search (string.OrdinalIgnoreCase).
 
 ## ValueTypes/Structs
 
@@ -171,7 +171,7 @@ This is based on FastMember's [ObjectReader](https://github.com/mgravell/fast-me
 
 ## [Emitter.EmitHelper](https://github.com/ffhighwind/Fasterflect/blob/master/Fasterflect/Emitter/EmitHelper.cs)
 
-This is a wrapper around System.Reflection.Emit.IlGenerator that is easier to read and simple to use.
+This is a wrapper around [System.Reflection.Emit.IlGenerator](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.ilgenerator?view=netframework-4.8) that is easier to read and simple to use.
 
 # License
 
