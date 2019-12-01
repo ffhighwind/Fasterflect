@@ -47,14 +47,14 @@ namespace Fasterflect.Emitter
 			if (CallInfo.IsTargetTypeStruct && CallInfo.HasNoParam) // no-arg struct needs special initialization
 			{
 				Generator.DeclareLocal(CallInfo.TargetType);      // TargetType tmp
-				Generator.ldloca_s(0)                               // &tmp
+				Generator.ldloca_s(0)                             // &tmp
 						 .initobj(CallInfo.TargetType)            // init_obj(&tmp)
-						 .ldloc_0.end();                            // load tmp
+						 .ldloc_0.end();                          // load tmp
 			}
 			else if (CallInfo.TargetType.IsArray) {
-				Generator.ldarg_0                                           // load args[] (method arguments)
-						 .ldc_i4_0                                          // load 0
-						 .ldelem_ref                                        // load args[0] (length)
+				Generator.ldarg_0                                         // load args[] (method arguments)
+						 .ldc_i4_0                                        // load 0
+						 .ldelem_ref                                      // load args[0] (length)
 						 .unbox_any(typeof(int))                          // unbox stack
 						 .newarr(CallInfo.TargetType.GetElementType());   // new T[args[0]]
 			}

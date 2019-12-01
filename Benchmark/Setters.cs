@@ -24,17 +24,14 @@
 #endregion
 
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Diagnosers;
+using Fasterflect;
+using FastMember;
+using Magnum.Reflection;
+using Sigil;
 using System;
 using System.Reflection;
-using FastMember;
-using Sigil;
-using BenchmarkDotNet.Diagnostics.Windows;
-using Magnum.Reflection;
-using BenchmarkDotNet.Diagnosers;
 using System.Runtime.CompilerServices;
-using Fasterflect;
 
 namespace Benchmark
 {

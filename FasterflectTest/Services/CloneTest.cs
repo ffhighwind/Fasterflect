@@ -24,10 +24,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 #endif
 using System.Linq;
-using Fasterflect;
-using Fasterflect.Extensions;
 using Fasterflect.Extensions.DeepClone;
-using Fasterflect.Extensions.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FasterflectTest.Services
@@ -179,8 +176,7 @@ namespace FasterflectTest.Services
 			PersonPoco arthur = new PersonPoco { Name = "Arthur Dent", Address = personAddress, Employer = "British Tea Company", Ssn = 123 };
 			PersonPoco trish = new PersonPoco { Name = "Trish", Address = personAddress, Employer = "", Ssn = 456 };
 			PersonPoco ford = new PersonPoco { Name = "Ford Prefect", Address = otherAddress, Employer = "Ursa Minor Publishing", Ssn = 789 };
-			LibraryPoco library = new LibraryPoco
-			{
+			LibraryPoco library = new LibraryPoco {
 				Address = libraryAddress,
 				Name = "The Library",
 				WaitingList = new List<PersonPoco> { arthur, trish, ford },

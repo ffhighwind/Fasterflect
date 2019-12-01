@@ -18,9 +18,9 @@
 
 #endregion
 
-using System;
 using FasterflectTest.Common;
 using FasterflectTest.SampleModel.People;
+using System;
 
 namespace FasterflectTest.Invocation
 {

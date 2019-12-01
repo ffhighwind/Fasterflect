@@ -16,14 +16,14 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 #endregion
 
-using System;
-using System.Linq;
-using System.Reflection;
 using Fasterflect;
 using Fasterflect.Emitter;
 using Fasterflect.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 namespace FasterflectTest.Internal
 {
 	[TestClass]

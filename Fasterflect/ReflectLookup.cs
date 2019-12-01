@@ -28,7 +28,7 @@ using System.Reflection;
 namespace Fasterflect
 {
 	/// <summary>
-	/// Helper class for looking up <see cref="MemberInfo"/> and <see cref="ConstructorInfo"/> types.
+	/// Helper class for looking up reflection based types such as <see cref="MemberInfo"/> and <see cref="ConstructorInfo"/>.
 	/// </summary>
 	public static class ReflectLookup
 	{
@@ -150,7 +150,7 @@ namespace Fasterflect
 		public static IList<FieldInfo> Fields(Type type, FasterflectFlags bindingFlags, params string[] names)
 		{
 			if (type == null || type == typeof(object)) {
-				return new FieldInfo[0];
+				return Constants.EmptyFieldInfoArray;
 			}
 
 			bool recurse = bindingFlags.IsNotSet(FasterflectFlags.DeclaredOnly);
@@ -158,7 +158,7 @@ namespace Fasterflect
 			bool hasSpecialFlags = bindingFlags.IsAnySet(FasterflectFlags.ExcludeBackingMembers | FasterflectFlags.ExcludeExplicitlyImplemented | FasterflectFlags.ExcludeHiddenMembers);
 
 			if (!recurse && !hasNames && !hasSpecialFlags) {
-				return type.GetFields(bindingFlags) ?? new FieldInfo[0];
+				return type.GetFields(bindingFlags) ?? Constants.EmptyFieldInfoArray;
 			}
 
 			IList<FieldInfo> fields = GetFields(type, bindingFlags);
@@ -172,7 +172,7 @@ namespace Fasterflect
 			bool recurse = bindingFlags.IsNotSet(FasterflectFlags.DeclaredOnly);
 
 			if (!recurse) {
-				return type.GetFields(bindingFlags) ?? new FieldInfo[0];
+				return type.GetFields(bindingFlags) ?? Constants.EmptyFieldInfoArray;
 			}
 
 			bindingFlags |= FasterflectFlags.DeclaredOnly;
@@ -544,7 +544,7 @@ namespace Fasterflect
 			params string[] names)
 		{
 			if (type == null || type == typeof(object)) {
-				return new MethodInfo[0];
+				return Constants.EmptyMethodInfoArray;
 			}
 			bool recurse = bindingFlags.IsNotSet(FasterflectFlags.DeclaredOnly);
 			bool hasNames = names != null && names.Length > 0;
@@ -554,7 +554,7 @@ namespace Fasterflect
 				bindingFlags.IsAnySet(FasterflectFlags.ExcludeBackingMembers | FasterflectFlags.ExcludeExplicitlyImplemented | FasterflectFlags.ExcludeHiddenMembers);
 
 			if (!recurse && !hasNames && !hasTypes && !hasSpecialFlags) {
-				return type.GetMethods(bindingFlags) ?? new MethodInfo[0];
+				return type.GetMethods(bindingFlags) ?? Constants.EmptyMethodInfoArray;
 			}
 
 			IList<MethodInfo> methods = GetMethods(type, bindingFlags);
@@ -570,7 +570,7 @@ namespace Fasterflect
 			bool recurse = bindingFlags.IsNotSet(FasterflectFlags.DeclaredOnly);
 
 			if (!recurse) {
-				return type.GetMethods(bindingFlags) ?? new MethodInfo[0];
+				return type.GetMethods(bindingFlags) ?? Constants.EmptyMethodInfoArray;
 			}
 
 			bindingFlags |= FasterflectFlags.DeclaredOnly;

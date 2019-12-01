@@ -18,11 +18,11 @@
 
 #endregion
 
-using System;
-using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Reflection;
 
 namespace FasterflectTest.Invocation
 {
@@ -32,22 +32,20 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestAccessStaticMemberViaMemberInfo()
 		{
-			RunWith((Type type) =>
-			   {
-				   System.Reflection.MemberInfo memberInfo = type.Member("TotalPeopleCreated", FasterflectFlags.StaticAnyVisibility);
-				   int totalPeopleCreated = (int) memberInfo.Get() + 1;
-				   memberInfo.Set(totalPeopleCreated);
-				   VerifyProperties(type, new { totalPeopleCreated });
-			   });
+			RunWith((Type type) => {
+				System.Reflection.MemberInfo memberInfo = type.Member("TotalPeopleCreated", FasterflectFlags.StaticAnyVisibility);
+				int totalPeopleCreated = (int)memberInfo.Get() + 1;
+				memberInfo.Set(totalPeopleCreated);
+				VerifyProperties(type, new { totalPeopleCreated });
+			});
 		}
 
 		[TestMethod]
 		public void TestAccessInstanceMemberViaMemberInfo()
 		{
-			RunWith((object person) =>
-			{
+			RunWith((object person) => {
 				MemberInfo memberInfo = person.UnwrapIfWrapped().GetType().Member("Name");
-				string name = (string) memberInfo.Get(person) + " updated";
+				string name = (string)memberInfo.Get(person) + " updated";
 				memberInfo.Set(person, name);
 				VerifyProperties(person, new { name });
 			});

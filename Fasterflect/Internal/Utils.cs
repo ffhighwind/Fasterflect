@@ -31,7 +31,7 @@ namespace Fasterflect
 		public static Type GetTypeAdjusted(this object obj)
 		{
 			return !(obj is ValueTypeHolder wrapper)
-				? obj is Type ? obj as Type : obj.GetType()
+				? obj is Type ty ? ty : obj.GetType()
 				: wrapper.Value.GetType();
 		}
 

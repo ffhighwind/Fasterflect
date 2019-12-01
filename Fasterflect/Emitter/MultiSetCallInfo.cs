@@ -41,8 +41,8 @@ namespace Fasterflect.Emitter
 			}
 			List<MemberInfo> memberList = new List<MemberInfo>(names.Length);
 #if NET35
-			FieldInfo[] allFields = useFields ? new FieldInfo[0] : targetType.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetField | System.Reflection.BindingFlags.SetField);
-			PropertyInfo[] allProperties = useProperties ? new PropertyInfo[0] : targetType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.SetProperty);
+			FieldInfo[] allFields = useFields ? Constants.EmptyFieldInfoArray : targetType.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetField | System.Reflection.BindingFlags.SetField);
+			PropertyInfo[] allProperties = useProperties ? Constants.EmptyPropertyInfoArray : targetType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.SetProperty);
 #else
 			IEnumerable<FieldInfo> allFields = targetType.GetRuntimeFields();
 			IEnumerable<PropertyInfo> allProperties = targetType.GetRuntimeProperties();

@@ -18,11 +18,11 @@
 
 #endregion
 
-using System;
-using System.Linq;
 using Fasterflect;
 using Fasterflect.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 
 namespace FasterflectTest.Invocation
 {
@@ -32,12 +32,11 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestInvokeInstanceMethod()
 		{
-			RunWith((object person) =>
-			  {
-				  double[] elements = new[] { 1d, 2d, 3d, 4d, 5d };
-				  elements.ForEach(element => person.CallMethod("Walk", element));
-				  Assert.AreEqual(elements.Sum(), person.GetFieldValue("metersTravelled"));
-			  });
+			RunWith((object person) => {
+				double[] elements = new[] { 1d, 2d, 3d, 4d, 5d };
+				elements.ForEach(element => person.CallMethod("Walk", element));
+				Assert.AreEqual(elements.Sum(), person.GetFieldValue("metersTravelled"));
+			});
 		}
 
 		[TestMethod]
@@ -63,13 +62,12 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestInvokeInstanceMethodViaMethodInfo()
 		{
-			RunWith((object person) =>
-			  {
-				  double[] elements = new[] { 1d, 2d, 3d, 4d, 5d };
-				  System.Reflection.MethodInfo methodInfo = person.UnwrapIfWrapped().GetType().Method("Walk", new[] { typeof(int) }, FasterflectFlags.InstanceAnyVisibility);
-				  elements.ForEach(element => methodInfo.Call(person, element));
-				  Assert.AreEqual(elements.Sum(), person.GetFieldValue("metersTravelled"));
-			  });
+			RunWith((object person) => {
+				double[] elements = new[] { 1d, 2d, 3d, 4d, 5d };
+				System.Reflection.MethodInfo methodInfo = person.UnwrapIfWrapped().GetType().Method("Walk", new[] { typeof(int) }, FasterflectFlags.InstanceAnyVisibility);
+				elements.ForEach(element => methodInfo.Call(person, element));
+				Assert.AreEqual(elements.Sum(), person.GetFieldValue("metersTravelled"));
+			});
 		}
 
 		[TestMethod]
@@ -84,19 +82,18 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestInvokeMethodWithOutArgument()
 		{
-			RunWith((object person) =>
-			  {
-				  object[] arguments = new object[] { 10d, null };
-				  person.CallMethod("Walk", new[] { typeof(double), typeof(double).MakeByRefType() }, arguments);
-				  Assert.AreEqual(person.GetFieldValue("metersTravelled"), arguments[1]);
-			  });
+			RunWith((object person) => {
+				object[] arguments = new object[] { 10d, null };
+				person.CallMethod("Walk", new[] { typeof(double), typeof(double).MakeByRefType() }, arguments);
+				Assert.AreEqual(person.GetFieldValue("metersTravelled"), arguments[1]);
+			});
 		}
 
 		[TestMethod]
 		public void TestInvokeExplicitlyImplementedMethod()
 		{
 			object employee = EmployeeType.CreateInstance();
-			double currentMeters = (double) employee.GetFieldValue("metersTravelled");
+			double currentMeters = (double)employee.GetFieldValue("metersTravelled");
 			employee.CallMethod("Swim", FasterflectFlags.InstanceAnyVisibility | FasterflectFlags.TrimExplicitlyImplemented, 100d);
 			VerifyFields(employee, new { metersTravelled = currentMeters + 100 });
 		}
@@ -105,7 +102,7 @@ namespace FasterflectTest.Invocation
 		public void TestInvokeBaseClassMethods()
 		{
 			object employee = EmployeeType.CreateInstance();
-			double currentMeters = (double) employee.GetFieldValue("metersTravelled");
+			double currentMeters = (double)employee.GetFieldValue("metersTravelled");
 			employee.CallMethod("Walk", 100d);
 			VerifyFields(employee, new { metersTravelled = currentMeters + 100 });
 		}
@@ -113,11 +110,10 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestInvokeStaticMethod()
 		{
-			RunWith((Type type) =>
-			  {
-				  int totalPeopleCreated = (int) type.GetFieldValue("totalPeopleCreated");
-				  Assert.AreEqual(totalPeopleCreated, type.CallMethod("GetTotalPeopleCreated"));
-			  });
+			RunWith((Type type) => {
+				int totalPeopleCreated = (int)type.GetFieldValue("totalPeopleCreated");
+				Assert.AreEqual(totalPeopleCreated, type.CallMethod("GetTotalPeopleCreated"));
+			});
 		}
 
 		[TestMethod]
@@ -143,22 +139,20 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestInvokeStaticMethodViaMethodInfo()
 		{
-			RunWith((Type type) =>
-			  {
-				  int totalPeopleCreated = (int) type.GetFieldValue("totalPeopleCreated");
-				  Assert.AreEqual(totalPeopleCreated,
-								   type.Method("GetTotalPeopleCreated", FasterflectFlags.StaticAnyVisibility).Call());
-			  });
+			RunWith((Type type) => {
+				int totalPeopleCreated = (int)type.GetFieldValue("totalPeopleCreated");
+				Assert.AreEqual(totalPeopleCreated,
+								 type.Method("GetTotalPeopleCreated", FasterflectFlags.StaticAnyVisibility).Call());
+			});
 		}
 
 		[TestMethod]
 		public void TestInvokeStaticMethodsWithArgument()
 		{
-			RunWith((Type type) =>
-			  {
-				  int totalPeopleCreated = (int) type.GetFieldValue("totalPeopleCreated");
-				  Assert.AreEqual(totalPeopleCreated + 20, type.CallMethod("AdjustTotalPeopleCreated", 20));
-			  });
+			RunWith((Type type) => {
+				int totalPeopleCreated = (int)type.GetFieldValue("totalPeopleCreated");
+				Assert.AreEqual(totalPeopleCreated + 20, type.CallMethod("AdjustTotalPeopleCreated", 20));
+			});
 		}
 
 		[TestMethod]

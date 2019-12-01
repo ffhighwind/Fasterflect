@@ -64,14 +64,25 @@ namespace Fasterflect
 			List<bool> kinds = new List<bool>(members.Count);
 			for (int i = 0; i < members.Count; i++) {
 				MemberInfo mi = members[i];
-				bool include = mi is FieldInfo && mi.Name[0] != '<'; // exclude auto-generated backing fields
-				include |= mi is PropertyInfo && (mi as PropertyInfo).CanRead; // exclude write-only properties
-				if (include) {
-					names.Add(mi.Name);
-					bool isField = mi is FieldInfo;
-					kinds.Add(isField);
-					types.Add(isField ? (mi as FieldInfo).FieldType : (mi as PropertyInfo).PropertyType);
+				Type memberType;
+				bool isField;
+				if (mi is FieldInfo field) {
+					if (mi.Name[0] == '<')
+						continue;
+					memberType = field.FieldType;
+					isField = true;
 				}
+				else if (mi is PropertyInfo property) {
+					if (!property.CanRead)
+						continue;
+					memberType = property.PropertyType;
+					isField = false;
+				}
+				else
+					continue;
+				names.Add(mi.Name);
+				kinds.Add(isField);
+				types.Add(memberType);
 			}
 			return new SourceInfo(type, names.ToArray(), types.ToArray(), kinds.ToArray());
 		}
@@ -131,12 +142,9 @@ namespace Fasterflect
 		#region Equals + GetHashCode
 		public override bool Equals(object obj)
 		{
-			if (!(obj is SourceInfo other))
-				return false;
-			if (other == this)
+			if (obj == this)
 				return true;
-
-			if (type != other.Type || paramNames.Length != other.ParamNames.Length)
+			if (!(obj is SourceInfo other) || type != other.Type || paramNames.Length != other.ParamNames.Length)
 				return false;
 			for (int i = 0; i < paramNames.Length; i++) {
 				if (paramNames[i] != other.ParamNames[i] || paramTypes[i] != other.ParamTypes[i] || paramKinds[i] != other.ParamKinds[i])

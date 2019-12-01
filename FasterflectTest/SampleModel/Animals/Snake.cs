@@ -18,10 +18,9 @@
 
 #endregion
 
-using System;
-using System.ComponentModel;
 using FasterflectTest.SampleModel.Animals.Enumerations;
 using FasterflectTest.SampleModel.Animals.Interfaces;
+using System.ComponentModel;
 
 namespace FasterflectTest.SampleModel.Animals
 {

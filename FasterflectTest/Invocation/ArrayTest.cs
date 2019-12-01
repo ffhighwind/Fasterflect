@@ -18,12 +18,10 @@
 
 #endregion
 
-using System;
-using Fasterflect;
 using Fasterflect.Extensions;
-using FasterflectTest.Common;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FasterflectTest.Invocation
 {
@@ -35,8 +33,7 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestConstructArrays()
 		{
-			RunWith((Type type) =>
-			{
+			RunWith((Type type) => {
 				object obj = type.CreateInstance(10);
 				Assert.IsNotNull(obj);
 				Assert.AreEqual(10, obj.GetPropertyValue("Length"));
@@ -46,8 +43,7 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestGetSetElements()
 		{
-			RunWith((Type type) =>
-			{
+			RunWith((Type type) => {
 				object array = type.CreateInstance(10);
 				object instance = type.GetElementType().CreateInstance().WrapIfValueType();
 				instance.SetFieldValue("name", "John");

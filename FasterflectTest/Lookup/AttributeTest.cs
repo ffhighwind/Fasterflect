@@ -18,18 +18,18 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
 using FasterflectTest.SampleModel.Animals;
 using FasterflectTest.SampleModel.Animals.Attributes;
 using FasterflectTest.SampleModel.Animals.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 
 namespace FasterflectTest.Lookup
 {

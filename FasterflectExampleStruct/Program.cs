@@ -1,5 +1,5 @@
-﻿using System;
-using Fasterflect;
+﻿using Fasterflect;
+using System;
 
 namespace FasterflectExampleStruct
 {

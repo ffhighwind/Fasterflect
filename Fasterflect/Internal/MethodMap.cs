@@ -444,7 +444,7 @@ namespace Fasterflect
 
 		internal virtual void InitializeInvoker()
 		{
-			MethodInfo mi = method as MethodInfo;
+			MethodInfo mi = (MethodInfo) method;
 			invoker = mi.DelegateForCallMethod();
 		}
 	}

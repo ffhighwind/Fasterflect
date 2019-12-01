@@ -859,8 +859,8 @@ namespace Fasterflect.Emitter
 		}
 
 		/// <summary>
-		/// Calls ILGenerator.EmitCalli(<see cref="OpCodes.Calli"/>, <see cref="CallingConvention"/>, Type, Type[], Type[]) that
-		/// calls the method indicated on the evaluation stack (as a pointer to an entry point)
+		/// Calls ILGenerator.EmitCalli(<see cref="OpCodes.Calli"/>, <see cref="CallingConvention"/>, <see cref="Type"/>, <see cref="Type"/>[], <see cref="Type"/>[]) 
+		/// that calls the method indicated on the evaluation stack (as a pointer to an entry point)
 		/// with arguments described by a calling convention using a managed calling convention.
 		/// </summary>
 		/// <param name="callingConvention">The managed calling convention to be used.</param>

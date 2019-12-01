@@ -118,9 +118,9 @@ namespace Fasterflect.Probing
 			if (obj == null || parameters == null) {
 				throw new ArgumentException("Missing or invalid argument: " + (obj == null ? "obj" : "parameters"));
 			}
-			string[] names = parameters.Keys.ToArray() ?? new string[0];
-			object[] values = parameters.Values.ToArray() ?? new object[0];
-			Type[] types = values.ToTypeArray() ?? new Type[0];
+			string[] names = parameters.Keys.ToArray() ?? Constants.EmptyStringArray;
+			object[] values = parameters.Values.ToArray() ?? Constants.EmptyObjectArray;
+			Type[] types = values.ToTypeArray() ?? Type.EmptyTypes;
 			bool isStatic = obj is Type;
 			Type type = isStatic ? obj as Type : obj.GetType();
 			SourceInfo sourceInfo = new SourceInfo(type, names, types);

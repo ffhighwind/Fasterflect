@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using System.Reflection;
-using Fasterflect;
+﻿using Fasterflect;
 using Fasterflect.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using System.Reflection;
 
 namespace FasterflectTest.Issues
 {

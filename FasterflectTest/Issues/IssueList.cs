@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections;
-using Fasterflect;
-using Fasterflect.Extensions;
+﻿using Fasterflect.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections;
 
 namespace FasterflectTest.Issues
 {
@@ -13,7 +12,7 @@ namespace FasterflectTest.Issues
 		public void Issue1()
 		{
 			Console.WriteLine("List 1: Add() without Fasterflect");
-			ArrayList list1 = (ArrayList) typeof(ArrayList).CreateInstance();
+			ArrayList list1 = (ArrayList)typeof(ArrayList).CreateInstance();
 			for (int i = 0; i < 10; i++) {
 				list1.Add(i);
 			}

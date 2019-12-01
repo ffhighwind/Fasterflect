@@ -18,12 +18,11 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using Fasterflect;
 using Fasterflect.Extensions.Services;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 
 namespace FasterflectTest.Services
 {

@@ -24,10 +24,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Benchmark
 {
@@ -45,13 +41,13 @@ namespace Benchmark
 
 		private string host;
 		private string Host {
-			get { return host; }
-			set { host = value; }
+			get => host;
+			set => host = value;
 		}
 
 		public string PublicHost {
-			get { return host; }
-			set { host = value; }
+			get => host;
+			set => host = value;
 		}
 	}
 }

@@ -83,7 +83,7 @@ namespace Fasterflect.Extensions.Services
 				return TryCall(converter, ctors.Cast<MethodBase>(), type, parameterValues);
 			}
 			catch (MissingMemberException) {
-				object[] values = parameterValues ?? new object[0];
+				object[] values = parameterValues ?? Constants.EmptyObjectArray;
 				throw new MissingMemberException(string.Format("Unable to locate a matching constructor on type {0} for parameters: {1}",
 																 type.Name, string.Join(", ", values.Select(v => v == null ? "null" : v.ToString()).ToArray())));
 			}
@@ -108,7 +108,7 @@ namespace Fasterflect.Extensions.Services
 		{
 			converter = converter ?? new ParameterConverter(StandardConvert);
 			if (parameterValues == null) {
-				parameterValues = new object[0];
+				parameterValues = Constants.EmptyObjectArray;
 			}
 			foreach (MethodBase mb in GetCandidates(parameterValues, methodBases)) {
 				List<object> convertedArgs = new List<object>();
@@ -265,7 +265,7 @@ namespace Fasterflect.Extensions.Services
 				return Fasterflect.Extensions.Services.TryInvokeWithValuesExtensions.TryCall(converter, methods.Cast<MethodBase>(), obj, parameterValues);
 			}
 			catch (MissingMemberException) {
-				object[] values = parameterValues ?? new object[0];
+				object[] values = parameterValues ?? Constants.EmptyObjectArray;
 				throw new MissingMethodException(string.Format("Unable to locate a matching method {0} on type {1} for parameters: {2}",
 																 methodName, type.Name,
 																 string.Join(", ", values.Select(v => v == null ? "null" : v.ToString()).ToArray())));

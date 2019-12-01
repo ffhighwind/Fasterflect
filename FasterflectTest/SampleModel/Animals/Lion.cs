@@ -18,12 +18,11 @@
 
 #endregion
 
-using System;
-using System.ComponentModel;
-using Fasterflect;
 using Fasterflect.Extensions;
 using FasterflectTest.SampleModel.Animals.Attributes;
 using FasterflectTest.SampleModel.Animals.Enumerations;
+using System;
+using System.ComponentModel;
 
 namespace FasterflectTest.SampleModel.Animals
 {
@@ -33,7 +32,7 @@ namespace FasterflectTest.SampleModel.Animals
 	{
 #pragma warning disable 0169, 0649
 		[Code("Field")]
-		private DateTime lastMealTime = DateTime.MinValue;
+		private readonly DateTime lastMealTime = DateTime.MinValue;
 
 		[Code("ReadWrite Property")]
 		[DefaultValue("Simba")]

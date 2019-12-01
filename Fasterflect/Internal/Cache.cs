@@ -90,7 +90,7 @@ namespace Fasterflect
 		{
 			entries[key] = strategy == CacheStrategy.Temporary
 				? new WeakReference(value)
-				: value as object;
+				: (object) value;
 		}
 		#endregion
 
@@ -135,7 +135,7 @@ namespace Fasterflect
 		/// <returns>The number of live cache entries still in the cache.</returns>
 		private int ClearCollected()
 		{
-			IList<TKey> keys = entries.Where(kvp => kvp.Value is WeakReference && !(kvp.Value as WeakReference).IsAlive).Select(kvp => kvp.Key).ToList();
+			IList<TKey> keys = entries.Where(kvp => kvp.Value is WeakReference wr && !wr.IsAlive).Select(kvp => kvp.Key).ToList();
 			keys.ForEach(k => entries.Remove(k));
 			return entries.Count;
 		}
@@ -148,7 +148,7 @@ namespace Fasterflect
 		public override string ToString()
 		{
 			int count = ClearCollected();
-			return count > 0 ? String.Format("Cache contains {0} live objects.", count) : "Cache is empty.";
+			return count > 0 ? string.Format("Cache contains {0} live objects.", count) : "Cache is empty.";
 		}
 		#endregion
 	}

@@ -18,10 +18,10 @@
 
 #endregion
 
+using FasterflectTest.SampleModel.Animals.Enumerations;
 using System;
 using System.Linq;
 using System.Reflection;
-using FasterflectTest.SampleModel.Animals.Enumerations;
 
 namespace FasterflectTest.Lookup
 {

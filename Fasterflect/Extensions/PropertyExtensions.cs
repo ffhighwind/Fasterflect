@@ -308,8 +308,8 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		/// <param name="obj">The object whose indexer is to be retrieved.</param>
 		/// <param name="parameters">The list of the indexer parameters.
-		/// The parameter types are determined from these parameters, therefore no parameter can be <code>null</code>.
-		/// If any parameter is <code>null</code> (or you can't be sure of that, i.e. receive from a variable), 
+		/// The parameter types are determined from these parameters, therefore no parameter can be <see langword="null"/>.
+		/// If any parameter is <see langword="null"/> (or you can't be sure of that, i.e. receive from a variable), 
 		/// use a different overload of this method.</param>
 		/// <returns>The value returned by the indexer.</returns>
 		internal static object GetIndexer(this object obj, params object[] parameters)
@@ -382,8 +382,8 @@ namespace Fasterflect.Extensions
 		/// <param name="obj">The object whose indexer is to be retrieved.</param>
 		/// <param name="bindingFlags">The binding flags used to lookup the indexer.</param>
 		/// <param name="parameters">The list of the indexer parameters.
-		/// The parameter types are determined from these parameters, therefore no parameter can be <code>null</code>.
-		/// If any parameter is <code>null</code> (or you can't be sure of that, i.e. receive from a variable), 
+		/// The parameter types are determined from these parameters, therefore no parameter can be <see langword="null"/>.
+		/// If any parameter is <see langword="null"/> (or you can't be sure of that, i.e. receive from a variable), 
 		/// use a different overload of this method.</param>
 		/// <returns>The value returned by the indexer.</returns>
 		internal static object GetIndexer(this object obj, FasterflectFlags bindingFlags, params object[] parameters)

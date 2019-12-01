@@ -18,13 +18,13 @@
 
 #endregion
 
+using Fasterflect;
+using Fasterflect.Extensions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Fasterflect;
-using Fasterflect.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FasterflectTest.Common
 {

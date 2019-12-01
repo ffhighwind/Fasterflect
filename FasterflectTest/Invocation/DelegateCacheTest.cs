@@ -18,13 +18,13 @@
 
 #endregion
 
-using System;
-using System.Collections;
 using Fasterflect;
 using Fasterflect.Emitter;
 using Fasterflect.Extensions;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections;
 
 namespace FasterflectTest.Invocation
 {
@@ -41,7 +41,7 @@ namespace FasterflectTest.Invocation
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			delegateMap = (IDictionary) typeof(BaseEmitter).GetFieldValue("cache").GetFieldValue("entries");
+			delegateMap = (IDictionary)typeof(BaseEmitter).GetFieldValue("cache").GetFieldValue("entries");
 			delegateMap.Clear();
 		}
 

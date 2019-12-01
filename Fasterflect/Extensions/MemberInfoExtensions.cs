@@ -86,8 +86,7 @@ namespace Fasterflect.Extensions
 		/// <returns>True for fields and readable properties, false otherwise.</returns>
 		public static bool IsReadable(this MemberInfo member)
 		{
-			PropertyInfo property = member as PropertyInfo;
-			return member is FieldInfo || (property != null && property.CanRead);
+			return member is FieldInfo || (member is PropertyInfo property && property.CanRead);
 		}
 
 		/// <summary>
@@ -97,9 +96,10 @@ namespace Fasterflect.Extensions
 		/// <returns>True for updateable fields and properties, false otherwise.</returns>
 		public static bool IsWritable(this MemberInfo member)
 		{
-			FieldInfo field = member as FieldInfo;
-			PropertyInfo property = member as PropertyInfo;
-			return (field != null && !field.IsInitOnly && !field.IsLiteral) || (property != null && property.CanWrite);
+			if (member is FieldInfo field) {
+				return !field.IsInitOnly && !field.IsLiteral;
+			}
+			return member is PropertyInfo property && property.CanWrite;
 		}
 		/// <summary>
 		/// Determines whether the given <paramref name="member"/> is invokable.
@@ -117,11 +117,11 @@ namespace Fasterflect.Extensions
 		/// properties and methods. Throws an exception for all other <see cref="MemberTypes"/>.</returns>
 		public static bool IsStatic(this MemberInfo member)
 		{
-			if(member is FieldInfo field)
+			if (member is FieldInfo field)
 				return field.IsStatic;
-			if(member is PropertyInfo property)
+			if (member is PropertyInfo property)
 				return property.CanRead ? property.GetGetMethod(true).IsStatic : property.GetSetMethod(true).IsStatic;
-			if(member is MethodInfo method)
+			if (member is MethodInfo method)
 				return method.IsStatic;
 			string message = string.Format("Unable to determine IsStatic for member {0}.{1}" +
 				"MemberType was {2} but only fields, properties and methods are supported.",
@@ -148,11 +148,15 @@ namespace Fasterflect.Extensions
 		/// is null an exception will be thrown.</returns>
 		internal static bool HasName(this MemberInfo member, string name)
 		{
-			string memberName = member.Name.Length > 0 && member.Name[0] == '_'
-									? member.Name.Substring(1)
-									: member.Name;
-			name = name.Length > 0 && name[0] == '_' ? name.Substring(1) : name;
-			return memberName.Equals(name, StringComparison.OrdinalIgnoreCase);
+			int i = member.Name.Length > 0 && member.Name[0] == '_' ? 1 : 0;
+			int j = name.Length > 0 && name[0] == '_' ? 1 : 0;
+			if ((name.Length - j) != (member.Name.Length - i))
+				return false;
+			for (int count = name.Length; j < count; ++i, ++j) {
+				if (char.ToUpper(member.Name[i]) != char.ToUpper(name[j]))
+					return false;
+			}
+			return true;
 		}
 		#endregion
 	}

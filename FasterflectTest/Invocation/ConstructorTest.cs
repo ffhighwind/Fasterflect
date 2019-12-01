@@ -18,15 +18,15 @@
 
 #endregion
 
-using System;
-using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
 using FasterflectTest.SampleModel.Animals;
 using FasterflectTest.SampleModel.Animals.Interfaces;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 namespace FasterflectTest.Invocation
 {
 	[TestClass]
@@ -55,22 +55,20 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestInvokeCtorWithPrimitiveArguments()
 		{
-			RunWith(type =>
-			  {
-				  object person = type.CreateInstance("John", 10).WrapIfValueType();
-				  VerifyFields(person, new { name = "John", age = 10 });
-			  });
+			RunWith(type => {
+				object person = type.CreateInstance("John", 10).WrapIfValueType();
+				VerifyFields(person, new { name = "John", age = 10 });
+			});
 		}
 
 		[TestMethod]
 		public void TestInvokeCtorWithComplexArgument()
 		{
-			RunWith(type =>
-			  {
-				  object person = type.CreateInstance("John", 10);
-				  object copy = type.CreateInstance(person).WrapIfValueType();
-				  VerifyFields(copy, new { name = "John", age = 10 });
-			  });
+			RunWith(type => {
+				object person = type.CreateInstance("John", 10);
+				object copy = type.CreateInstance(person).WrapIfValueType();
+				VerifyFields(copy, new { name = "John", age = 10 });
+			});
 		}
 
 		[TestMethod]
@@ -84,14 +82,13 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestInvokeCtorWithOutArgument()
 		{
-			RunWith(type =>
-			  {
-				  object[] arguments = new object[] { "John", 10, 0 };
-				  object person = type.CreateInstance(new[] { typeof(string), typeof(int), typeof(int).MakeByRefType() },
-													arguments).WrapIfValueType();
-				  VerifyFields(person, new { name = "John", age = 10 });
-				  Assert.IsTrue((int) arguments[2] > 0);
-			  });
+			RunWith(type => {
+				object[] arguments = new object[] { "John", 10, 0 };
+				object person = type.CreateInstance(new[] { typeof(string), typeof(int), typeof(int).MakeByRefType() },
+												  arguments).WrapIfValueType();
+				VerifyFields(person, new { name = "John", age = 10 });
+				Assert.IsTrue((int)arguments[2] > 0);
+			});
 		}
 
 		[TestMethod]
@@ -113,12 +110,11 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestInvokeCtorWithNullParametersTheRightWay()
 		{
-			RunWith(type =>
-			  {
-				  object person = type.CreateInstance(new[] { typeof(string), typeof(int) },
-													null, 10).WrapIfValueType();
-				  VerifyFields(person, new { name = (string) null, age = 10 });
-			  });
+			RunWith(type => {
+				object person = type.CreateInstance(new[] { typeof(string), typeof(int) },
+												  null, 10).WrapIfValueType();
+				VerifyFields(person, new { name = (string)null, age = 10 });
+			});
 		}
 
 		[TestMethod]
@@ -132,12 +128,11 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestInvokeCtorViaConstructorInfo()
 		{
-			RunWith(type =>
-			  {
-				  ConstructorInfo ctorInfo = type.Constructor(typeof(string), typeof(int));
-				  object person = ctorInfo.CreateInstance(null, 10).WrapIfValueType();
-				  VerifyFields(person, new { name = (string) null, age = 10 });
-			  });
+			RunWith(type => {
+				ConstructorInfo ctorInfo = type.Constructor(typeof(string), typeof(int));
+				object person = ctorInfo.CreateInstance(null, 10).WrapIfValueType();
+				VerifyFields(person, new { name = (string)null, age = 10 });
+			});
 		}
 
 		[TestMethod]

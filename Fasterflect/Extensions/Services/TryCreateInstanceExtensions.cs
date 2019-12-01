@@ -70,8 +70,8 @@ namespace Fasterflect.Extensions.Services
 		public static object TryCreateInstance(this Type type, IDictionary<string, object> parameters)
 		{
 			bool hasParameters = parameters != null && parameters.Count > 0;
-			string[] names = hasParameters ? parameters.Keys.ToArray() : new string[0];
-			object[] values = hasParameters ? parameters.Values.ToArray() : new object[0];
+			string[] names = hasParameters ? parameters.Keys.ToArray() : Constants.EmptyStringArray;
+			object[] values = hasParameters ? parameters.Values.ToArray() : Constants.EmptyObjectArray;
 			return type.TryCreateInstance(names, values);
 		}
 
@@ -91,8 +91,8 @@ namespace Fasterflect.Extensions.Services
 		/// <returns>An instance of <paramref name="type"/>.</returns>
 		public static object TryCreateInstance(this Type type, string[] parameterNames, object[] parameterValues)
 		{
-			string[] names = parameterNames ?? new string[0];
-			object[] values = parameterValues ?? new object[0];
+			string[] names = parameterNames ?? Constants.EmptyStringArray;
+			object[] values = parameterValues ?? Constants.EmptyObjectArray;
 			if (names.Length != values.Length) {
 				throw new ArgumentException("Mismatching name and value arrays (must be of identical length).");
 			}
@@ -120,9 +120,9 @@ namespace Fasterflect.Extensions.Services
 		public static object TryCreateInstance(this Type type, string[] parameterNames, Type[] parameterTypes,
 												object[] parameterValues)
 		{
-			string[] names = parameterNames ?? new string[0];
-			Type[] types = parameterTypes ?? new Type[0];
-			object[] values = parameterValues ?? new object[0];
+			string[] names = parameterNames ?? Constants.EmptyStringArray;
+			Type[] types = parameterTypes ?? Type.EmptyTypes;
+			object[] values = parameterValues ?? Constants.EmptyObjectArray;
 			if (names.Length != values.Length || names.Length != types.Length) {
 				throw new ArgumentException("Mismatching name, type and value arrays (must be of identical length).");
 			}
@@ -130,6 +130,6 @@ namespace Fasterflect.Extensions.Services
 			return map.Invoke(values);
 		}
 
-		#endregion
+#endregion
 	}
 }

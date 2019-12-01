@@ -23,28 +23,17 @@
 
 #endregion
 
-using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
-using System;
-using System.Reflection;
-using FastMember;
-using Sigil;
-//using BenchmarkDotNet.Diagnosers;
-using BenchmarkDotNet.Diagnostics.Windows;
-using Magnum.Reflection;
-using BenchmarkDotNet.Diagnosers;
-using System.Runtime.CompilerServices;
-using Fasterflect;
 
 namespace Benchmark
 {
 	public class Program
 	{
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{
-			var summary = BenchmarkRunner.Run<Getters>();
-			var summary2 = BenchmarkRunner.Run<Setters>();
+			// Produces benchmark data in bin\Release\BenchmarkDotNet.Artifacts\results
+			var getterSummary = BenchmarkRunner.Run<Getters>();
+			var setterSummary = BenchmarkRunner.Run<Setters>();
 		}
 	}
 }

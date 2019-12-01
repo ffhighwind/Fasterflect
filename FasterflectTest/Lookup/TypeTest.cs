@@ -16,16 +16,16 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 #endregion
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using Fasterflect;
 using Fasterflect.Extensions;
 using FasterflectTest.SampleModel.Animals;
 using FasterflectTest.SampleModel.Generics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
 
 namespace FasterflectTest.Lookup
 {

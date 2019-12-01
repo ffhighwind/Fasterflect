@@ -18,15 +18,13 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
 using Fasterflect;
 using Fasterflect.Extensions;
 using Fasterflect.Probing;
 using FasterflectTest.SampleModel.Animals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 
 namespace FasterflectTest.Probing
 {

@@ -1,8 +1,7 @@
-﻿using System;
-using Fasterflect;
-using Fasterflect.Extensions;
+﻿using Fasterflect.Extensions;
 using Fasterflect.Extensions.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FasterflectTest.Services
 {
@@ -56,9 +55,9 @@ namespace FasterflectTest.Services
 		{
 			Type type = typeof(EventSource);
 			int sum = 0;
-			type.AddHandler("StaticIntOp", args => sum += (int) args[0] * 2);
-			type.AddHandler("StaticIntOp", args => sum += (int) args[0] * 3);
-			int result = (int) type.InvokeDelegate("StaticIntOp", 2);
+			type.AddHandler("StaticIntOp", args => sum += (int)args[0] * 2);
+			type.AddHandler("StaticIntOp", args => sum += (int)args[0] * 3);
+			int result = (int)type.InvokeDelegate("StaticIntOp", 2);
 			Assert.AreEqual(10, sum);
 			Assert.AreEqual(10, result);
 		}
@@ -67,9 +66,9 @@ namespace FasterflectTest.Services
 		public void Test_assign_static_string_arg_string_return_delegate()
 		{
 			Type type = typeof(EventSource);
-			type.AddHandler("StaticStringOp", args => (string) args[0] + "1");
-			type.AddHandler("StaticStringOp", args => (string) args[0] + "2");
-			string result = (string) type.InvokeDelegate("StaticStringOp", "A");
+			type.AddHandler("StaticStringOp", args => (string)args[0] + "1");
+			type.AddHandler("StaticStringOp", args => (string)args[0] + "2");
+			string result = (string)type.InvokeDelegate("StaticStringOp", "A");
 			Assert.AreEqual("A2", result);
 		}
 
@@ -88,9 +87,9 @@ namespace FasterflectTest.Services
 		{
 			object target = typeof(EventSource).CreateInstance();
 			int sum = 0;
-			target.AddHandler("intOp", args => sum += (int) args[0] * 2);
-			target.AddHandler("intOp", args => sum += (int) args[0] * 3);
-			int result = (int) target.InvokeDelegate("intOp", 2);
+			target.AddHandler("intOp", args => sum += (int)args[0] * 2);
+			target.AddHandler("intOp", args => sum += (int)args[0] * 3);
+			int result = (int)target.InvokeDelegate("intOp", 2);
 			Assert.AreEqual(10, sum);
 			Assert.AreEqual(10, result);
 		}
@@ -99,9 +98,9 @@ namespace FasterflectTest.Services
 		public void Test_assign_instance_string_arg_string_return_delegate()
 		{
 			object target = typeof(EventSource).CreateInstance();
-			target.AddHandler("stringOp", args => (string) args[0] + "1");
-			target.AddHandler("stringOp", args => (string) args[0] + "2");
-			string result = (string) target.InvokeDelegate("stringOp", "A");
+			target.AddHandler("stringOp", args => (string)args[0] + "1");
+			target.AddHandler("stringOp", args => (string)args[0] + "2");
+			string result = (string)target.InvokeDelegate("stringOp", "A");
 			Assert.AreEqual("A2", result);
 		}
 
@@ -110,8 +109,8 @@ namespace FasterflectTest.Services
 		{
 			object target = typeof(EventSource).CreateInstance();
 			int sum = 0;
-			target.AddHandler("intEvent", args => sum += (int) args[0] * 2);
-			target.AddHandler("intEvent", args => sum += (int) args[0] * 3);
+			target.AddHandler("intEvent", args => sum += (int)args[0] * 2);
+			target.AddHandler("intEvent", args => sum += (int)args[0] * 3);
 			object result = target.CallMethod("TriggerEvents", 2);
 			Assert.AreEqual(10, sum);
 			Assert.AreEqual(10, result);
@@ -122,8 +121,8 @@ namespace FasterflectTest.Services
 		{
 			Type type = typeof(EventSource);
 			int sum = 0;
-			type.AddHandler("StaticIntEvent", args => sum += (int) args[0] * 2);
-			type.AddHandler("StaticIntEvent", args => sum += (int) args[0] * 3);
+			type.AddHandler("StaticIntEvent", args => sum += (int)args[0] * 2);
+			type.AddHandler("StaticIntEvent", args => sum += (int)args[0] * 3);
 			object result = type.CallMethod("TriggerStaticEvents", 2);
 			Assert.AreEqual(10, sum);
 			Assert.AreEqual(10, result);

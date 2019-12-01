@@ -1,5 +1,5 @@
-﻿using System;
-using Fasterflect;
+﻿using Fasterflect;
+using System;
 
 namespace FasterflectExample
 {
@@ -24,7 +24,7 @@ namespace FasterflectExample
 			MemberSetter setAge = Reflect.Setter(typeof(Person), "Age");
 			MultiSetter setBoth = Reflect.MultiSetter(typeof(Person), "Age", "Name");
 
-			Person person = (Person) ctor("John Doe", 21);
+			Person person = (Person)ctor("John Doe", 21);
 			setAge(person, 30);
 			Console.WriteLine(getName(person));
 			Console.WriteLine(getAge(person));

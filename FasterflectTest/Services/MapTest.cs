@@ -16,9 +16,7 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 #endregion
 
-using Fasterflect;
 using Fasterflect.Extensions;
-using Fasterflect.Extensions.Services;
 using FasterflectTest.Common;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -87,12 +85,11 @@ namespace FasterflectTest.Services
 		[TestMethod]
 		public void TestMap()
 		{
-			RunWith((object person) =>
-					{
-						object source = new { name = "John", age = 10, metersTravelled = 120d };
-						source.Map(person);
-						VerifyFields(person, source);
-					});
+			RunWith((object person) => {
+				object source = new { name = "John", age = 10, metersTravelled = 120d };
+				source.Map(person);
+				VerifyFields(person, source);
+			});
 		}
 		#endregion
 
@@ -100,24 +97,22 @@ namespace FasterflectTest.Services
 		[TestMethod]
 		public void TestMapProperties()
 		{
-			RunWith((object person) =>
-					{
-						object source = new { Name = "John", Age = 10, MetersTravelled = 120d };
-						source.MapProperties(person);
-						VerifyProperties(person, source);
-					});
+			RunWith((object person) => {
+				object source = new { Name = "John", Age = 10, MetersTravelled = 120d };
+				source.MapProperties(person);
+				VerifyProperties(person, source);
+			});
 		}
 
 		[TestMethod]
 		public void TestMapPropertiesWithFilter()
 		{
-			RunWith((object person) =>
-					{
-						int currentAge = (int) person.GetPropertyValue("Age");
-						object source = new { Name = "John", Age = currentAge + 10, MetersTravelled = 120d };
-						source.MapProperties(person, "Name", "MetersTravelled");
-						VerifyProperties(person, new { Age = currentAge });
-					});
+			RunWith((object person) => {
+				int currentAge = (int)person.GetPropertyValue("Age");
+				object source = new { Name = "John", Age = currentAge + 10, MetersTravelled = 120d };
+				source.MapProperties(person, "Name", "MetersTravelled");
+				VerifyProperties(person, new { Age = currentAge });
+			});
 		}
 
 		[TestMethod]
@@ -134,12 +129,11 @@ namespace FasterflectTest.Services
 		[TestMethod]
 		public void TestMapPropertiesToFields()
 		{
-			RunWith((object person) =>
-					{
-						object source = new { name = "John", age = 10, metersTravelled = 120d };
-						source.MapPropertiesToFields(person);
-						VerifyFields(person, source);
-					});
+			RunWith((object person) => {
+				object source = new { name = "John", age = 10, metersTravelled = 120d };
+				source.MapPropertiesToFields(person);
+				VerifyFields(person, source);
+			});
 			//DateTime birthday = new DateTime(1973, 1, 27);
 			//object source = new { id = 42, birthDay = birthday, name = "Arthur Dent" };
 			//Person target = new Person();
@@ -161,13 +155,12 @@ namespace FasterflectTest.Services
 		[TestMethod]
 		public void TestMapPropertiesToFieldsWithFilter()
 		{
-			RunWith((object person) =>
-					{
-						int currentAge = (int) person.GetFieldValue("age");
-						object source = new { name = "John", age = currentAge + 10, metersTravelled = 120d };
-						source.MapPropertiesToFields(person, "name", "metersTravelled");
-						VerifyFields(person, new { age = currentAge });
-					});
+			RunWith((object person) => {
+				int currentAge = (int)person.GetFieldValue("age");
+				object source = new { name = "John", age = currentAge + 10, metersTravelled = 120d };
+				source.MapPropertiesToFields(person, "name", "metersTravelled");
+				VerifyFields(person, new { age = currentAge });
+			});
 		}
 
 		[TestMethod]
@@ -184,24 +177,22 @@ namespace FasterflectTest.Services
 		[TestMethod]
 		public void TestMapFields()
 		{
-			RunWith((object person) =>
-					{
-						object source = new Source("John", 10, 120d);
-						source.MapFields(person);
-						VerifyFields(person, new { name = "John", age = 10, metersTravelled = 120d });
-					});
+			RunWith((object person) => {
+				object source = new Source("John", 10, 120d);
+				source.MapFields(person);
+				VerifyFields(person, new { name = "John", age = 10, metersTravelled = 120d });
+			});
 		}
 
 		[TestMethod]
 		public void TestMapFieldsWithFilter()
 		{
-			RunWith((object person) =>
-					{
-						int currentAge = (int) person.GetFieldValue("age");
-						Source source = new Source("John", currentAge + 10, 120d);
-						source.MapFields(person, "Name", "MetersTravelled");
-						VerifyFields(person, new { age = currentAge });
-					});
+			RunWith((object person) => {
+				int currentAge = (int)person.GetFieldValue("age");
+				Source source = new Source("John", currentAge + 10, 120d);
+				source.MapFields(person, "Name", "MetersTravelled");
+				VerifyFields(person, new { age = currentAge });
+			});
 		}
 
 		[TestMethod]
@@ -218,24 +209,22 @@ namespace FasterflectTest.Services
 		[TestMethod]
 		public void TestMapFieldsToProperties()
 		{
-			RunWith((object person) =>
-					{
-						Source source = new Source("John", 10, 120d);
-						source.MapFieldsToProperties(person);
-						VerifyProperties(person, new { Name = "John", Age = 10, MetersTravelled = 120d });
-					});
+			RunWith((object person) => {
+				Source source = new Source("John", 10, 120d);
+				source.MapFieldsToProperties(person);
+				VerifyProperties(person, new { Name = "John", Age = 10, MetersTravelled = 120d });
+			});
 		}
 
 		[TestMethod]
 		public void TestMapFieldsToPropertiesWithFilter()
 		{
-			RunWith((object person) =>
-					{
-						int currentAge = (int) person.GetPropertyValue("Age");
-						Source source = new Source("John", currentAge + 10, 120d);
-						source.MapFieldsToProperties(person, "name", "metersTravelled");
-						VerifyProperties(person, new { Age = currentAge });
-					});
+			RunWith((object person) => {
+				int currentAge = (int)person.GetPropertyValue("Age");
+				Source source = new Source("John", currentAge + 10, 120d);
+				source.MapFieldsToProperties(person, "name", "metersTravelled");
+				VerifyProperties(person, new { Age = currentAge });
+			});
 		}
 
 		[TestMethod]

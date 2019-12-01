@@ -24,17 +24,14 @@
 #endregion
 
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Diagnosers;
+using Fasterflect;
+using FastMember;
+using Magnum.Reflection;
+using Sigil;
 using System;
 using System.Reflection;
-using FastMember;
-using Sigil;
-using BenchmarkDotNet.Diagnostics.Windows;
-using Magnum.Reflection;
-using BenchmarkDotNet.Diagnosers;
 using System.Runtime.CompilerServices;
-using Fasterflect;
 
 namespace Benchmark
 {
@@ -78,18 +75,6 @@ namespace Benchmark
 			getDelegate = (Func<TestUri, string>)Delegate.CreateDelegate(funcType, getgetMethod);
 			getDelegateDynamic = Delegate.CreateDelegate(funcType, getgetMethod);
 
-			var actionType = Type.GetType("System.Action`2[Benchmark.TestUri, System.String]");
-			//setDelegate = (Action<TestUri, string>)Delegate.CreateDelegate(actionType, property.GetSetMethod(nonPublic: allowNonPublicFieldAccess));
-			//setDelegateDynamic = Delegate.CreateDelegate(actionType, property.GetSetMethod(nonPublic: allowNonPublicFieldAccess));
-
-			//var setterEmiter = Emit<Action<TestUri, string>>
-			//	.NewDynamicMethod("SetTestUriProperty")
-			//	.LoadArgument(0)
-			//	.LoadArgument(1)
-			//	.Call(property.GetSetMethod(nonPublic: allowNonPublicFieldAccess))
-			//	.Return();
-			//setter = setterEmiter.CreateDelegate();
-
 			Emit<Func<TestUri, string>> getterEmiter = Emit<Func<TestUri, string>>
 				.NewDynamicMethod("GetTestUriProperty")
 				.LoadArgument(0)
@@ -98,17 +83,6 @@ namespace Benchmark
 			funcTstring = getterEmiter.CreateDelegate();
 
 			ffgetter = Reflect.PropertyGetter(property);
-			//ffsetter = Reflect.PropertySetter(property);
-
-			//var objSetterEmiter = Emit<Action<object, object>>
-			//	.NewDynamicMethod("SetObjTestUriProperty")
-			//	.LoadArgument(0)
-			//	.CastClass(typeof(TestUri))
-			//	.LoadArgument(1)
-			//	.CastClass(typeof(string))
-			//	.Call(property.GetSetMethod(nonPublic: allowNonPublicFieldAccess))
-			//	.Return();
-			//objsetter = objSetterEmiter.CreateDelegate();
 
 			Emit<MemberGetter> objGetterEmiter = Emit<MemberGetter>
 				.NewDynamicMethod("GetObjTestUriProperty")
@@ -126,7 +100,7 @@ namespace Benchmark
 				.Return();
 			funcObjObj = objGetterEmiterFunc.CreateDelegate();
 		}
-		
+
 		[Benchmark]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public string Direct_Inlining()

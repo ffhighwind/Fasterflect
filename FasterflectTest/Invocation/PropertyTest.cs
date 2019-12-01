@@ -16,12 +16,12 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 #endregion
 
-using System;
-using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Reflection;
 
 namespace FasterflectTest.Invocation
 {
@@ -31,12 +31,11 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestAccessStaticProperties()
 		{
-			RunWith((Type type) =>
-					{
-						int totalPeopleCreated = (int) type.GetPropertyValue("TotalPeopleCreated") + 1;
-						type.SetPropertyValue("TotalPeopleCreated", totalPeopleCreated);
-						VerifyProperties(type, new { totalPeopleCreated });
-					});
+			RunWith((Type type) => {
+				int totalPeopleCreated = (int)type.GetPropertyValue("TotalPeopleCreated") + 1;
+				type.SetPropertyValue("TotalPeopleCreated", totalPeopleCreated);
+				VerifyProperties(type, new { totalPeopleCreated });
+			});
 		}
 
 		[TestMethod]
@@ -56,24 +55,22 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestAccessStaticPropertyViaPropertyInfo()
 		{
-			RunWith((Type type) =>
-					{
-						PropertyInfo propInfo = type.Property("TotalPeopleCreated", FasterflectFlags.StaticAnyVisibility);
-						int totalPeopleCreated = (int) propInfo.Get() + 1;
-						propInfo.Set(totalPeopleCreated);
-						VerifyProperties(type, new { totalPeopleCreated });
-					});
+			RunWith((Type type) => {
+				PropertyInfo propInfo = type.Property("TotalPeopleCreated", FasterflectFlags.StaticAnyVisibility);
+				int totalPeopleCreated = (int)propInfo.Get() + 1;
+				propInfo.Set(totalPeopleCreated);
+				VerifyProperties(type, new { totalPeopleCreated });
+			});
 		}
 
 		[TestMethod]
 		public void TestAccessInstanceProperties()
 		{
-			RunWith((object person) =>
-					{
-						string name = (string) person.GetPropertyValue("Name") + " updated";
-						person.SetPropertyValue("Name", name);
-						VerifyProperties(person, new { name });
-					});
+			RunWith((object person) => {
+				string name = (string)person.GetPropertyValue("Name") + " updated";
+				person.SetPropertyValue("Name", name);
+				VerifyProperties(person, new { name });
+			});
 		}
 
 		[TestMethod]
@@ -93,31 +90,29 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestAccessInstancePropertyViaPropertyInfo()
 		{
-			RunWith((object person) =>
-					{
-						PropertyInfo propInfo = person.UnwrapIfWrapped().GetType().Property("Name");
-						string name = (string) propInfo.Get(person) + " updated";
-						propInfo.Set(person, name);
-						VerifyProperties(person, new { name });
-					});
+			RunWith((object person) => {
+				PropertyInfo propInfo = person.UnwrapIfWrapped().GetType().Property("Name");
+				string name = (string)propInfo.Get(person) + " updated";
+				propInfo.Set(person, name);
+				VerifyProperties(person, new { name });
+			});
 		}
 
 		[TestMethod]
 		public void TestChainInstancePropertySetters()
 		{
-			RunWith((object person) =>
-					{
-						person.SetPropertyValue("Name", "John")
-							.SetPropertyValue("Age", 20)
-							.SetPropertyValue("MetersTravelled", 120d);
-						VerifyProperties(person, new { Name = "John", Age = 20, MetersTravelled = 120d });
-					});
+			RunWith((object person) => {
+				person.SetPropertyValue("Name", "John")
+					.SetPropertyValue("Age", 20)
+					.SetPropertyValue("MetersTravelled", 120d);
+				VerifyProperties(person, new { Name = "John", Age = 20, MetersTravelled = 120d });
+			});
 		}
 
 		[TestMethod]
 		public void TestAccessStaticPropertiesViaSubclassType()
 		{
-			int totalPeopleCreated = (int) EmployeeType.GetPropertyValue("TotalPeopleCreated") + 1;
+			int totalPeopleCreated = (int)EmployeeType.GetPropertyValue("TotalPeopleCreated") + 1;
 			EmployeeType.SetPropertyValue("TotalPeopleCreated", totalPeopleCreated);
 			VerifyProperties(EmployeeType, new { totalPeopleCreated });
 		}

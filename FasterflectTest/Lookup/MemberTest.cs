@@ -18,14 +18,14 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
 using FasterflectTest.SampleModel.Animals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace FasterflectTest.Lookup
 {
@@ -259,7 +259,7 @@ namespace FasterflectTest.Lookup
 			MemberInfo member = typeof(Lion).Member("lastMealTime");
 			Assert.IsNotNull(member);
 			Assert.IsTrue(member.IsReadable());
-			Assert.IsTrue(member.IsWritable());
+			Assert.IsFalse(member.IsWritable());
 			// normal instance property
 			member = typeof(Lion).Member("Name");
 			Assert.IsNotNull(member);

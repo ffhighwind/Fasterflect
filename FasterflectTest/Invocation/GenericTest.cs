@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using Fasterflect;
-using Fasterflect.Emitter;
-using Fasterflect.Extensions;
+﻿using Fasterflect.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 
 namespace FasterflectTest.Invocation
 {
@@ -63,7 +60,7 @@ namespace FasterflectTest.Invocation
 		public void Test_invoke_static_generic_methods()
 		{
 			Type type = typeof(Host);
-			int val = (int) type.CallMethod(new[] { typeof(int) }, "Exact", 1);
+			int val = (int)type.CallMethod(new[] { typeof(int) }, "Exact", 1);
 			Assert.AreEqual(1, val);
 		}
 
@@ -71,7 +68,7 @@ namespace FasterflectTest.Invocation
 		public void Test_invoke_instance_generic_method_two_arguments_two_params()
 		{
 			object target = typeof(Host).CreateInstance();
-			string result = (string) target.CallMethod(new[] { typeof(string), typeof(int) }, "Add", "1", 2);
+			string result = (string)target.CallMethod(new[] { typeof(string), typeof(int) }, "Add", "1", 2);
 			Assert.AreEqual("1:12", result);
 		}
 
@@ -79,7 +76,7 @@ namespace FasterflectTest.Invocation
 		public void Test_invoke_instance_generic_method_two_arguments_three_params()
 		{
 			object target = typeof(Host).CreateInstance();
-			string result = (string) target.CallMethod(new[] { typeof(string), typeof(int) }, "Add", "1", 2, 3);
+			string result = (string)target.CallMethod(new[] { typeof(string), typeof(int) }, "Add", "1", 2, 3);
 			Assert.AreEqual("2:123", result);
 		}
 
@@ -87,7 +84,7 @@ namespace FasterflectTest.Invocation
 		public void Test_invoke_instance_generic_method_one_argument_two_params_one_generic()
 		{
 			object target = typeof(Host).CreateInstance();
-			string result = (string) target.CallMethod(new[] { typeof(string) }, "Add", "1", 2);
+			string result = (string)target.CallMethod(new[] { typeof(string) }, "Add", "1", 2);
 			Assert.AreEqual("3:12", result);
 		}
 
@@ -95,7 +92,7 @@ namespace FasterflectTest.Invocation
 		public void Test_invoke_instance_generic_method_one_argument_three_params_two_generic()
 		{
 			object target = typeof(Host).CreateInstance();
-			string result = (string) target.CallMethod(new[] { typeof(string) }, "Add", "1", 2, "3");
+			string result = (string)target.CallMethod(new[] { typeof(string) }, "Add", "1", 2, "3");
 			Assert.AreEqual("4:123", result);
 		}
 
@@ -103,7 +100,7 @@ namespace FasterflectTest.Invocation
 		public void Test_invoke_instance_generic_method_two_arguments_one_param_generic()
 		{
 			object target = typeof(Host).CreateInstance();
-			string result = (string) target.CallMethod(new[] { typeof(string), typeof(int) }, "Add", "1");
+			string result = (string)target.CallMethod(new[] { typeof(string), typeof(int) }, "Add", "1");
 			Assert.AreEqual("5:1_Int32", result);
 		}
 
@@ -111,7 +108,7 @@ namespace FasterflectTest.Invocation
 		public void Test_invoke_instance_non_generic_method_two_params()
 		{
 			object target = typeof(Host).CreateInstance();
-			string result = (string) target.CallMethod(null, "Add", "1", 2);
+			string result = (string)target.CallMethod(null, "Add", "1", 2);
 			Assert.AreEqual("6:12", result);
 		}
 	}

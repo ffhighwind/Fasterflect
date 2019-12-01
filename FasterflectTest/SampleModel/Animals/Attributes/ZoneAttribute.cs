@@ -18,8 +18,8 @@
 
 #endregion
 
-using System;
 using FasterflectTest.SampleModel.Animals.Enumerations;
+using System;
 
 namespace FasterflectTest.SampleModel.Animals.Attributes
 {

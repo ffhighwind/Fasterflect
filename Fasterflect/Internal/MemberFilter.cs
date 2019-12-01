@@ -161,11 +161,11 @@ namespace Fasterflect
 				}
 				if (!exclude && excludeBacking) {
 					exclude |= member is FieldInfo && member.Name[0] == '<';
-					if (member as MethodInfo != null) {
+					if (member is MethodInfo methodInfo) {
 						// filter out property backing methods
 						exclude |= member.Name.Length > 4 && member.Name.Substring(1, 3) == "et_";
 						// filter out base implementations when an overrride exists
-						exclude |= result.ContainsOverride(member as MethodInfo);
+						exclude |= result.ContainsOverride(methodInfo);
 					}
 					if (member is PropertyInfo property) {
 						MethodInfo propertyGetter = property.GetGetMethod(true);

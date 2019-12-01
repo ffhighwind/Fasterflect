@@ -16,12 +16,11 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 #endregion
 
-using System;
-using System.Reflection;
 using Fasterflect;
 using Fasterflect.Extensions;
-using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Reflection;
 
 namespace FasterflectTest.Invocation
 {
@@ -31,12 +30,11 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestAccessStaticFields()
 		{
-			RunWith((Type type) =>
-					{
-						int totalPeopleCreated = (int) type.GetFieldValue("totalPeopleCreated") + 1;
-						type.SetFieldValue("totalPeopleCreated", totalPeopleCreated);
-						VerifyFields(type, new { totalPeopleCreated });
-					});
+			RunWith((Type type) => {
+				int totalPeopleCreated = (int)type.GetFieldValue("totalPeopleCreated") + 1;
+				type.SetFieldValue("totalPeopleCreated", totalPeopleCreated);
+				VerifyFields(type, new { totalPeopleCreated });
+			});
 		}
 
 		[TestMethod]
@@ -56,35 +54,32 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestAccessStaticFieldViaFieldInfo()
 		{
-			RunWith((Type type) =>
-					{
-						FieldInfo fieldInfo = type.Field("totalPeopleCreated", FasterflectFlags.StaticAnyVisibility);
-						int totalPeopleCreated = (int) fieldInfo.Get() + 1;
-						fieldInfo.Set(totalPeopleCreated);
-						VerifyFields(type, new { totalPeopleCreated });
-					});
+			RunWith((Type type) => {
+				FieldInfo fieldInfo = type.Field("totalPeopleCreated", FasterflectFlags.StaticAnyVisibility);
+				int totalPeopleCreated = (int)fieldInfo.Get() + 1;
+				fieldInfo.Set(totalPeopleCreated);
+				VerifyFields(type, new { totalPeopleCreated });
+			});
 		}
 
 		[TestMethod]
 		public void TestAccessInstanceFields()
 		{
-			RunWith((object person) =>
-					{
-						string name = (string) person.GetFieldValue("name") + " updated";
-						person.SetFieldValue("name", name);
-						VerifyFields(person, new { name });
-					});
+			RunWith((object person) => {
+				string name = (string)person.GetFieldValue("name") + " updated";
+				person.SetFieldValue("name", name);
+				VerifyFields(person, new { name });
+			});
 		}
 
 		[TestMethod]
 		public void TestAccessPrivateFieldUnderNonPublicBindingFlags()
 		{
-			RunWith((object person) =>
-					{
-						string name = (string) person.GetFieldValue("name", FasterflectFlags.NonPublic | FasterflectFlags.Instance) + " updated";
-						person.SetFieldValue("name", name, FasterflectFlags.NonPublic | FasterflectFlags.Instance);
-						VerifyFields(person, new { name });
-					});
+			RunWith((object person) => {
+				string name = (string)person.GetFieldValue("name", FasterflectFlags.NonPublic | FasterflectFlags.Instance) + " updated";
+				person.SetFieldValue("name", name, FasterflectFlags.NonPublic | FasterflectFlags.Instance);
+				VerifyFields(person, new { name });
+			});
 		}
 
 		[TestMethod]
@@ -104,31 +99,29 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestAccessInstanceFieldViaFieldInfo()
 		{
-			RunWith((object person) =>
-					{
-						FieldInfo fieldInfo = person.UnwrapIfWrapped().GetType().Field("name");
-						string name = (string) fieldInfo.Get(person) + " updated";
-						fieldInfo.Set(person, name);
-						VerifyFields(person, new { name });
-					});
+			RunWith((object person) => {
+				FieldInfo fieldInfo = person.UnwrapIfWrapped().GetType().Field("name");
+				string name = (string)fieldInfo.Get(person) + " updated";
+				fieldInfo.Set(person, name);
+				VerifyFields(person, new { name });
+			});
 		}
 
 		[TestMethod]
 		public void TestChainInstanceFieldSetters()
 		{
-			RunWith((object person) =>
-					{
-						person.SetFieldValue("name", "John")
-							.SetFieldValue("age", 20)
-							.SetFieldValue("metersTravelled", 120d);
-						VerifyFields(person, new { name = "John", age = 20, metersTravelled = 120d });
-					});
+			RunWith((object person) => {
+				person.SetFieldValue("name", "John")
+					.SetFieldValue("age", 20)
+					.SetFieldValue("metersTravelled", 120d);
+				VerifyFields(person, new { name = "John", age = 20, metersTravelled = 120d });
+			});
 		}
 
 		[TestMethod]
 		public void TestAccessStaticFieldsViaSubclassType()
 		{
-			int totalPeopleCreated = (int) EmployeeType.GetFieldValue("totalPeopleCreated") + 1;
+			int totalPeopleCreated = (int)EmployeeType.GetFieldValue("totalPeopleCreated") + 1;
 			EmployeeType.SetFieldValue("totalPeopleCreated", totalPeopleCreated);
 			VerifyFields(EmployeeType, new { totalPeopleCreated });
 		}

@@ -18,12 +18,12 @@
 
 #endregion
 
-using System;
-using System.Linq;
 using Fasterflect;
 using Fasterflect.Extensions;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 
 namespace FasterflectTest.Invocation
 {
@@ -44,34 +44,30 @@ namespace FasterflectTest.Invocation
 
 		private void InvokeIndexer(Func<object, object[], object> getIndexerAction)
 		{
-			RunWith((personBase, elementType, elementTypeNullable) =>
-			  {
-				  object[][] people = new[] { new object[] { "John", 10 }, new object[] { "Jane", 20 } };
-				  people.ForEach(sample =>
-								  {
-									  object person = elementType.CreateInstance(sample[0], sample[1]);
-									  object name = person.WrapIfValueType().GetFieldValue("name");
-									  personBase.SetIndexer(new[] { typeof(string), elementTypeNullable }, name,
-															 person);
-								  });
-				  people.ForEach(sample =>
-								  {
-									  object person = getIndexerAction(personBase, sample);
-									  VerifyFields(person.WrapIfValueType(),
-													new { name = sample[0], age = sample[1] });
-								  });
-			  });
+			RunWith((personBase, elementType, elementTypeNullable) => {
+				object[][] people = new[] { new object[] { "John", 10 }, new object[] { "Jane", 20 } };
+				people.ForEach(sample => {
+					object person = elementType.CreateInstance(sample[0], sample[1]);
+					object name = person.WrapIfValueType().GetFieldValue("name");
+					personBase.SetIndexer(new[] { typeof(string), elementTypeNullable }, name,
+										   person);
+				});
+				people.ForEach(sample => {
+					object person = getIndexerAction(personBase, sample);
+					VerifyFields(person.WrapIfValueType(),
+								  new { name = sample[0], age = sample[1] });
+				});
+			});
 		}
 
 		private void RunWith(Action<object, Type, Type> assertionAction)
 		{
-			Types.Select(t =>
-						 {
-							 object emptyDictionary = t.Field("friends").FieldType.CreateInstance();
-							 object person = t.CreateInstance().WrapIfValueType();
-							 person.SetFieldValue("friends", emptyDictionary);
-							 return person;
-						 }).ForEach(
+			Types.Select(t => {
+				object emptyDictionary = t.Field("friends").FieldType.CreateInstance();
+				object person = t.CreateInstance().WrapIfValueType();
+				person.SetFieldValue("friends", emptyDictionary);
+				return person;
+			}).ForEach(
 										 person =>
 										 assertionAction(
 															person,

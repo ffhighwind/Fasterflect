@@ -55,8 +55,8 @@ namespace Fasterflect.Extensions.Services
 		internal static object TryCallMethod(this object obj, string methodName, bool mustUseAllParameters, IDictionary<string, object> parameters)
 		{
 			bool hasParameters = parameters != null && parameters.Count > 0;
-			string[] names = hasParameters ? parameters.Keys.ToArray() : new string[0];
-			object[] values = hasParameters ? parameters.Values.ToArray() : new object[0];
+			string[] names = hasParameters ? parameters.Keys.ToArray() : Constants.EmptyStringArray;
+			object[] values = hasParameters ? parameters.Values.ToArray() : Constants.EmptyObjectArray;
 			return obj.TryCallMethod(methodName, mustUseAllParameters, names, values.ToTypeArray(), values);
 		}
 
@@ -77,11 +77,13 @@ namespace Fasterflect.Extensions.Services
 		internal static object TryCallMethod(this object obj, string methodName, bool mustUseAllParameters,
 											string[] parameterNames, Type[] parameterTypes, object[] parameterValues)
 		{
-			bool isStatic = obj is Type;
-			Type type = isStatic ? obj as Type : obj.GetType();
-			string[] names = parameterNames ?? new string[0];
-			Type[] types = parameterTypes ?? new Type[0];
-			object[] values = parameterValues ?? new object[0];
+			Type type = obj as Type;
+			bool isStatic = type != null;
+			if (!isStatic)
+				type = obj.GetType();
+			string[] names = parameterNames ?? Constants.EmptyStringArray;
+			Type[] types = parameterTypes ?? Type.EmptyTypes;
+			object[] values = parameterValues ?? Constants.EmptyObjectArray;
 			if (names.Length != values.Length || names.Length != types.Length) {
 				throw new ArgumentException("Mismatching name, type and value arrays (must be of identical length).");
 			}

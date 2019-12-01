@@ -18,11 +18,11 @@
 
 #endregion
 
-using System;
-using System.Linq;
 using Fasterflect.Probing;
 using FasterflectTest.SampleModel.Animals.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 
 namespace FasterflectTest.Probing
 {
@@ -45,7 +45,7 @@ namespace FasterflectTest.Probing
 			Assert.AreEqual(Climate.Cold, TypeConverter.Get(typeof(Climate), 2));
 			Assert.AreEqual(Climate.Cold, TypeConverter.Get(typeof(Climate), "2"));
 			Assert.AreEqual(Climate.Cold, TypeConverter.Get(typeof(Climate), "Cold"));
-			Assert.AreEqual(Climate.Cold, TypeConverter.Get(typeof(Climate), (object) "Cold"));
+			Assert.AreEqual(Climate.Cold, TypeConverter.Get(typeof(Climate), (object)"Cold"));
 		}
 		#endregion
 
@@ -56,7 +56,7 @@ namespace FasterflectTest.Probing
 			string emptyGuidString = string.Empty.PadRight(16, '\0');
 			string textualGuid = string.Empty.PadRight(32, '0');
 			byte[] emptyGuidBuffer = new byte[16];
-			Assert.AreEqual(Guid.Empty, TypeConverter.Get(typeof(Guid), (object) emptyGuidString));
+			Assert.AreEqual(Guid.Empty, TypeConverter.Get(typeof(Guid), (object)emptyGuidString));
 			Assert.AreEqual(Guid.Empty, TypeConverter.Get(typeof(Guid), emptyGuidBuffer));
 			Assert.AreEqual(Guid.Empty, TypeConverter.Get(typeof(Guid), textualGuid));
 		}
@@ -74,7 +74,7 @@ namespace FasterflectTest.Probing
 			Assert.AreEqual(guid, TypeConverter.Get(typeof(Guid), binaryGuid));
 			// test direct from guid
 			Assert.AreEqual(binaryStringGuid, TypeConverter.Get(typeof(string), guid));
-			Assert.IsTrue(binaryGuid.SequenceEqual((byte[]) TypeConverter.Get(typeof(byte[]), guid)));
+			Assert.IsTrue(binaryGuid.SequenceEqual((byte[])TypeConverter.Get(typeof(byte[]), guid)));
 		}
 		#endregion
 	}

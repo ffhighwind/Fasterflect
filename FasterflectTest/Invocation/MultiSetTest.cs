@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Fasterflect;
 using FasterflectTest.SampleModel.Animals;
 using FasterflectTest.SampleModel.People;
-using Fasterflect;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Reflection;
 
 namespace FasterflectTest.Invocation
@@ -54,7 +50,7 @@ namespace FasterflectTest.Invocation
 
 			ValueTypeHolder h = person;
 			setter(h, 5);
-			person = (PersonStruct) h.Value;
+			person = (PersonStruct)h.Value;
 			Assert.IsTrue(person.Age == 5);
 		}
 
@@ -70,7 +66,7 @@ namespace FasterflectTest.Invocation
 
 			MultiSetter setter = Reflect.MultiSetter(person.GetType(), "Name", "Age", "MetersTravelled");
 			setter(h, "Jack Black", 5, 2.0d);
-			person = (PersonStruct) h;
+			person = (PersonStruct)h;
 			Assert.IsTrue(person.Name == "Jack Black" && person.Age == 5 && person.MetersTravelled == 2);
 
 

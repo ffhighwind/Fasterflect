@@ -18,16 +18,15 @@
 
 #endregion
 
+using Fasterflect;
+using Fasterflect.Extensions;
+using Fasterflect.Extensions.Services;
+using FasterflectTest.SampleModel.Animals;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Fasterflect;
-using Fasterflect.Extensions;
-using Fasterflect.Extensions.Services;
-using Fasterflect.Probing;
-using FasterflectTest.SampleModel.Animals;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FasterflectTest.Probing
 {
@@ -192,8 +191,7 @@ namespace FasterflectTest.Probing
 
 			// now lets try to create instances of the Book class using these values
 			IEnumerable<object> data = from book in xml.Elements("Book")
-									   select new
-									   {
+									   select new {
 										   id = book.Attribute("id"),
 										   author = book.Attribute("author"),
 										   title = book.Attribute("title"),

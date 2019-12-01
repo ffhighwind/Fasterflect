@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections;
-using Fasterflect;
+﻿using Fasterflect;
 using Fasterflect.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections;
 
 namespace FasterflectTest.Issues
 {
@@ -17,7 +17,7 @@ namespace FasterflectTest.Issues
 			for (int i = 0; i < 10; i++) {
 				add_with_object(list, i);
 			}
-			int size = (int) list.GetPropertyValue("Count");
+			int size = (int)list.GetPropertyValue("Count");
 			Assert.AreEqual(10, size);
 		}
 
@@ -30,7 +30,7 @@ namespace FasterflectTest.Issues
 			for (int i = 0; i < 10; i++) {
 				add_with_int(list, i);
 			}
-			int size = (int) list.GetPropertyValue("Count");
+			int size = (int)list.GetPropertyValue("Count");
 			Assert.AreEqual(10, size);
 		}
 
@@ -41,7 +41,7 @@ namespace FasterflectTest.Issues
 			for (int i = 0; i < 10; i++) {
 				list.CallMethod("Add", i);
 			}
-			int size = (int) list.GetPropertyValue("Count");
+			int size = (int)list.GetPropertyValue("Count");
 			Assert.AreEqual(10, size);
 		}
 

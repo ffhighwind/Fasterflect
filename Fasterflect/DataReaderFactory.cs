@@ -50,7 +50,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="type">The declaring type of the properties/fields.</param>
 		/// <param name="properties">The properties that will be mapped by the <see cref="DbDataReader"/>.</param>
-		public DataReaderFactory(Type type, IEnumerable<PropertyInfo> properties) : this(type, properties, new FieldInfo[0])
+		public DataReaderFactory(Type type, IEnumerable<PropertyInfo> properties) : this(type, properties, Constants.EmptyFieldInfoArray)
 		{
 		}
 

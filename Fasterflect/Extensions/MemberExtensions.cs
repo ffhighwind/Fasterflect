@@ -52,16 +52,18 @@ namespace Fasterflect.Extensions
 			}
 
 			IList<MemberInfo> result = type.GetMember(name, bindingFlags);
-			bool hasSpecialFlags = bindingFlags.IsAnySet(FasterflectFlags.ExcludeBackingMembers | FasterflectFlags.ExcludeExplicitlyImplemented | FasterflectFlags.ExcludeHiddenMembers);
-			result = hasSpecialFlags && result.Count > 0 ? result.Filter(bindingFlags) : result;
-			bool found = result.Count > 0;
-
-			if (!found && bindingFlags.IsNotSet(FasterflectFlags.DeclaredOnly)) {
-				if (type.BaseType != typeof(object) && type.BaseType != null) {
-					return type.BaseType.Member(name, bindingFlags);
-				}
+			if (result.Count > 0) {
+				bool hasSpecialFlags = bindingFlags.IsAnySet(FasterflectFlags.ExcludeBackingMembers | FasterflectFlags.ExcludeExplicitlyImplemented | FasterflectFlags.ExcludeHiddenMembers);
+				if (!hasSpecialFlags)
+					return result[0];
+				result = result.Filter(bindingFlags);
+				if (result.Count > 0)
+					return result[0];
 			}
-			return found ? result[0] : null;
+			if (bindingFlags.IsNotSet(FasterflectFlags.DeclaredOnly) && type.BaseType != typeof(object) && type.BaseType != null) {
+				return type.BaseType.Member(name, bindingFlags);
+			}
+			return null;
 		}
 		#endregion
 
@@ -149,7 +151,7 @@ namespace Fasterflect.Extensions
 												 params string[] names)
 		{
 			if (type == null || type == typeof(object)) {
-				return new MemberInfo[0];
+				return Constants.EmptyMemberInfoArray;
 			}
 
 			bool recurse = bindingFlags.IsNotSet(FasterflectFlags.DeclaredOnly);

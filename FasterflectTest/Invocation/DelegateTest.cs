@@ -18,11 +18,11 @@
 
 #endregion
 
-using System;
 using Fasterflect;
 using Fasterflect.Extensions;
 using FasterflectTest.SampleModel.People;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FasterflectTest.Invocation
 {
@@ -32,10 +32,9 @@ namespace FasterflectTest.Invocation
 		[TestMethod]
 		public void TestDelegateRetrievalMethodsReturnCorrectDelegateType()
 		{
-			RunWith((Type type) =>
-			  {
-				  Func<Delegate>[] funcs = new Func<Delegate>[]
-							  {
+			RunWith((Type type) => {
+				Func<Delegate>[] funcs = new Func<Delegate>[]
+							{
 								   () => type.MakeArrayType().DelegateForGetElement(),
 								   () => type.MakeArrayType().DelegateForSetElement(),
 								   () => type.DelegateForCreateInstance(),
@@ -64,9 +63,9 @@ namespace FasterflectTest.Invocation
 								   () =>
 								   type.DelegateForCallMethod("Walk",
 														   new[] { typeof(double), typeof(double).MakeByRefType() }),
-							  };
-				  Type[] types = new[]
-							  {
+							};
+				Type[] types = new[]
+							{
 								   typeof(ArrayElementGetter),
 								   typeof(ArrayElementSetter),
 								   typeof(ConstructorInvoker),
@@ -88,12 +87,12 @@ namespace FasterflectTest.Invocation
 								   typeof(MethodInvoker)
 							  };
 
-				  for (int i = 0; i < funcs.Length; i++) {
-					  Delegate result = funcs[i]();
-					  Assert.IsNotNull(result);
-					  Assert.IsInstanceOfType(result, types[i]);
-				  }
-			  });
+				for (int i = 0; i < funcs.Length; i++) {
+					Delegate result = funcs[i]();
+					Assert.IsNotNull(result);
+					Assert.IsInstanceOfType(result, types[i]);
+				}
+			});
 		}
 	}
 }

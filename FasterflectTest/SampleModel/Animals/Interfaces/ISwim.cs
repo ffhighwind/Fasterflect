@@ -18,7 +18,6 @@
 
 #endregion
 
-using System;
 
 namespace FasterflectTest.SampleModel.Animals.Interfaces
 {

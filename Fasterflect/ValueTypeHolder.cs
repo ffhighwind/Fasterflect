@@ -33,7 +33,7 @@ namespace Fasterflect
 		/// can then be used with Fasterflect.
 		/// </summary>
 		/// <param name="value">The value type to be wrapped.  
-		/// Must be a derivative of <code>ValueType</code>.</param>
+		/// Must be a derivative of <see cref="ValueType"/>.</param>
 		public ValueTypeHolder(object value)
 		{
 			Value = (ValueType)value;

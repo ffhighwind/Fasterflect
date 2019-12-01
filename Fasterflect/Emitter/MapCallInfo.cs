@@ -44,12 +44,8 @@ namespace Fasterflect.Emitter
 		public override bool Equals(object obj)
 		{
 			MapCallInfo other = obj as MapCallInfo;
-			if (other == null) {
+			if (other == null || !base.Equals(obj))
 				return false;
-			}
-			if (!base.Equals(obj)) {
-				return false;
-			}
 			if (other.SourceType != SourceType ||
 				other.SourceMemberTypes != SourceMemberTypes ||
 				other.TargetMemberTypes != TargetMemberTypes ||
