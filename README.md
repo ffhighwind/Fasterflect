@@ -6,7 +6,7 @@ This framework is based on [Fasterflect](https://github.com/buunguyen/Fasterflec
 
 ## Benchmarks
 
-Fasterflect is 50x faster than .NET reflection, 8x faster than FastMember, and 2-10x slower than direct access. Note also that Fasterflect only uses *objects* as arguments and return types. This slows down the methods because data needs to be boxed and unboxed. However, this is usually the only time that reflection is useful. If you know the generic types at compile time then you likely have direct access to the properties or you can implement an interface that lets you bypass the need for reflection.
+Fasterflect is 50x faster than .NET reflection, 8x faster than FastMember, and 2-10x slower than direct access. Note also that Fasterflect only uses *objects* as arguments and return types. This slows down the methods because data needs to be boxed and unboxed. However, this is usually the only time that reflection is useful. If you know the generic types at compile time then you can probably use an interface instead of reflection.
 
 |                         Property Getters |        Mean |   Ratio |
 |----------------------------------------- |------------:|--------:|
@@ -102,7 +102,7 @@ Reflect is the static factory for all reflection-based delegates. Every delegate
 | Reflect.FieldSetter() | FieldInfo |
 | Reflect.MultiSetter() | Sets multiple properties/fields without using a loop. |
 | Reflect.Method() | MethodInfo |
-| Reflect.Mapper() | Maps the properties/fields of one type onto another type. This can also be used as a shallow cloning method if both types are the same. |
+| Reflect.Mapper() | Maps the properties/fields of one type onto another type. This can be used as a shallow cloning method if both types are the same. |
 | Reflect.IndexerGetter() | value = object[index1, index2] |
 | Reflect.IndexerSetter() | object[index1, index2] = value |
 | Reflect.ArrayGetter() | value = array[index] |
@@ -112,11 +112,11 @@ Reflect is the static factory for all reflection-based delegates. Every delegate
 
 ## [ReflectLookup](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/ReflectLookup.cs)
 
-This allows searching for reflection based objects using Fasterflect flags instead of BindingFlags. This is up to 2x slower than normal reflection, but it allows partial matching (string.Contains) and case insensitive search.
+This allows searching for reflection based objects using Fasterflect flags instead of BindingFlags. This is up to 2x slower then .NET reflection, but it allows partial matching (string.Contains) and case insensitive search (string.OrdinalIgnoreCase).
 
-## [ValueTypeHolder](https://github.com/ffhighwind/Fasterflect/blob/master/Fasterflect/ValueTypeHolder.cs)
+## ValueTypes/Structs
 
-Value types (structs) must be wrapped with a ValueTypeHolder to work with the reflection delegates. The alternative to this approach would be to make the first argument of every delegate a ref. I have decided against this because value types are not supposed to be passed by reference and forcing the user to type ref for every call is tedious and it would reduce the performance for reference types.
+Value types must be wrapped with a [ValueTypeHolder](https://github.com/ffhighwind/Fasterflect/blob/master/Fasterflect/ValueTypeHolder.cs) to work with the Fasterflect delegates. This could have been prevented if I made the first argument of every delegate a ref. I have decided against this because value types are not supposed to be passed by reference and forcing the user to type ref for every call is tedious and it would reduce the performance for reference types.
 
 ```csharp
 using System;
