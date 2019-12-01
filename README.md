@@ -97,7 +97,7 @@ Reflect is the static factory for all reflection-based delegates. Every delegate
 | Reflect.Getter() | MemberInfo (PropertyInfo or FieldInfo) | 
 | Reflect.PropertyGetter() | PropertyInfo |
 | Reflect.FieldGetter() | FieldInfo |
-| Reflect.Setter() | PropertyInfo or FieldInfo |
+| Reflect.Setter() | MemberInfo (PropertyInfo or FieldInfo) |
 | Reflect.PropertySetter() | PropertyInfo |
 | Reflect.FieldSetter() | FieldInfo |
 | Reflect.MultiSetter() | Sets multiple properties/fields without using a loop. |
