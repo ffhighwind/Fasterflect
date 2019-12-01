@@ -1,6 +1,7 @@
 ﻿#region License
 
 // Copyright © 2010 Buu Nguyen, Morten Mertner
+// Copyright © 2018 Wesley Hamilton
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
 // you may not use this file except in compliance with the License. 
@@ -70,19 +71,19 @@ namespace Fasterflect
 		/// <summary>
 		/// <see cref="Array.Empty{T}"/>
 		/// </summary>
-		public static readonly PropertyInfo[] EmptyPropertyInfoArray = Array.Empty<PropertyInfo>();
+		public static readonly PropertyInfo[] EmptyPropertyInfoArray => Array.Empty<PropertyInfo>();
 		/// <summary>
 		/// <see cref="Array.Empty{T}"/>
 		/// </summary>
-		public static readonly MemberInfo[] EmptyMemberInfoArray = Array.Empty<MemberInfo>();
+		public static readonly MemberInfo[] EmptyMemberInfoArray => Array.Empty<MemberInfo>();
 		/// <summary>
 		/// <see cref="Array.Empty{T}"/>
 		/// </summary>
-		public static readonly FieldInfo[] EmptyFieldInfoArray = Array.Empty<FieldInfo>();
+		public static readonly FieldInfo[] EmptyFieldInfoArray => Array.Empty<FieldInfo>();
 		/// <summary>
 		/// <see cref="Array.Empty{T}"/>
 		/// </summary>
-		public static readonly MethodInfo[] EmptyMethodInfoArray = Array.Empty<MethodInfo>();
+		public static readonly MethodInfo[] EmptyMethodInfoArray => Array.Empty<MethodInfo>();
 #endif
 	}
 }
