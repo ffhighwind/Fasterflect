@@ -112,7 +112,7 @@ Reflect is the static factory for all reflection-based delegates. Every delegate
 
 ## [ReflectLookup](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/ReflectLookup.cs)
 
-This allows searching for reflection based objects using either FasterflectFlags or BindingFlags. This is up to 2x slower then .NET reflection, but it allows partial matching (string.Contains) and case insensitive search (string.OrdinalIgnoreCase).
+This allows searching for reflection based objects using either FasterflectFlags or BindingFlags. This is up to 2x slower than .NET reflection, but it allows partial matching (string.Contains) and case insensitive search (string.OrdinalIgnoreCase).
 
 ## ValueTypes/Structs
 
@@ -167,7 +167,7 @@ public static class Program
 
 ## [DataReaderFactory](https://github.com/ffhighwind/Fasterflect/blob/master/Fasterflect/DataReaderFactory.cs)
 
-This is based on FastMember's [ObjectReader](https://github.com/mgravell/fast-member/blob/master/FastMember/ObjectReader.cs). It can be used with SqlBulkCopy which is 100x as fast as a loop of individual database inserts. It can also be used as a parameter for DataTable.Load() to convert a list of objects to a DataTable.
+This is based on FastMember's [ObjectReader](https://github.com/mgravell/fast-member/blob/master/FastMember/ObjectReader.cs). It can be used with SqlBulkCopy which is up to 100x faster than a loop of individual database inserts. It can also be used as a parameter for DataTable.Load() to convert a list of objects to a DataTable.
 
 ## [Emitter.EmitHelper](https://github.com/ffhighwind/Fasterflect/blob/master/Fasterflect/Emitter/EmitHelper.cs)
 
