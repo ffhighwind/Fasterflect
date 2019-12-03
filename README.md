@@ -102,7 +102,7 @@ Reflect is the static factory for all reflection-based delegates. Every delegate
 | Reflect.FieldSetter() | FieldInfo |
 | Reflect.MultiSetter() | Sets multiple properties/fields without using a loop. |
 | Reflect.Method() | MethodInfo |
-| Reflect.Mapper() | Maps the properties/fields of one type onto another type. This can be used as a shallow cloning method if both types are the same. |
+| Reflect.Mapper() | Maps the properties/fields of one type onto another type. This can be used as a shallow copy method if both types are the same. |
 | Reflect.IndexerGetter() | value = object[index1, index2] |
 | Reflect.IndexerSetter() | object[index1, index2] = value |
 | Reflect.ArrayGetter() | value = array[index] |
