@@ -19,6 +19,7 @@
     <DelaySign>false</DelaySign>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Configurations>Debug;Release</Configurations>
+    <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|netcoreapp2.0'">
@@ -59,9 +60,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net35'">
     <DefineConstants>NETFRAMEWORK;NET35</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
-    <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">

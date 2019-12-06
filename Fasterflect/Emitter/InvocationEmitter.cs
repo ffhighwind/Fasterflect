@@ -24,23 +24,27 @@ namespace Fasterflect.Emitter
 	internal abstract class InvocationEmitter : BaseEmitter
 	{
 		protected InvocationEmitter(CallInfo callInfo)
-			: base(callInfo)
 		{
+			CallInfo = callInfo;
 		}
+
+		protected override Type TargetType => CallInfo.TargetType;
+		public CallInfo CallInfo { get; protected set; }
 
 		protected byte CreateLocalsForByRefParams(byte paramArrayIndex, MethodBase invocationInfo)
 		{
-			Type[] paramTypes = CallInfo.MethodParamTypes ?? CallInfo.ParamTypes;
+			Type[] paramTypes = CallInfo.ParamTypes;
 			byte numberOfByRefParams = 0;
 			ParameterInfo[] parameters = invocationInfo.GetParameters();
-			for (int i = 0; i < paramTypes.Length; i++) {
+			for (int i = 0, count = paramTypes.Length; i < count; ++i) {
 				Type paramType = paramTypes[i];
 				if (paramType.IsByRef) {
 					Type type = paramType.GetElementType();
 					Generator.DeclareLocal(type);
 					if (!parameters[i].IsOut) // no initialization necessary is 'out' parameter
 					{
-						Generator.ldarg(paramArrayIndex)
+						Generator
+							.ldarg(paramArrayIndex)
 							.ldc_i4(i)
 							.ldelem_ref
 							.CastFromObject(type)
@@ -55,12 +59,13 @@ namespace Fasterflect.Emitter
 
 		protected void AssignByRefParamsToArray(int paramArrayIndex)
 		{
-			Type[] paramTypes = CallInfo.MethodParamTypes ?? CallInfo.ParamTypes;
+			Type[] paramTypes = CallInfo.ParamTypes;
 			byte currentByRefParam = 0;
-			for (int i = 0; i < paramTypes.Length; i++) {
+			for (int i = 0, count = paramTypes.Length; i < count; ++i) {
 				Type paramType = paramTypes[i];
 				if (paramType.IsByRef) {
-					Generator.ldarg(paramArrayIndex)
+					Generator
+						.ldarg(paramArrayIndex)
 						.ldc_i4(i)
 						.ldloc(currentByRefParam++)
 						.boxIfValueType(paramType.GetElementType())
@@ -72,15 +77,16 @@ namespace Fasterflect.Emitter
 
 		protected void PushParamsOrLocalsToStack(int paramArrayIndex)
 		{
-			Type[] paramTypes = CallInfo.MethodParamTypes ?? CallInfo.ParamTypes;
+			Type[] paramTypes = CallInfo.ParamTypes;
 			byte currentByRefParam = 0;
-			for (int i = 0; i < paramTypes.Length; i++) {
+			for (int i = 0, count = paramTypes.Length; i < count; ++i) {
 				Type paramType = paramTypes[i];
 				if (paramType.IsByRef) {
 					Generator.ldloca_s(currentByRefParam++);
 				}
 				else {
-					Generator.ldarg(paramArrayIndex)
+					Generator
+						.ldarg(paramArrayIndex)
 						.ldc_i4(i)
 						.ldelem_ref
 						.CastFromObject(paramType);

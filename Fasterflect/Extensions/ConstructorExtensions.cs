@@ -68,7 +68,7 @@ namespace Fasterflect.Extensions
 		/// <seealso cref="CreateInstance(System.Type,System.Type[],Fasterflect.FasterflectFlags,object[])"/>
 		public static object CreateInstance(this Type type, FasterflectFlags bindingFlags, params object[] parameters)
 		{
-			return Reflect.Constructor(type, bindingFlags, parameters.ToTypeArray())(parameters);
+			return Reflect.Constructor(ReflectLookup.Constructor(type, bindingFlags, parameters.ToTypeArray()))(parameters);
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object CreateInstance(this Type type, Type[] parameterTypes, FasterflectFlags bindingFlags, params object[] parameters)
 		{
-			return Reflect.Constructor(type, bindingFlags, parameterTypes)(parameters);
+			return Reflect.Constructor(ReflectLookup.Constructor(type, bindingFlags, parameterTypes))(parameters);
 		}
 
 		/// <summary>
@@ -99,7 +99,7 @@ namespace Fasterflect.Extensions
 		public static ConstructorInvoker DelegateForCreateInstance(this Type type, FasterflectFlags bindingFlags,
 																	params Type[] parameterTypes)
 		{
-			return Reflect.Constructor(type, bindingFlags, parameterTypes);
+			return Reflect.Constructor(ReflectLookup.Constructor(type, bindingFlags, parameterTypes));
 		}
 		#endregion
 

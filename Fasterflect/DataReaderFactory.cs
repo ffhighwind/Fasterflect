@@ -68,7 +68,7 @@ namespace Fasterflect
 			MemberTypes = new Type[Members.Length];
 			Getters = new MemberGetter[Members.Length];
 			AllowNull = new BitArray(Members.Length);
-			for (int i = 0; i < Members.Length; i++) {
+			for (int i = 0; i < Members.Length; ++i) {
 				MemberInfo member = Members[i];
 				MemberNames[i] = member.Name;
 				Getters[i] = Reflect.Getter(member);
@@ -258,7 +258,7 @@ namespace Fasterflect
 
 			public override int GetValues(object[] values)
 			{
-				for (int i = 0, count = PropertyNames.Length; i < count; i++) {
+				for (int i = 0, count = PropertyNames.Length; i < count; ++i) {
 					values[i] = Getters[i](Current) ?? DBNull.Value;
 				}
 				return PropertyNames.Length;
@@ -300,7 +300,7 @@ namespace Fasterflect
 				}
 				};
 				object[] rowData = new object[5];
-				for (int i = 0; i < PropertyNames.Length; i++) {
+				for (int i = 0; i < PropertyNames.Length; ++i) {
 					rowData[0] = i;
 					rowData[1] = PropertyNames[i];
 					rowData[2] = MemberTypes[i];

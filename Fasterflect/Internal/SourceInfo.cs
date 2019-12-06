@@ -27,12 +27,12 @@ namespace Fasterflect
 {
 	internal class SourceInfo
 	{
-		#region Fields
-		private readonly Type type;
-		private readonly bool[] paramKinds;
-		private readonly string[] paramNames;
-		private readonly Type[] paramTypes;
-		private MemberGetter[] paramValueReaders;
+		#region Properties
+		private Type type { get; }
+		private bool[] paramKinds { get; }
+		private string[] paramNames { get; }
+		private Type[] paramTypes { get; }
+		private MemberGetter[] paramValueReaders { get; set; }
 		#endregion
 
 		#region Constructors
@@ -43,7 +43,7 @@ namespace Fasterflect
 			paramTypes = types;
 			paramKinds = new bool[names.Length];
 			// this overload assumes that all names refer to fields on the given type
-			for (int i = 0; i < paramKinds.Length; i++) {
+			for (int i = 0; i < paramKinds.Length; ++i) {
 				paramKinds[i] = true;
 			}
 		}
@@ -62,7 +62,7 @@ namespace Fasterflect
 			List<string> names = new List<string>(members.Count);
 			List<Type> types = new List<Type>(members.Count);
 			List<bool> kinds = new List<bool>(members.Count);
-			for (int i = 0; i < members.Count; i++) {
+			for (int i = 0; i < members.Count; ++i) {
 				MemberInfo mi = members[i];
 				Type memberType;
 				bool isField;
@@ -110,7 +110,7 @@ namespace Fasterflect
 		{
 			InitializeParameterValueReaders();
 			object[] paramValues = new object[paramNames.Length];
-			for (int i = 0; i < paramNames.Length; i++) {
+			for (int i = 0; i < paramNames.Length; ++i) {
 				paramValues[i] = paramValueReaders[i](source);
 			}
 			return paramValues;
@@ -131,7 +131,7 @@ namespace Fasterflect
 		{
 			if (paramValueReaders == null) {
 				paramValueReaders = new MemberGetter[paramNames.Length];
-				for (int i = 0; i < paramNames.Length; i++) {
+				for (int i = 0; i < paramNames.Length; ++i) {
 					string name = paramNames[i];
 					paramValueReaders[i] = paramKinds[i] ? type.DelegateForGetFieldValue(name) : type.DelegateForGetPropertyValue(name);
 				}
@@ -146,7 +146,7 @@ namespace Fasterflect
 				return true;
 			if (!(obj is SourceInfo other) || type != other.Type || paramNames.Length != other.ParamNames.Length)
 				return false;
-			for (int i = 0; i < paramNames.Length; i++) {
+			for (int i = 0; i < paramNames.Length; ++i) {
 				if (paramNames[i] != other.ParamNames[i] || paramTypes[i] != other.ParamTypes[i] || paramKinds[i] != other.ParamKinds[i])
 					return false;
 			}
@@ -155,7 +155,7 @@ namespace Fasterflect
 		public override int GetHashCode()
 		{
 			int hash = type.GetHashCode();
-			for (int i = 0; i < paramNames.Length; i++)
+			for (int i = 0; i < paramNames.Length; ++i)
 				hash += (i + 31) * paramNames[i].GetHashCode() ^ paramTypes[i].GetHashCode();
 			return hash;
 		}

@@ -68,9 +68,7 @@ namespace Benchmark
 			getsetMethod = property.GetSetMethod(nonPublic: allowNonPublicFieldAccess);
 			fastMember = TypeAccessor.Create(@class, allowNonPublicAccessors: allowNonPublicFieldAccess);
 
-			var funcType = Type.GetType("System.Func`2[Benchmark.TestUri, System.String]");
-
-			var actionType = Type.GetType("System.Action`2[Benchmark.TestUri, System.String]");
+			Type actionType = Type.GetType("System.Action`2[Benchmark.TestUri, System.String]");
 			setDelegate = (Action<TestUri, string>)Delegate.CreateDelegate(actionType, getsetMethod);
 			setDelegateDynamic = Delegate.CreateDelegate(actionType, getsetMethod);
 

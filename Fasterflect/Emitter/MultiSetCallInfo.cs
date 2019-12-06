@@ -21,68 +21,36 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Fasterflect.Emitter
 {
-	internal class MultiSetCallInfo : CallInfo
+	/// <summary>
+	/// Stores all necessary information to construct a dynamic method for member mapping.
+	/// </summary>
+	[DebuggerStepThrough]
+	internal class MultiSetCallInfo
 	{
-		public readonly MemberInfo[] members;
+		public Type TargetType { get; }
+		public readonly IList<MemberInfo> Members;
 
-		public MultiSetCallInfo(Type targetType, FasterflectFlags flags, string[] names)
-			: base(targetType, null, flags, System.Reflection.MemberTypes.Custom, "Fasterflect_MultiSet", null, null, false)
+		public MultiSetCallInfo(Type targetType, IList<MemberInfo> members)
 		{
-			bool useProperties = flags.IsSet(System.Reflection.BindingFlags.SetProperty);
-			bool useFields = flags.IsSet(System.Reflection.BindingFlags.SetField);
-			if (!useProperties && !useFields) {
-				useProperties = true;
-				useFields = true;
-			}
-			List<MemberInfo> memberList = new List<MemberInfo>(names.Length);
-#if NET35
-			FieldInfo[] allFields = useFields ? Constants.EmptyFieldInfoArray : targetType.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetField | System.Reflection.BindingFlags.SetField);
-			PropertyInfo[] allProperties = useProperties ? Constants.EmptyPropertyInfoArray : targetType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.SetProperty);
-#else
-			IEnumerable<FieldInfo> allFields = targetType.GetRuntimeFields();
-			IEnumerable<PropertyInfo> allProperties = targetType.GetRuntimeProperties();
-#endif
-			List<FieldInfo> fields = MemberFilter.Filter<FieldInfo>(allFields, flags);
-			List<PropertyInfo> properties = MemberFilter.Filter<PropertyInfo>(allProperties, flags);
-			string[] arr = new string[1];
-			for (int i = 0, count = names.Length; i < count; i++) {
-				arr[0] = names[i];
-				MemberInfo minfo = null;
-				FieldInfo finfo = fields.Filter(flags, arr).FirstOrDefault();
-				if (finfo != null) {
-					if (!finfo.IsInitOnly) {
-						minfo = finfo;
-					}
-				}
-				else {
-					PropertyInfo pinfo = properties.Filter(flags, arr).FirstOrDefault();
-					minfo = pinfo;
-					if (pinfo != null && !pinfo.CanWrite) {
-						minfo = null;
-					}
-				}
-				memberList.Add(minfo);
-			}
-			for (int i = memberList.Count - 1; i >= 0; i--) {
-				if (memberList[i] != null) {
-					break;
-				}
-				memberList.RemoveAt(i);
-			}
-			members = memberList.ToArray();
+			TargetType = targetType;
+			Members = members;
 		}
 
 		public override bool Equals(object obj)
 		{
 			if (obj is MultiSetCallInfo other) {
-				if (other.members.Length == members.Length) {
-					for (int i = 0, count = other.members.Length; i < members.Length; i++) {
-						if (other.members[i] != members[i])
+				if (other.Members.Count == Members.Count) {
+					for (int i = 0, count = Members.Count; i < count; ++i) {
+						MemberInfo mi = other.Members[i];
+						MemberInfo mi2 = Members[i];
+						if (ReferenceEquals(mi, mi2))
+							continue;
+						if (!Members[i].Equals(other.Members[i]))
 							return false;
 					}
 					return true;
@@ -93,11 +61,12 @@ namespace Fasterflect.Emitter
 
 		public override int GetHashCode()
 		{
-			int hash = base.GetHashCode();
-			for (int i = 0, count = members.Length; i < count; i++) {
-				hash += members[i].GetHashCode();
+			int hashCode = 688758924;
+			hashCode = hashCode * -1521134295 + TargetType.GetHashCode();
+			for (int i = 0, count = Members.Count; i < count; ++i) {
+				hashCode = hashCode * -1521134295 + Members[i].GetHashCode();
 			}
-			return hash;
+			return hashCode;
 		}
 	}
 }

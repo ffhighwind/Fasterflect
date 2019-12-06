@@ -153,9 +153,9 @@ namespace FasterflectBenchmark
 
 		private static void RunHashCodeBenchmark()
 		{
-			CallInfo callInfo = new CallInfo(TargetType, null, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "name",
+			BaseInfo callInfo = new BaseInfo(TargetType, null, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "name",
 										 new[] { typeof(int), typeof(string) }, null, true);
-			CallInfo callInfoOther = new CallInfo(typeof(CallInfo), null, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "other",
+			BaseInfo callInfoOther = new BaseInfo(typeof(BaseInfo), null, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "other",
 											  new[] { typeof(string) }, null, true);
 			SourceInfo sourceInfo = SourceInfo.CreateFromType(new { ID = 42, Name = "Test" }.GetType());
 			SourceInfo sourceInfoOther = SourceInfo.CreateFromType(new { id = 42, Name = "Test" }.GetType());
@@ -169,7 +169,7 @@ namespace FasterflectBenchmark
 								{ "SourceInfo Equals Other", () => sourceInfo.Equals(sourceInfoOther) },
 								{ "string GetHashCode", () => "foo".GetHashCode() },
 								{ "string Equals", () => "foo".Equals("bar") },
-								{ "new CallInfo", () => new CallInfo(TargetType, null,  FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "name",
+								{ "new CallInfo", () => new BaseInfo(TargetType, null,  FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "name",
 																	  new[] { typeof(int), typeof(string) }, null, true) },
 								{ "new SourceInfo", () => new SourceInfo(TargetType, new[] { "ID", "Name" }, new[] { typeof(int), typeof(string) }) },
 								{ "new SourceInfo anon", () => SourceInfo.CreateFromType(new { ID = 42, Name = "Test" }.GetType()) },

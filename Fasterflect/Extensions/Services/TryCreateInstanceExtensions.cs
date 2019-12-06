@@ -97,7 +97,7 @@ namespace Fasterflect.Extensions.Services
 				throw new ArgumentException("Mismatching name and value arrays (must be of identical length).");
 			}
 			Type[] parameterTypes = new Type[names.Length];
-			for (int i = 0; i < names.Length; i++) {
+			for (int i = 0; i < names.Length; ++i) {
 				object value = values[i];
 				parameterTypes[i] = value?.GetType();
 			}

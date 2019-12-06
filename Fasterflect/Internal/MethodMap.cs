@@ -97,7 +97,7 @@ namespace Fasterflect
 			int nullCount = 0; // number of fields filled using null
 			int injectionCount = 0; // number of fields filled using external values (dependency injection aka IoC)
 			parameterOrderMap = new int[paramNames.Length];
-			for (int i = 0; i < paramNames.Length; i++) {
+			for (int i = 0; i < paramNames.Length; ++i) {
 				parameterOrderMap[i] = -1;
 			}
 			parameterUsageCount = 0;
@@ -107,7 +107,7 @@ namespace Fasterflect
 			// keep a reverse index for later when we check for default values
 			parameterOrderMapReverse = new int[noColumnForParameter];
 			// explicitly mark unused entries as we may have more parameters than columns
-			for (int i = 0; i < noColumnForParameter; i++) {
+			for (int i = 0; i < noColumnForParameter; ++i) {
 				parameterOrderMapReverse[i] = -1;
 			}
 			bool isPerfectColumnOrder = true;
@@ -325,7 +325,7 @@ namespace Fasterflect
 		{
 			object[] methodParams = new object[parameters.Count];
 			//int firstPotentialDefaultValueIndex = 0;
-			for (int i = 0; i < row.Length; i++) {
+			for (int i = 0; i < row.Length; ++i) {
 				// only include columns in constructor
 				if (parameterUsageMask[i]) {
 					int index = parameterOrderMap[i];
@@ -352,7 +352,7 @@ namespace Fasterflect
 				}
 			}
 			// TODO decide whether to support injecting default values
-			//for (int i = firstPotentialDefaultValueIndex; i < methodParams.Length; i++)
+			//for (int i = firstPotentialDefaultValueIndex; i < methodParams.Length; ++i)
 			//{
 			//    if (parameterDefaultValueMask[i])
 			//    {
@@ -381,7 +381,7 @@ namespace Fasterflect
 		internal Type[] GetParamTypes()
 		{
 			Type[] paramTypes = new Type[parameters.Count];
-			for (int i = 0; i < parameters.Count; i++) {
+			for (int i = 0; i < parameters.Count; ++i) {
 				ParameterInfo pi = parameters[i];
 				paramTypes[i] = pi.ParameterType;
 			}

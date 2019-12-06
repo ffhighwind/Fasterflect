@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Reflection;
 using System.Reflection.Emit;
 
 namespace Fasterflect.Emitter
@@ -25,22 +24,23 @@ namespace Fasterflect.Emitter
 	internal class ArrayGetEmitter : BaseEmitter
 	{
 		public ArrayGetEmitter(Type targetType)
-			: base(new CallInfo(targetType, null, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Method,
-									 Constants.ArrayGetterName, new[] { typeof(int) }, null, true))
 		{
+			TargetType = targetType;
 		}
+
+		protected override Type TargetType { get; }
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
-			return CreateDynamicMethod(Constants.ArrayGetterName, CallInfo.TargetType,
-										typeof(object), new[] { typeof(object), typeof(int) });
+			return CreateDynamicMethod("get_ArrayIndex", TargetType, typeof(object), new[] { typeof(object), typeof(int) });
 		}
 
 		protected internal override Delegate CreateDelegate()
 		{
-			Type elementType = CallInfo.TargetType.GetElementType();
-			Generator.ldarg_0 // load array
-				.castclass(CallInfo.TargetType) // (T[])array
+			Type elementType = TargetType.GetElementType();
+			Generator
+				.ldarg_0 // load array
+				.castclass(TargetType) // (T[])array
 				.ldarg_1 // load index
 				.ldelem(elementType) // load array[index]
 				.boxIfValueType(elementType) // [box] return

@@ -20,9 +20,10 @@
 #endregion
 
 using Fasterflect.Emitter;
-using Fasterflect.Extensions;
 using System;
 using System.Reflection;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Fasterflect
 {
@@ -31,6 +32,19 @@ namespace Fasterflect
 	/// </summary>
 	public static class Reflect
 	{
+		private static readonly Cache<FieldInfo, MemberGetter> FieldGetters = new Cache<FieldInfo, MemberGetter>();
+		private static readonly Cache<FieldInfo, MemberSetter> FieldSetters = new Cache<FieldInfo, MemberSetter>();
+		private static readonly Cache<PropertyInfo, MemberGetter> PropertyGetters = new Cache<PropertyInfo, MemberGetter>();
+		private static readonly Cache<PropertyInfo, MemberSetter> PropertySetters = new Cache<PropertyInfo, MemberSetter>();
+		private static readonly Cache<ConstructorInfo, ConstructorInvoker> Constructors = new Cache<ConstructorInfo, ConstructorInvoker>();
+		private static readonly Cache<CallInfo, MethodInvoker> Methods = new Cache<CallInfo, MethodInvoker>();
+		private static readonly Cache<Type, ArrayElementSetter> ArraySetters = new Cache<Type, ArrayElementSetter>();
+		private static readonly Cache<Type, ArrayElementGetter> ArrayGetters = new Cache<Type, ArrayElementGetter>();
+		private static readonly Cache<CallInfo, MethodInvoker> IndexerSetters = new Cache<CallInfo, MethodInvoker>();
+		private static readonly Cache<CallInfo, MethodInvoker> IndexerGetters = new Cache<CallInfo, MethodInvoker>();
+		private static readonly Cache<MultiSetCallInfo, MultiSetter> MultiSetters = new Cache<MultiSetCallInfo, MultiSetter>();
+		private static readonly Cache<MapCallInfo, ObjectMapper> Mappers = new Cache<MapCallInfo, ObjectMapper>();
+
 		#region Constructor
 		/// <summary>
 		/// Creates a <see cref="ConstructorInvoker"/> which invokes the given <see cref="ConstructorInfo"/>.
@@ -40,38 +54,28 @@ namespace Fasterflect
 		/// <returns>A <see cref="ConstructorInvoker"/> which invokes the given <see cref="ConstructorInfo"/>.</returns>
 		public static ConstructorInvoker Constructor(Type type, params Type[] parameterTypes)
 		{
-			return Constructor(type, FasterflectFlags.InstanceAnyVisibility, parameterTypes);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="ConstructorInvoker"/> which invokes the given <see cref="ConstructorInfo"/>.
-		/// </summary>
-		/// <param name="type">The <see cref="Type"/> that the <see cref="ConstructorInvoker"/> will construct.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to use when searching for the <see cref="ConstructorInfo"/>.</param>
-		/// <param name="parameterTypes">The <see cref="ConstructorInfo"/>'s parameters types.</param>
-		/// <returns>A <see cref="ConstructorInvoker"/> which invokes the given <see cref="ConstructorInfo"/>.</returns>
-		public static ConstructorInvoker Constructor(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
-		{
-			return (ConstructorInvoker)new CtorInvocationEmitter(type, bindingFlags, parameterTypes).GetDelegate();
+			ConstructorInfo ctor = ReflectLookup.Constructor(type, parameterTypes);
+			ConstructorInvoker value = Constructor(ctor);
+			return value;
 		}
 
 		/// <summary>
 		/// Creates a <see cref="ConstructorInvoker"/> which invokes the given <see cref="ConstructorInfo"/>.
 		/// </summary>
 		/// <param name="ctor">The <see cref="ConstructorInfo"/> that the <see cref="ConstructorInvoker"/> will invoke.</param>
-		/// <returns>A <see cref="ConstructorInvoker"/>gate which invokes the given <see cref="ConstructorInfo"/>.</returns>
+		/// <returns>A <see cref="ConstructorInvoker"/> which invokes the given <see cref="ConstructorInfo"/>.</returns>
 		public static ConstructorInvoker Constructor(ConstructorInfo ctor)
 		{
-			return (ConstructorInvoker)new CtorInvocationEmitter(ctor, FasterflectFlags.InstanceAnyDeclaredOnly).GetDelegate();
+			ConstructorInvoker value = Constructors.Get(ctor);
+			if (value != null)
+				return value;
+			value = (ConstructorInvoker)new CtorInvocationEmitter(ctor).GetDelegate();
+			Constructors.Insert(ctor, value);
+			return value;
 		}
 		#endregion
 
 		#region Getters
-		internal static MemberGetter Getter(Type type, string name, MemberTypes memberType, FasterflectFlags bindingFlags)
-		{
-			return (MemberGetter)new MemberGetEmitter(type, bindingFlags, memberType, name).GetDelegate();
-		}
-
 		/// <summary>
 		/// Creates a <see cref="MemberGetter"/> which gets the value of the given member.
 		/// </summary>
@@ -80,7 +84,9 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given member.</returns>
 		public static MemberGetter Getter(Type type, string name)
 		{
-			return (MemberGetter)new MemberGetEmitter(type, FasterflectFlags.StaticInstanceAnyVisibility, MemberTypes.Field | MemberTypes.Property, name).GetDelegate();
+			MemberInfo memberInfo = type.GetMember(name, BindingFlags.GetProperty | BindingFlags.GetField | BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).FirstOrDefault();
+			MemberGetter value = Getter(memberInfo);
+			return value;
 		}
 
 		/// <summary>
@@ -92,7 +98,9 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given member.</returns>
 		public static MemberGetter Getter(Type type, string name, FasterflectFlags bindingFlags)
 		{
-			return (MemberGetter)new MemberGetEmitter(type, bindingFlags, MemberTypes.Field | MemberTypes.Property, name).GetDelegate();
+			MemberInfo memberInfo = ReflectLookup.Member(type, name, bindingFlags);
+			MemberGetter value = Getter(memberInfo);
+			return value;
 		}
 
 		/// <summary>
@@ -102,8 +110,10 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given member.</returns>
 		public static MemberGetter Getter(MemberInfo memberInfo)
 		{
-			FasterflectFlags bindingFlags = memberInfo.IsStatic() ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
-			return (MemberGetter)new MemberGetEmitter(memberInfo, bindingFlags).GetDelegate();
+			if (memberInfo.MemberType == MemberTypes.Field) {
+				return FieldGetter((FieldInfo)memberInfo);
+			}
+			return PropertyGetter((PropertyInfo)memberInfo);
 		}
 
 		/// <summary>
@@ -113,42 +123,12 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="FieldInfo"/>.</returns>
 		public static MemberGetter FieldGetter(FieldInfo fieldInfo)
 		{
-			FasterflectFlags bindingFlags = fieldInfo.IsStatic ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
-			return (MemberGetter)new MemberGetEmitter(fieldInfo, bindingFlags).GetDelegate();
-		}
-
-		/// <summary>
-		/// Creates a <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.
-		/// </summary>
-		/// <param name="propInfo">The <see cref="PropertyInfo"/> whose value will be returned.</param>
-		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.</returns>
-		public static MemberGetter PropertyGetter(PropertyInfo propInfo)
-		{
-			FasterflectFlags bindingFlags = propInfo.IsStatic() ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
-			return (MemberGetter)new MemberGetEmitter(propInfo, bindingFlags).GetDelegate();
-		}
-
-		/// <summary>
-		/// Creates a <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.
-		/// </summary>
-		/// <param name="type">The <see cref="Type"/> of the <see cref="PropertyInfo"/>.</param>
-		/// <param name="name">The name of the <see cref="PropertyInfo"/>.</param>
-		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.</returns>
-		public static MemberGetter PropertyGetter(Type type, string name)
-		{
-			return (MemberGetter)new MemberGetEmitter(type, FasterflectFlags.StaticInstanceAnyVisibility, MemberTypes.Property, name).GetDelegate();
-		}
-
-		/// <summary>
-		/// Creates a <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.
-		/// </summary>
-		/// <param name="type">The <see cref="Type"/> of the <see cref="PropertyInfo"/>.</param>
-		/// <param name="name">The name of the <see cref="PropertyInfo"/>.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the <see cref="PropertyInfo"/>.</param>
-		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.</returns>
-		public static MemberGetter PropertyGetter(Type type, string name, FasterflectFlags bindingFlags)
-		{
-			return (MemberGetter)new MemberGetEmitter(type, bindingFlags, MemberTypes.Property, name).GetDelegate();
+			MemberGetter value = FieldGetters.Get(fieldInfo);
+			if (value != null)
+				return value;
+			value = (MemberGetter)new MemberGetEmitter(fieldInfo).GetDelegate();
+			FieldGetters.Insert(fieldInfo, value);
+			return value;
 		}
 
 		/// <summary>
@@ -159,7 +139,9 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="FieldInfo"/>.</returns>
 		public static MemberGetter FieldGetter(Type type, string name)
 		{
-			return (MemberGetter)new MemberGetEmitter(type, FasterflectFlags.StaticInstanceAnyVisibility, MemberTypes.Field, name).GetDelegate();
+			MemberInfo memberInfo = type.GetMember(name, BindingFlags.GetField | BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).FirstOrDefault();
+			MemberGetter value = FieldGetter((FieldInfo)memberInfo);
+			return value;
 		}
 
 		/// <summary>
@@ -171,15 +153,66 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="FieldInfo"/>.</returns>
 		public static MemberGetter FieldGetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
-			return (MemberGetter)new MemberGetEmitter(type, bindingFlags, MemberTypes.Field, name).GetDelegate();
+			FieldInfo fieldInfo = ReflectLookup.Field(type, name, bindingFlags);
+			MemberGetter value = FieldGetter(fieldInfo);
+			return value;
+		}
+
+		/// <summary>
+		/// Creates a <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.
+		/// </summary>
+		/// <param name="propInfo">The <see cref="PropertyInfo"/> whose value will be returned.</param>
+		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.</returns>
+		public static MemberGetter PropertyGetter(PropertyInfo propInfo)
+		{
+			MemberGetter value = PropertyGetters.Get(propInfo);
+			if (value != null)
+				return value;
+			value = (MemberGetter)new MemberGetEmitter(propInfo).GetDelegate();
+			PropertyGetters.Insert(propInfo, value);
+			return value;
+		}
+
+		/// <summary>
+		/// Creates a <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.
+		/// </summary>
+		/// <param name="type">The <see cref="Type"/> of the <see cref="PropertyInfo"/>.</param>
+		/// <param name="name">The name of the <see cref="PropertyInfo"/>.</param>
+		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.</returns>
+		public static MemberGetter PropertyGetter(Type type, string name)
+		{
+			MemberInfo memberInfo = type.GetMember(name, BindingFlags.GetProperty | BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).FirstOrDefault();
+			MemberGetter value = PropertyGetter((PropertyInfo)memberInfo);
+			return value;
+		}
+
+		/// <summary>
+		/// Creates a <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.
+		/// </summary>
+		/// <param name="type">The <see cref="Type"/> of the <see cref="PropertyInfo"/>.</param>
+		/// <param name="name">The name of the <see cref="PropertyInfo"/>.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the <see cref="PropertyInfo"/>.</param>
+		/// <returns>A <see cref="MemberGetter"/> which gets the value of the given <see cref="PropertyInfo"/>.</returns>
+		public static MemberGetter PropertyGetter(Type type, string name, FasterflectFlags bindingFlags)
+		{
+			PropertyInfo propInfo = ReflectLookup.Property(type, name, bindingFlags);
+			MemberGetter value = PropertyGetter(propInfo);
+			return value;
 		}
 		#endregion
 
 		#region Setters
-		internal static MemberSetter Setter(Type type, string name, MemberTypes memberType, FasterflectFlags bindingFlags)
+		/// <summary>
+		/// Creates a <see cref="MemberSetter"/> which sets the value of the given member.
+		/// </summary>
+		/// <param name="memberInfo">The <see cref="MemberInfo"/> whos value will be set.</param>
+		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given member.</returns>
+		public static MemberSetter Setter(MemberInfo memberInfo)
 		{
-			CallInfo callInfo = new CallInfo(type, null, bindingFlags, memberType, name, null, null, false);
-			return (MemberSetter)new MemberSetEmitter(callInfo).GetDelegate();
+			if (memberInfo.MemberType == MemberTypes.Field) {
+				return FieldSetter((FieldInfo)memberInfo);
+			}
+			return PropertySetter((PropertyInfo)memberInfo);
 		}
 
 		/// <summary>
@@ -190,7 +223,9 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given member.</returns>
 		public static MemberSetter Setter(Type type, string name)
 		{
-			return Setter(type, name, MemberTypes.Field | MemberTypes.Property, FasterflectFlags.StaticInstanceAnyVisibility);
+			MemberInfo memberInfo = type.GetMember(name, BindingFlags.SetProperty | BindingFlags.SetField | BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).FirstOrDefault();
+			MemberSetter value = Setter(memberInfo);
+			return value;
 		}
 
 		/// <summary>
@@ -202,7 +237,9 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given member.</returns>
 		public static MemberSetter Setter(Type type, string name, FasterflectFlags bindingFlags)
 		{
-			return Setter(type, name, MemberTypes.Field | MemberTypes.Property, FasterflectFlags.StaticInstanceAnyVisibility);
+			MemberInfo memberInfo = ReflectLookup.Member(type, name, bindingFlags);
+			MemberSetter value = Setter(memberInfo);
+			return value;
 		}
 
 		/// <summary>
@@ -212,8 +249,12 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given <see cref="FieldInfo"/>.</returns>
 		public static MemberSetter FieldSetter(FieldInfo fieldInfo)
 		{
-			FasterflectFlags bindingFlags = fieldInfo.IsStatic ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
-			return (MemberSetter)new MemberSetEmitter(fieldInfo, bindingFlags).GetDelegate();
+			MemberSetter value = FieldSetters.Get(fieldInfo);
+			if (value != null)
+				return value;
+			value = (MemberSetter)new MemberSetEmitter(fieldInfo).GetDelegate();
+			FieldSetters.Insert(fieldInfo, value);
+			return value;
 		}
 
 		/// <summary>
@@ -223,19 +264,12 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given <see cref="PropertyInfo"/>.</returns>
 		public static MemberSetter PropertySetter(PropertyInfo propInfo)
 		{
-			FasterflectFlags bindingFlags = propInfo.IsStatic() ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
-			return (MemberSetter)new MemberSetEmitter(propInfo, bindingFlags).GetDelegate();
-		}
-
-		/// <summary>
-		/// Creates a <see cref="MemberSetter"/> which sets the value of the given <see cref="PropertyInfo"/>.
-		/// </summary>
-		/// <param name="propInfo">The <see cref="PropertyInfo"/> whose value will be set.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the <see cref="PropertyInfo"/>.</param>
-		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given <see cref="PropertyInfo"/>.</returns>
-		public static MemberSetter PropertySetter(PropertyInfo propInfo, FasterflectFlags bindingFlags)
-		{
-			return (MemberSetter)new MemberSetEmitter(propInfo, bindingFlags).GetDelegate();
+			MemberSetter value = PropertySetters.Get(propInfo);
+			if (value != null)
+				return value;
+			value = (MemberSetter)new MemberSetEmitter(propInfo).GetDelegate();
+			PropertySetters.Insert(propInfo, value);
+			return value;
 		}
 
 		/// <summary>
@@ -246,7 +280,9 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given <see cref="PropertyInfo"/>.</returns>
 		public static MemberSetter PropertySetter(Type type, string name)
 		{
-			return Setter(type, name, MemberTypes.Property, FasterflectFlags.StaticInstanceAnyVisibility);
+			MemberInfo memberInfo = type.GetMember(name, BindingFlags.SetProperty | BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).FirstOrDefault();
+			MemberSetter value = PropertySetter((PropertyInfo)memberInfo);
+			return value;
 		}
 
 		/// <summary>
@@ -258,7 +294,9 @@ namespace Fasterflect
 		/// <returns>A<see cref="MemberSetter"/> which sets the value of the given <see cref="PropertyInfo"/>.</returns>
 		public static MemberSetter PropertySetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
-			return Setter(type, name, MemberTypes.Property, bindingFlags);
+			PropertyInfo propInfo = ReflectLookup.Property(type, name, bindingFlags);
+			MemberSetter value = PropertySetter(propInfo);
+			return value;
 		}
 
 		/// <summary>
@@ -269,7 +307,9 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given <see cref="FieldInfo"/>.</returns>
 		public static MemberSetter FieldSetter(Type type, string name)
 		{
-			return Setter(type, name, MemberTypes.Field, FasterflectFlags.StaticInstanceAnyVisibility);
+			MemberInfo memberInfo = type.GetMember(name, BindingFlags.SetField | BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).FirstOrDefault();
+			MemberSetter value = FieldSetter((FieldInfo)memberInfo);
+			return value;
 		}
 
 		/// <summary>
@@ -281,7 +321,9 @@ namespace Fasterflect
 		/// <returns>A <see cref="MemberSetter"/> which sets the value of the given <see cref="FieldInfo"/>.</returns>
 		public static MemberSetter FieldSetter(Type type, string name, FasterflectFlags bindingFlags)
 		{
-			return Setter(type, name, MemberTypes.Field, bindingFlags);
+			FieldInfo fieldInfo = ReflectLookup.Field(type, name, bindingFlags);
+			MemberSetter value = FieldSetter(fieldInfo);
+			return value;
 		}
 		#endregion
 
@@ -294,7 +336,7 @@ namespace Fasterflect
 		/// <returns>A <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.</returns>
 		public static MultiSetter MultiSetter(Type type, params string[] memberNames)
 		{
-			return MultiSetter(type, FasterflectFlags.StaticInstanceAnyVisibility, memberNames);
+			return MultiSetter(type, FasterflectFlags.StaticInstanceAnyVisibility | BindingFlags.SetProperty | BindingFlags.SetField, memberNames);
 		}
 
 		/// <summary>
@@ -306,7 +348,26 @@ namespace Fasterflect
 		/// <returns>A <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.</returns>
 		public static MultiSetter MultiSetter(Type type, FasterflectFlags bindingFlags, params string[] memberNames)
 		{
-			return (MultiSetter)new MultiSetEmitter(type, bindingFlags, memberNames).GetDelegate();
+			IList<MemberInfo> members = ReflectLookup.Members(type, MemberTypes.Field | MemberTypes.Property, bindingFlags, memberNames);
+			MultiSetter value = MultiSetter(type, members);
+			return value;
+		}
+
+		/// <summary>
+		/// Creates a <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.
+		/// </summary>
+		/// <param name="type">The <see cref="Type"/> whose members will be set.</param>
+		/// <param name="members">The members to set.</param>
+		/// <returns>A <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.</returns>
+		public static MultiSetter MultiSetter(Type type, IList<MemberInfo> members)
+		{
+			MultiSetCallInfo callInfo = new MultiSetCallInfo(type, members);
+			MultiSetter value = MultiSetters.Get(callInfo);
+			if (value != null)
+				return value;
+			value = (MultiSetter)new MultiSetEmitter(callInfo).GetDelegate();
+			MultiSetters.Insert(callInfo, value);
+			return value;
 		}
 		#endregion
 
@@ -319,7 +380,7 @@ namespace Fasterflect
 		/// <returns>The delegate which can get the value of an indexer.</returns>
 		public static MethodInvoker IndexerGetter(Type type, params Type[] parameterTypes)
 		{
-			return IndexerGetter(type, FasterflectFlags.InstanceAnyVisibility, parameterTypes);
+			return IndexerGetter(type, FasterflectFlags.InstanceAnyVisibility | BindingFlags.InvokeMethod, parameterTypes);
 		}
 
 		/// <summary>
@@ -331,7 +392,20 @@ namespace Fasterflect
 		/// <returns>The delegate which can get the value of an indexer.</returns>
 		public static MethodInvoker IndexerGetter(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
-			return (MethodInvoker)new MethodInvocationEmitter(type, bindingFlags, Constants.IndexerGetterName, parameterTypes).GetDelegate();
+			MethodInfo method = ReflectLookup.Method(type, "[]=", parameterTypes, bindingFlags);
+			MethodInvoker value = IndexerGetter(method);
+			return value;
+		}
+
+		internal static MethodInvoker IndexerGetter(MethodInfo method)
+		{
+			CallInfo callInfo = new CallInfo(method);
+			MethodInvoker value = IndexerGetters.Get(callInfo);
+			if (value != null)
+				return value;
+			value = (MethodInvoker)new MethodInvocationEmitter(method).GetDelegate();
+			IndexerGetters.Insert(callInfo, value);
+			return value;
 		}
 
 		/// <summary>
@@ -350,7 +424,7 @@ namespace Fasterflect
 		/// </example>
 		public static MethodInvoker IndexerSetter(Type type, params Type[] parameterTypes)
 		{
-			return IndexerSetter(type, FasterflectFlags.InstanceAnyVisibility, parameterTypes);
+			return IndexerSetter(type, FasterflectFlags.InstanceAnyVisibility | BindingFlags.InvokeMethod, parameterTypes);
 		}
 
 		/// <summary>
@@ -370,7 +444,20 @@ namespace Fasterflect
 		/// </example>
 		public static MethodInvoker IndexerSetter(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
-			return (MethodInvoker)new MethodInvocationEmitter(type, bindingFlags, Constants.IndexerSetterName, parameterTypes).GetDelegate();
+			MethodInfo method = ReflectLookup.Method(type, "=[]", parameterTypes, bindingFlags);
+			MethodInvoker value = IndexerSetter(method);
+			return value;
+		}
+
+		internal static MethodInvoker IndexerSetter(MethodInfo method)
+		{
+			CallInfo callInfo = new CallInfo(method);
+			MethodInvoker value = IndexerSetters.Get(callInfo);
+			if (value != null)
+				return value;
+			value = (MethodInvoker)new MethodInvocationEmitter(method).GetDelegate();
+			IndexerSetters.Insert(callInfo, value);
+			return value;
 		}
 		#endregion
 
@@ -382,8 +469,13 @@ namespace Fasterflect
 		/// <returns>A <see cref="MethodInvoker"/> which invokes the given <see cref="MethodInfo"/>.</returns>
 		public static MethodInvoker Method(MethodInfo methodInfo)
 		{
-			FasterflectFlags bindingFlags = methodInfo.IsStatic ? FasterflectFlags.StaticAnyVisibility : FasterflectFlags.InstanceAnyVisibility;
-			return (MethodInvoker)new MethodInvocationEmitter(methodInfo, bindingFlags).GetDelegate();
+			CallInfo callInfo = new CallInfo(methodInfo);
+			MethodInvoker value = Methods.Get(callInfo);
+			if (value != null)
+				return value;
+			value = (MethodInvoker)new MethodInvocationEmitter(methodInfo).GetDelegate();
+			IndexerGetters.Insert(callInfo, value);
+			return value;
 		}
 
 		/// <summary>
@@ -395,7 +487,9 @@ namespace Fasterflect
 		/// <returns>A <see cref="MethodInvoker"/> which invokes the given <see cref="MethodInfo"/>.</returns>
 		public static MethodInvoker Method(Type type, string name, params Type[] parameterTypes)
 		{
-			return Method(type, null, name, FasterflectFlags.StaticInstanceAnyVisibility, parameterTypes);
+			MethodInfo method = ReflectLookup.Method(type, name, parameterTypes);
+			MethodInvoker value = Method(method);
+			return value;
 		}
 
 		/// <summary>
@@ -408,7 +502,9 @@ namespace Fasterflect
 		/// <returns>A <see cref="MethodInvoker"/> which invokes the given <see cref="MethodInfo"/>.</returns>
 		public static MethodInvoker Method(Type type, string name, Type[] genericTypes, params Type[] parameterTypes)
 		{
-			return Method(type, genericTypes, name, FasterflectFlags.StaticInstanceAnyVisibility, parameterTypes);
+			MethodInfo method = ReflectLookup.Method(type, genericTypes, name, parameterTypes);
+			MethodInvoker value = Method(method);
+			return value;
 		}
 
 		/// <summary>
@@ -421,7 +517,9 @@ namespace Fasterflect
 		/// <returns>A <see cref="MethodInvoker"/> which invokes the given <see cref="MethodInfo"/>.</returns>
 		public static MethodInvoker Method(Type type, string name, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
-			return Method(type, null, name, bindingFlags, parameterTypes);
+			MethodInfo method = ReflectLookup.Method(type, name, parameterTypes, bindingFlags);
+			MethodInvoker value = Method(method);
+			return value;
 		}
 
 		/// <summary>
@@ -435,8 +533,9 @@ namespace Fasterflect
 		/// <returns>A <see cref="MethodInvoker"/> which invokes the given <see cref="MethodInfo"/>.</returns>
 		public static MethodInvoker Method(Type type, Type[] genericTypes, string name, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
-			CallInfo callInfo = new CallInfo(type, genericTypes, bindingFlags, MemberTypes.Method, name, parameterTypes, null, true);
-			return (MethodInvoker)new MethodInvocationEmitter(callInfo).GetDelegate();
+			MethodInfo method = ReflectLookup.Method(type, genericTypes, name, parameterTypes, bindingFlags);
+			MethodInvoker value = Method(method);
+			return value;
 		}
 		#endregion
 
@@ -448,7 +547,12 @@ namespace Fasterflect
 		/// <returns>An <see cref="ArrayElementGetter"/> which retrieves an element of an array.</returns>
 		public static ArrayElementGetter ArrayGetter(Type arrayType)
 		{
-			return (ArrayElementGetter)new ArrayGetEmitter(arrayType).GetDelegate();
+			ArrayElementGetter value = ArrayGetters.Get(arrayType);
+			if (value != null)
+				return value;
+			value = (ArrayElementGetter)new ArrayGetEmitter(arrayType).GetDelegate();
+			ArrayGetters.Insert(arrayType, value);
+			return value;
 		}
 
 		/// <summary>
@@ -458,7 +562,12 @@ namespace Fasterflect
 		/// <returns>An <see cref="ArrayElementGetter"/> which sets an element of an array.</returns>
 		public static ArrayElementSetter ArraySetter(Type arrayType)
 		{
-			return (ArrayElementSetter)new ArraySetEmitter(arrayType).GetDelegate();
+			ArrayElementSetter value = ArraySetters.Get(arrayType);
+			if (value != null)
+				return value;
+			value = (ArrayElementSetter)new ArraySetEmitter(arrayType).GetDelegate();
+			ArraySetters.Insert(arrayType, value);
+			return value;
 		}
 		#endregion
 
@@ -475,24 +584,8 @@ namespace Fasterflect
 		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static ObjectMapper Mapper(Type sourceType, Type targetType, params string[] names)
 		{
-			return Mapper(sourceType, targetType, FasterflectFlags.InstanceAnyVisibility, names);
-		}
-
-		/// <summary>
-		/// Creates a delegate that can map values from fields and properties on the source object to fields and properties with the 
-		/// same name on the target object.
-		/// </summary>
-		/// <param name="sourceType">The type of the source object.</param>
-		/// <param name="targetType">The type of the target object.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> used to define the scope when locating members.</param>
-		/// <param name="names">The optional list of member names against which to filter the members that are
-		/// to be mapped. If this parameter is <see langword="null"/> or empty no name filtering will be applied. The default 
-		/// behavior is to check for an exact, case-sensitive match. Pass <see cref="FasterflectFlags.PartialNameMatch"/> to 
-		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
-		public static ObjectMapper Mapper(Type sourceType, Type targetType, FasterflectFlags bindingFlags, params string[] names)
-		{
-			const MemberTypes memberTypes = MemberTypes.Field | MemberTypes.Property;
-			return Mapper(sourceType, targetType, memberTypes, memberTypes, bindingFlags, names);
+			ObjectMapper value = Mapper(sourceType, targetType, StringComparer.Ordinal, names, Constants.EmptyStringArray);
+			return value;
 		}
 
 		/// <summary>
@@ -510,11 +603,27 @@ namespace Fasterflect
 		/// to be mapped. If this parameter is <see langword="null"/> or empty no name filtering will be applied. The default 
 		/// behavior is to check for an exact, case-sensitive match. Pass <see cref="FasterflectFlags.PartialNameMatch"/> to 
 		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
-		public static ObjectMapper Mapper(Type sourceType, Type targetType, MemberTypes sourceTypes, MemberTypes targetTypes,
-							   FasterflectFlags bindingFlags, params string[] names)
+		public static ObjectMapper Mapper(Type sourceType, Type targetType, string[] sourceNames, string[] targetNames)
 		{
-			MapEmitter emitter = new MapEmitter(sourceType, targetType, sourceTypes, targetTypes, bindingFlags, names);
-			return (ObjectMapper)emitter.GetDelegate();
+			ObjectMapper value = Mapper(sourceType, targetType, StringComparer.Ordinal, sourceNames, targetNames);
+			return value;
+		}
+
+		public static ObjectMapper Mapper(Type sourceType, Type targetType, StringComparer comparer, params string[] names)
+		{
+			ObjectMapper value = Mapper(sourceType, targetType, comparer, names, names);
+			return value;
+		}
+
+		internal static ObjectMapper Mapper(Type sourceType, Type targetType, StringComparer comparer, string[] sourceNames, string[] targetNames)
+		{
+			MapCallInfo callInfo = new MapCallInfo(sourceType, targetType, comparer, sourceNames, targetNames);
+			ObjectMapper value = Mappers.Get(callInfo);
+			if (value != null)
+				return value;
+			value = (ObjectMapper)new MapEmitter(callInfo).GetDelegate();
+			Mappers.Insert(callInfo, value);
+			return value;
 		}
 		#endregion
 
@@ -528,7 +637,8 @@ namespace Fasterflect
 		/// <returns>A deep clone of the source object.</returns>
 		public static T DeepClone<T>(T source) where T : class, new()
 		{
-			return Fasterflect.Extensions.DeepClone.DeepCloneExtensions.DeepClone<T>(source);
+			T clone = Extensions.DeepClone.DeepCloneExtensions.DeepClone(source);
+			return clone;
 		}
 
 		/// <summary>
@@ -541,9 +651,9 @@ namespace Fasterflect
 		{
 			if (obj == null)
 				return null;
-			System.Reflection.MethodInfo inst = obj.GetType().GetMethod("MemberwiseClone",
-				System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-			return (T)inst?.Invoke(obj, null);
+			MethodInfo inst = obj.GetType().GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
+			T clone = (T)inst?.Invoke(obj, null);
+			return clone;
 		}
 		#endregion
 	}

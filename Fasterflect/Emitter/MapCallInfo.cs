@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -26,39 +27,41 @@ namespace Fasterflect.Emitter
 	/// Stores all necessary information to construct a dynamic method for member mapping.
 	/// </summary>
 	[DebuggerStepThrough]
-	internal class MapCallInfo : CallInfo
+	internal class MapCallInfo
 	{
-		public Type SourceType { get; private set; }
-		public MemberTypes SourceMemberTypes { get; private set; }
-		public MemberTypes TargetMemberTypes { get; private set; }
-		public string[] Names { get; private set; }
+		public Type TargetType { get; }
+		public Type SourceType { get; }
+		public string[] Sources { get; }
+		public string[] Targets { get; }
+		public StringComparer Comparer { get; }
 
-		public MapCallInfo(Type targetType, Type[] genericTypes, FasterflectFlags bindingFlags, MemberTypes memberTypes, string name, Type[] parameterTypes, MemberInfo memberInfo, bool isReadOperation, Type sourceType, MemberTypes sourceMemberTypes, MemberTypes targetMemberTypes, string[] names) : base(targetType, genericTypes, bindingFlags, memberTypes, name, parameterTypes, memberInfo, isReadOperation)
+		public MapCallInfo(Type sourceType, Type targetType, StringComparer comparer, string[] sourceNames, string[] targetNames)
 		{
 			SourceType = sourceType;
-			SourceMemberTypes = sourceMemberTypes;
-			TargetMemberTypes = targetMemberTypes;
-			Names = names;
+			TargetType = targetType;
+			Sources = sourceNames;
+			Targets = targetNames == null || targetNames == sourceNames ? Constants.EmptyStringArray : targetNames;
+			Comparer = comparer;
 		}
 
 		public override bool Equals(object obj)
 		{
-			MapCallInfo other = obj as MapCallInfo;
-			if (other == null || !base.Equals(obj))
-				return false;
-			if (other.SourceType != SourceType ||
-				other.SourceMemberTypes != SourceMemberTypes ||
-				other.TargetMemberTypes != TargetMemberTypes ||
-				(other.Names == null && Names != null) ||
-				(other.Names != null && Names == null) ||
-				(other.Names != null && Names != null && other.Names.Length != Names.Length)) {
+			if (!(obj is MapCallInfo other)) {
 				return false;
 			}
-			if (other.Names != null && Names != null) {
-				for (int i = 0; i < Names.Length; i++) {
-					if (Names[i] != other.Names[i]) {
+			if (other.SourceType != SourceType
+				|| other.TargetType != TargetType
+				|| other.Sources.Length != Sources.Length) {
+				return false;
+			}
+			for (int i = 0, count = Sources.Length; i < count; ++i) {
+				if (!Comparer.Equals(Sources[i], other.Sources[i]))
+					return false;
+			}
+			if(Targets == null) {
+				for (int i = 0, count = Targets.Length; i < count; ++i) {
+					if (!Comparer.Equals(Targets[i], other.Targets[i]))
 						return false;
-					}
 				}
 			}
 			return true;
@@ -66,11 +69,16 @@ namespace Fasterflect.Emitter
 
 		public override int GetHashCode()
 		{
-			int hash = base.GetHashCode() + SourceType.GetHashCode() * SourceMemberTypes.GetHashCode() * TargetMemberTypes.GetHashCode();
-			for (int i = 0; i < Names.Length; i++) {
-				hash += Names[i].GetHashCode() * (i + 1);
+			int hashCode = 167991888;
+			hashCode = hashCode * -1521134295 + TargetType.GetHashCode();
+			hashCode = hashCode * -1521134295 + SourceType.GetHashCode();
+			for (int i = 0, count = Sources.Length; i < count; ++i) {
+				hashCode = hashCode * -1521134295 + Sources[i].GetHashCode();
 			}
-			return hash;
+			for (int i = 0, count = Targets.Length; i < count; ++i) {
+				hashCode = hashCode * -1521134295 + Targets[i].GetHashCode();
+			}
+			return hashCode;
 		}
 	}
 }

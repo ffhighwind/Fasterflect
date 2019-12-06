@@ -27,72 +27,70 @@ namespace Fasterflect.Emitter
 {
 	internal class MemberSetEmitter : BaseEmitter
 	{
-		public MemberSetEmitter(MemberInfo memberInfo, FasterflectFlags bindingFlags)
-			: this(memberInfo.DeclaringType, bindingFlags, memberInfo.MemberType, memberInfo.Name, memberInfo)
+		public MemberSetEmitter(MemberInfo memberInfo)
 		{
+			MemberInfo = memberInfo;
+			if (memberInfo is PropertyInfo property) {
+				TargetType = property.PropertyType;
+			}
+			else {
+				FieldInfo field = (FieldInfo)memberInfo;
+				TargetType = field.FieldType;
+			}
 		}
 
-		public MemberSetEmitter(Type targetType, FasterflectFlags bindingFlags, MemberTypes memberType, string fieldOrProperty)
-			: this(targetType, bindingFlags, memberType, fieldOrProperty, null)
+		public MemberSetEmitter(PropertyInfo property)
 		{
+			MemberInfo = property;
+			TargetType = property.PropertyType;
 		}
 
-		private MemberSetEmitter(Type targetType, FasterflectFlags bindingFlags, MemberTypes memberType, string fieldOrProperty, MemberInfo memberInfo)
-			: base(new CallInfo(targetType, null, bindingFlags, memberType, fieldOrProperty, Constants.ArrayOfObjectType, memberInfo, false))
+		public MemberSetEmitter(FieldInfo field)
 		{
+			MemberInfo = field;
+			TargetType = field.FieldType;
 		}
 
-		internal MemberSetEmitter(CallInfo callInfo) : base(callInfo)
-		{
-		}
+		public MemberInfo MemberInfo { get; }
+
+		protected override Type TargetType { get; }
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
-			return CreateDynamicMethod("setter", CallInfo.TargetType, null, new[] { typeof(object), typeof(object) });
+			return CreateDynamicMethod("setter", TargetType, null, new[] { typeof(object), typeof(object) });
 		}
 
 		protected internal override Delegate CreateDelegate()
 		{
-			MemberInfo member = CallInfo.MemberInfo;
-			if (member == null) {
-				member = LookupUtils.GetMember(CallInfo);
-				CallInfo.IsStatic = member.IsStatic();
-			}
-			bool handleInnerStruct = CallInfo.ShouldHandleInnerStruct;
-
-			if (CallInfo.IsStatic) {
-				Generator.ldarg_1.end();                            // load value-to-be-set
+			bool handleInnerStruct = ShouldHandleInnerStruct;
+			if (IsStatic) {
+				Generator.ldarg_1.end();                   // load value-to-be-set
 			}
 			else {
-				Generator.ldarg_0.end();                            // load arg-0 (this)
+				Generator.ldarg_0.end();                   // load arg-0 (this)
 				if (handleInnerStruct) {
-					Generator.DeclareLocal(CallInfo.TargetType);    // TargetType tmpStr
-					LoadInnerStructToLocal(0);                      // tmpStr = ((ValueTypeHolder)this)).Value;
-					Generator.ldarg_1.end();                        // load value-to-be-set;
+					Generator.DeclareLocal(TargetType);    // TargetType tmpStr
+					LoadInnerStructToLocal(0);             // tmpStr = ((ValueTypeHolder)this)).Value;
+					Generator.ldarg_1.end();               // load value-to-be-set;
 				}
 				else {
-					Generator.castclass(CallInfo.TargetType)      // (TargetType)this
-						.ldarg_1.end();                             // load value-to-be-set;
+					Generator.castclass(TargetType)   // (TargetType)this
+					         .ldarg_1.end();          // load value-to-be-set;
 				}
 			}
-
-			Generator.CastFromObject(member.Type());                // unbox | cast value-to-be-set
-			if (member.MemberType == MemberTypes.Field) {
-				FieldInfo field = member as FieldInfo;
-				Generator.stfld(field.IsStatic, field);             // (this|tmpStr).field = value-to-be-set;
+			Generator.CastFromObject(MemberInfo.Type());   // unbox | cast value-to-be-set
+			if (MemberInfo is FieldInfo field) {
+				Generator.stfld(field.IsStatic, field);    // (this|tmpStr).field = value-to-be-set;
 			}
 			else {
-				PropertyInfo prop = member as PropertyInfo;
-				MethodInfo setMethod = LookupUtils.GetPropertySetMethod(prop, CallInfo);
-				Generator.call(setMethod.IsStatic || CallInfo.IsTargetTypeStruct, setMethod); // (this|tmpStr).set_Prop(value-to-be-set);
+				PropertyInfo prop = (PropertyInfo) MemberInfo;
+				MethodInfo setMethod = prop.GetSetMethod();
+				Generator.call(setMethod.IsStatic || IsTargetTypeStruct, setMethod);   // (this|tmpStr).set_Prop(value-to-be-set);
 			}
-
 			if (handleInnerStruct) {
 				StoreLocalToInnerStruct(0); // ((ValueTypeHolder)this)).Value = tmpStr
 			}
-
 			Generator.ret();
-
 			return Method.CreateDelegate(typeof(MemberSetter));
 		}
 	}

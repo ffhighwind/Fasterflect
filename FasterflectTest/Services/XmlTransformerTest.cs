@@ -49,13 +49,14 @@ namespace FasterflectTest.Services
 			string name = string.Format("{1}<Name>Bruce Lee</Name>{0}", Environment.NewLine, "\t");
 			string age = string.Format("{1}<Age>25</Age>{0}", Environment.NewLine, "\t");
 			string mt = string.Format("{1}<MetersTravelled>0</MetersTravelled>{0}", Environment.NewLine, "\t");
-			List<string> expected = new List<string>();
-			expected.Add(string.Format(xml, Environment.NewLine, name + age + mt));
-			expected.Add(string.Format(xml, Environment.NewLine, name + mt + age));
-			expected.Add(string.Format(xml, Environment.NewLine, age + name + mt));
-			expected.Add(string.Format(xml, Environment.NewLine, age + mt + name));
-			expected.Add(string.Format(xml, Environment.NewLine, mt + age + name));
-			expected.Add(string.Format(xml, Environment.NewLine, mt + name + age));
+			List<string> expected = new List<string> {
+				string.Format(xml, Environment.NewLine, name + age + mt),
+				string.Format(xml, Environment.NewLine, name + mt + age),
+				string.Format(xml, Environment.NewLine, age + name + mt),
+				string.Format(xml, Environment.NewLine, age + mt + name),
+				string.Format(xml, Environment.NewLine, mt + age + name),
+				string.Format(xml, Environment.NewLine, mt + name + age)
+			};
 			Person person = new Person("Bruce Lee", 25);
 			Assert.IsTrue(expected.Contains(person.ToXml()));
 		}

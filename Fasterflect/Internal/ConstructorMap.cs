@@ -37,7 +37,7 @@ namespace Fasterflect
 		#region UpdateMembers Private Helper Method
 		private void UpdateMembers(object target, object[] row)
 		{
-			for (int i = 0; i < row.Length; i++) {
+			for (int i = 0; i < row.Length; ++i) {
 				if (parameterReflectionMask[i]) {
 					MemberInfo member = members[i];
 					if (member != null) {

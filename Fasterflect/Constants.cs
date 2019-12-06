@@ -26,10 +26,6 @@ namespace Fasterflect
 {
 	internal static class Constants
 	{
-		public const string IndexerSetterName = "set_Item";
-		public const string IndexerGetterName = "get_Item";
-		public const string ArraySetterName = "[]=";
-		public const string ArrayGetterName = "=[]";
 		/// <summary>
 		/// new Type[] { typeof(object) }
 		/// </summary>
@@ -38,7 +34,7 @@ namespace Fasterflect
 		/// <summary>
 		/// new object[0]
 		/// </summary>
-		public static readonly object[] EmptyObjectArray = new object[0];
+		public static readonly object[] EmptyObjectArray =  new object[0];
 		/// <summary>
 		/// new string[0]
 		/// </summary>
@@ -71,19 +67,19 @@ namespace Fasterflect
 		/// <summary>
 		/// <see cref="Array.Empty{T}"/>
 		/// </summary>
-		public static readonly PropertyInfo[] EmptyPropertyInfoArray => Array.Empty<PropertyInfo>();
+		public static PropertyInfo[] EmptyPropertyInfoArray => Array.Empty<PropertyInfo>();
 		/// <summary>
 		/// <see cref="Array.Empty{T}"/>
 		/// </summary>
-		public static readonly MemberInfo[] EmptyMemberInfoArray => Array.Empty<MemberInfo>();
+		public static MemberInfo[] EmptyMemberInfoArray => Array.Empty<MemberInfo>();
 		/// <summary>
 		/// <see cref="Array.Empty{T}"/>
 		/// </summary>
-		public static readonly FieldInfo[] EmptyFieldInfoArray => Array.Empty<FieldInfo>();
+		public static FieldInfo[] EmptyFieldInfoArray => Array.Empty<FieldInfo>();
 		/// <summary>
 		/// <see cref="Array.Empty{T}"/>
 		/// </summary>
-		public static readonly MethodInfo[] EmptyMethodInfoArray => Array.Empty<MethodInfo>();
+		public static MethodInfo[] EmptyMethodInfoArray => Array.Empty<MethodInfo>();
 #endif
 	}
 }

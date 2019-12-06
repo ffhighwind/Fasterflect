@@ -17,7 +17,6 @@
 #endregion
 
 using System;
-using System.Reflection;
 using System.Reflection.Emit;
 
 namespace Fasterflect.Emitter
@@ -25,26 +24,27 @@ namespace Fasterflect.Emitter
 	internal class ArraySetEmitter : BaseEmitter
 	{
 		public ArraySetEmitter(Type targetType)
-			: base(new CallInfo(targetType, null, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Method, Constants.ArraySetterName,
-									 new[] { typeof(int), targetType.GetElementType() }, null, false))
 		{
+			TargetType = targetType;
 		}
+
+		protected override Type TargetType { get; }
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
-			return CreateDynamicMethod(Constants.ArraySetterName, CallInfo.TargetType, null,
-										new[] { typeof(object), typeof(int), typeof(object) });
+			return CreateDynamicMethod("set_ArrayIndex", TargetType, null,	new[] { typeof(object), typeof(int), typeof(object) });
 		}
 
 		protected internal override Delegate CreateDelegate()
 		{
-			Type elementType = CallInfo.TargetType.GetElementType();
-			Generator.ldarg_0 // load array
-				.castclass(CallInfo.TargetType) // (T[])array
-				.ldarg_1 // load index
-				.ldarg_2 // load value
-				.CastFromObject(elementType) // (unbox | cast) value
-				.stelem(elementType) // array[index] = value
+			Type elementType = TargetType.GetElementType();
+			Generator
+				.ldarg_0                       // load array
+				.castclass(TargetType)         // (T[])array
+				.ldarg_1                       // load index
+				.ldarg_2                       // load value
+				.CastFromObject(elementType)   // (unbox | cast) value
+				.stelem(elementType)           // array[index] = value
 				.ret();
 			return Method.CreateDelegate(typeof(ArrayElementSetter));
 		}

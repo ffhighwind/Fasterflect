@@ -63,7 +63,7 @@ namespace Fasterflect.Extensions.DeepClone
 			map[source] = clone;
 			IList<FieldInfo> fields = type.Fields(FasterflectFlags.StaticInstanceAnyVisibility).Where(f => !f.IsLiteral && !f.IsCalculated(type)).ToList();
 			object[] values = fields.Select(f => CloneField(f, source, map)).ToArray();
-			for (int i = 0; i < fields.Count; i++) {
+			for (int i = 0; i < fields.Count; ++i) {
 				fields[i].Set(clone, values[i]);
 			}
 			return clone;
@@ -79,7 +79,7 @@ namespace Fasterflect.Extensions.DeepClone
 			map[source] = clone;
 			IList sourceList = (IList)source;
 			IList cloneList = (IList)clone;
-			for (int i = 0; i < sourceList.Count; i++) {
+			for (int i = 0; i < sourceList.Count; ++i) {
 				object element = sourceList[i];
 				cloneList[i] = element.ShouldClone() ? element.DeepClone(map) : element;
 			}

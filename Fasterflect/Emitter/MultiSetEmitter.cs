@@ -21,6 +21,7 @@
 
 using Fasterflect.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -28,45 +29,54 @@ namespace Fasterflect.Emitter
 {
 	internal class MultiSetEmitter : BaseEmitter
 	{
-		public MultiSetEmitter(Type targetType, FasterflectFlags flags, string[] memberNames)
-			: base(new MultiSetCallInfo(targetType, flags, memberNames))
+		public MultiSetEmitter(Type targetType, IList<MemberInfo> members) 
+			: this(new MultiSetCallInfo(targetType, members))
 		{
 		}
 
+		public MultiSetEmitter(MultiSetCallInfo callInfo)
+		{
+			CallInfo = callInfo;
+			IsStatic = true;
+			for (int i = 0, count = callInfo.Members.Count; i < count; ++i) {
+				bool isstatic = callInfo.Members[i].IsStatic();
+				if (!isstatic) {
+					IsStatic = false;
+					break;
+				}
+			}
+		}
+
+		protected override Type TargetType => CallInfo.TargetType;
+		public MultiSetCallInfo CallInfo { get; }
+		protected override bool IsStatic { get; }
+
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
-			return CreateDynamicMethod("multisetter", CallInfo.TargetType, null,
+			return CreateDynamicMethod("multisetter", TargetType, null,
 				new[] { typeof(object), typeof(object).MakeArrayType() });
 		}
 
 		protected internal override Delegate CreateDelegate()
 		{
-			MultiSetCallInfo callinfo = (MultiSetCallInfo)CallInfo;
-			MemberInfo[] members = callinfo.members;
-			callinfo.IsStatic = true;
-			for (int i = 0, count = members.Length; i < count; i++) {
-				bool isstatic = members[i].IsStatic();
-				if (!isstatic) {
-					callinfo.IsStatic = false;
-					break;
-				}
-			}
-			bool handleInnerStruct = CallInfo.ShouldHandleInnerStruct;
-			if (!callinfo.IsStatic) {
-				Generator.ldarg_0.end();                            // load arg-0 (this)
+			IList<MemberInfo> members = CallInfo.Members;
+			bool handleInnerStruct = ShouldHandleInnerStruct;
+			if (!IsStatic) {
+				Generator.ldarg_0.end();                     // load arg-0 (this)
 				if (handleInnerStruct) {
-					Generator.DeclareLocal(CallInfo.TargetType);    // TargetType tmpStr
-					Generator.castclass(typeof(ValueTypeHolder)) // (ValueTypeHolder)wrappedStruct
-						.callvirt(StructGetMethod) // <stack>.get_Value()
-						.unbox_any(CallInfo.TargetType) // unbox <stack>
-						.stloc(0); // localStr = <stack>
+					Generator.DeclareLocal(TargetType);      // TargetType tmpStr
+					Generator
+						.castclass(typeof(ValueTypeHolder))  // (ValueTypeHolder)wrappedStruct
+						.callvirt(StructGetMethod)           // <stack>.get_Value()
+						.unbox_any(TargetType)               // unbox <stack>
+						.stloc(0);                           // localStr = <stack>
 				}
 				else {
-					Generator.castclass(CallInfo.TargetType);      // (TargetType)this
+					Generator.castclass(TargetType);   // (TargetType)this
 				}
 			}
 
-			for (int i = 0, count = members.Length; i < count; i++) {
+			for (int i = 0, count = members.Count; i < count; ++i) {
 				MemberInfo method = members[i];
 				if (method == null)
 					continue;
@@ -81,7 +91,7 @@ namespace Fasterflect.Emitter
 					}
 					Generator.ldarg_1.ldc_i4(i).ldelem_ref.end();
 					Generator.CastFromObject(field.FieldType);
-					Generator.stfld(field.IsStatic, field);             // (this|tmpStr).field = value-to-be-set;
+					Generator.stfld(field.IsStatic, field);          // (this|tmpStr).field = value-to-be-set;
 				}
 				else {
 					PropertyInfo property = (PropertyInfo)method;
@@ -96,13 +106,13 @@ namespace Fasterflect.Emitter
 					}
 					Generator.ldarg_1.ldc_i4(i).ldelem_ref.end();
 					Generator.CastFromObject(property.PropertyType);
-					Generator.call(setMethod.IsStatic || CallInfo.IsTargetTypeStruct, setMethod); // (this|tmpStr).set_Prop(value-to-be-set);
+					Generator.call(setMethod.IsStatic || IsTargetTypeStruct, setMethod);   // (this|tmpStr).set_Prop(value-to-be-set);
 				}
 			}
 			if (handleInnerStruct) {
-				StoreLocalToInnerStruct(0); // ((ValueTypeHolder)this)).Value = tmpStr
+				StoreLocalToInnerStruct(0);   // ((ValueTypeHolder)this)).Value = tmpStr
 			}
-			//Generator.ldnull.end(); // load null
+			//Generator.ldnull.end();   // load null
 			Generator.ret();
 			return Method.CreateDelegate(typeof(MultiSetter));
 		}

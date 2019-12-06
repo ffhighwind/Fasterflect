@@ -18,30 +18,29 @@
 
 #endregion
 
+#if (NET45 || NETSTANDARD || NETCOREAPP)
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+
 namespace Fasterflect
 {
-#if (NET45 || NETSTANDARD || NETCOREAPP)
-	using System;
-	using System.Collections.Concurrent;
-	using System.Collections.Generic;
-	using System.Diagnostics;
-	using System.Linq;
-
 	[DebuggerStepThrough]
 	internal sealed class Cache<TKey, TValue>
+		where TValue : class
 	{
-		private readonly IDictionary<TKey, object> entries;
+		private readonly ConcurrentDictionary<TKey, WeakReference<TValue>> entries;
 
-		#region Constructors
 		public Cache()
 		{
-			entries = new ConcurrentDictionary<TKey, object>();
+			entries = new ConcurrentDictionary<TKey, WeakReference<TValue>>();
 		}
+
 		public Cache(IEqualityComparer<TKey> equalityComparer)
 		{
-			entries = new ConcurrentDictionary<TKey, object>(equalityComparer);
+			entries = new ConcurrentDictionary<TKey, WeakReference<TValue>>(equalityComparer);
 		}
-		#endregion
 
 		#region Properties
 		/// <summary>
@@ -57,14 +56,7 @@ namespace Fasterflect
 		/// </summary>
 		public TValue this[TKey key] {
 			get => Get(key);
-			set => Insert(key, value, CacheStrategy.Temporary);
-		}
-
-		/// <summary>
-		/// Indexer for adding a cache item using the specified strategy.
-		/// </summary>
-		public TValue this[TKey key, CacheStrategy strategy] {
-			set => Insert(key, value, strategy);
+			set => Insert(key, value);
 		}
 		#endregion
 
@@ -76,21 +68,7 @@ namespace Fasterflect
 		/// <param name="value">The object to be inserted into the cache.</param>
 		public void Insert(TKey key, TValue value)
 		{
-			Insert(key, value, CacheStrategy.Temporary);
-		}
-
-		/// <summary>
-		/// Insert an object into the cache using the specified cache strategy (lifetime management).
-		/// </summary>
-		/// <param name="key">The cache key used to reference the item.</param>
-		/// <param name="value">The object to be inserted into the cache.</param>
-		/// <param name="strategy">The strategy to apply for the inserted item (use Temporary for objects 
-		/// that are collectible and Permanent for objects you wish to keep forever).</param>
-		public void Insert(TKey key, TValue value, CacheStrategy strategy)
-		{
-			entries[key] = strategy == CacheStrategy.Temporary
-				? new WeakReference(value)
-				: (object) value;
+			entries[key] = new WeakReference<TValue>(value);
 		}
 		#endregion
 
@@ -102,9 +80,11 @@ namespace Fasterflect
 		/// <returns>The retrieved cache item or null if not found.</returns>
 		public TValue Get(TKey key)
 		{
-			object entry;
-			entries.TryGetValue(key, out entry);
-			return (TValue)(entry is WeakReference wr ? wr.Target : entry);
+			if (entries.TryGetValue(key, out WeakReference<TValue> entry)) {
+				entry.TryGetTarget(out TValue target);
+				return target;
+			}
+			return null;
 		}
 		#endregion
 
@@ -116,7 +96,7 @@ namespace Fasterflect
 		/// <returns>True if an item removed from the cache and false otherwise.</returns>
 		public bool Remove(TKey key)
 		{
-			return entries.Remove(key);
+			return entries.TryRemove(key, out WeakReference<TValue> _);
 		}
 		#endregion
 
@@ -135,8 +115,15 @@ namespace Fasterflect
 		/// <returns>The number of live cache entries still in the cache.</returns>
 		private int ClearCollected()
 		{
-			IList<TKey> keys = entries.Where(kvp => kvp.Value is WeakReference wr && !wr.IsAlive).Select(kvp => kvp.Key).ToList();
-			keys.ForEach(k => entries.Remove(k));
+			List<TKey> keys = new List<TKey>();
+			foreach (var kv in entries) {
+				if (!kv.Value.TryGetTarget(out TValue target)) {
+					keys.Add(kv.Key);
+				}
+			}
+			foreach (TKey key in keys) {
+				entries.TryRemove(key, out WeakReference<TValue> _);
+			}
 			return entries.Count;
 		}
 		#endregion
@@ -152,61 +139,55 @@ namespace Fasterflect
 		}
 		#endregion
 	}
+}
 #elif NET35
-	using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Diagnostics;
 
-    [DebuggerStepThrough]
-	internal sealed class Cache<TKey,TValue>
+namespace Fasterflect
+{
+	[DebuggerStepThrough]
+	internal sealed class Cache<TKey, TValue>
 	{
-		private readonly Dictionary<TKey, object> entries;
+		private readonly Dictionary<TKey, WeakReference> entries;
 		private int owner;
 
-	#region Constructors
+#region Constructors
 		public Cache()
 		{
-			entries = new Dictionary<TKey,object>();
+			entries = new Dictionary<TKey, WeakReference>();
 		}
+
 		public Cache(IEqualityComparer<TKey> equalityComparer)
 		{
-			entries = new Dictionary<TKey,object>(equalityComparer);
+			entries = new Dictionary<TKey, WeakReference>(equalityComparer);
 		}
-	#endregion
+#endregion
 
-	#region Properties
+#region Properties
 		/// <summary>
 		/// Returns the number of entries currently stored in the cache. Accessing this property
 		/// causes a check of all entries in the cache to ensure collected entries are not counted.
 		/// </summary>
-		public int Count
-		{
+		public int Count {
 			get { return ClearCollected(); }
 		}
-	#endregion
+#endregion
 
-	#region Indexers
+#region Indexers
 		/// <summary>
 		/// Indexer for accessing or adding cache entries.
 		/// </summary>
-		public TValue this[ TKey key ]
-		{
-			get { return Get(key); }
-			set { Insert(key, value, CacheStrategy.Temporary); }
+		public TValue this[TKey key] {
+			get => Get(key);
+			set => Insert(key, value);
 		}
+#endregion
 
-		/// <summary>
-		/// Indexer for adding a cache item using the specified strategy.
-		/// </summary>
-		public TValue this[ TKey key, CacheStrategy strategy ]
-		{
-			set { Insert(key, value, strategy); }
-		}
-	#endregion
-
-	#region Insert Methods
+#region Insert Methods
 		/// <summary>
 		/// Insert a collectible object into the cache.
 		/// </summary>
@@ -214,46 +195,33 @@ namespace Fasterflect
 		/// <param name="value">The object to be inserted into the cache.</param>
 		public void Insert(TKey key, TValue value)
 		{
-			Insert(key, value, CacheStrategy.Temporary);
-		}
-
-		/// <summary>
-		/// Insert an object into the cache using the specified cache strategy (lifetime management).
-		/// </summary>
-		/// <param name="key">The cache key used to reference the item.</param>
-		/// <param name="value">The object to be inserted into the cache.</param>
-		/// <param name="strategy">The strategy to apply for the inserted item (use Temporary for objects 
-		/// that are collectible and Permanent for objects you wish to keep forever).</param>
-		public void Insert(TKey key, TValue value, CacheStrategy strategy)
-		{
-			object entry = strategy == CacheStrategy.Temporary ? new WeakReference(value) : value as object;
+			WeakReference entry = new WeakReference(value);
 			int current = Thread.CurrentThread.ManagedThreadId;
-			while(Interlocked.CompareExchange(ref owner, current, 0) != current) { }
-			entries[ key ] = entry;
-			if(current != Interlocked.Exchange(ref owner, 0))
+			while (Interlocked.CompareExchange(ref owner, current, 0) != current) { }
+			entries[key] = entry;
+			if (current != Interlocked.Exchange(ref owner, 0))
 				throw new UnauthorizedAccessException("Thread had access to cache even though it shouldn't have.");
 		}
-	#endregion
+#endregion
 
-	#region GetValue Methods
+#region GetValue Methods
 		/// <summary>
 		/// Retrieves an entry from the cache using the given key.
 		/// </summary>
 		/// <param name="key">The cache key of the item to retrieve.</param>
 		/// <returns>The retrieved cache item or null if not found.</returns>
 		public TValue Get(TKey key)
-        {
+		{
 			int current = Thread.CurrentThread.ManagedThreadId;
-			while(Interlocked.CompareExchange(ref owner, current, 0) != current) { }
-			object entry;
-			entries.TryGetValue(key, out entry);
-			if(current != Interlocked.Exchange(ref owner, 0))
+			while (Interlocked.CompareExchange(ref owner, current, 0) != current) { }
+			entries.TryGetValue(key, out WeakReference entry);
+			if (current != Interlocked.Exchange(ref owner, 0))
 				throw new UnauthorizedAccessException("Thread had access to cache even though it shouldn't have.");
 			return (TValue)(entry is WeakReference wr ? wr.Target : entry);
 		}
-	#endregion
+#endregion
 
-	#region Remove Methods
+#region Remove Methods
 		/// <summary>
 		/// Removes the object associated with the given key from the cache.
 		/// </summary>
@@ -262,24 +230,24 @@ namespace Fasterflect
 		public bool Remove(TKey key)
 		{
 			int current = Thread.CurrentThread.ManagedThreadId;
-			while(Interlocked.CompareExchange(ref owner, current, 0) != current) { }
+			while (Interlocked.CompareExchange(ref owner, current, 0) != current) { }
 			bool found = entries.Remove(key);
-			if(current != Interlocked.Exchange(ref owner, 0))
+			if (current != Interlocked.Exchange(ref owner, 0))
 				throw new UnauthorizedAccessException("Thread had access to cache even though it shouldn't have.");
 			return found;
 		}
-	#endregion
+#endregion
 
-	#region Clear Methods
+#region Clear Methods
 		/// <summary>
 		/// Removes all entries from the cache.
 		/// </summary>
 		public void Clear()
 		{
 			int current = Thread.CurrentThread.ManagedThreadId;
-			while(Interlocked.CompareExchange(ref owner, current, 0) != current) { }
+			while (Interlocked.CompareExchange(ref owner, current, 0) != current) { }
 			entries.Clear();
-			if(current != Interlocked.Exchange(ref owner, 0))
+			if (current != Interlocked.Exchange(ref owner, 0))
 				throw new UnauthorizedAccessException("Thread had access to cache even though it shouldn't have.");
 		}
 
@@ -290,18 +258,18 @@ namespace Fasterflect
 		private int ClearCollected()
 		{
 			int current = Thread.CurrentThread.ManagedThreadId;
-			while(Interlocked.CompareExchange(ref owner, current, 0) != current) { }
-			IList<TKey> keys = entries.Where(kvp => kvp.Value is WeakReference && ! (kvp.Value as WeakReference).IsAlive).Select(kvp => kvp.Key).ToList();
+			while (Interlocked.CompareExchange(ref owner, current, 0) != current) { }
+			IList<TKey> keys = entries.Where(kvp => kvp.Value is WeakReference && !(kvp.Value as WeakReference).IsAlive).Select(kvp => kvp.Key).ToList();
 			keys.ForEach(k => entries.Remove(k));
 			int count = entries.Count;
-			if(current != Interlocked.Exchange(ref owner, 0))
+			if (current != Interlocked.Exchange(ref owner, 0))
 				throw new UnauthorizedAccessException("Thread had access to cache even though it shouldn't have.");
 			return count;
 		}
-	#endregion
+#endregion
 
-	#region ToString
-        /// <summary>
+#region ToString
+		/// <summary>
 		/// This method returns a string with information on the cache contents (number of contained objects).
 		/// </summary>
 		public override string ToString()
@@ -309,9 +277,9 @@ namespace Fasterflect
 			int count = ClearCollected();
 			return count > 0 ? String.Format("Cache contains {0} live objects.", count) : "Cache is empty.";
 		}
-	#endregion
+#endregion
 	}
+}
 #else
 #error At least one of the compilation symbols NET45, NET35, or NETSTANDARD2_0 must be defined. 
 #endif
-}

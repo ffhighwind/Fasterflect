@@ -24,33 +24,30 @@ namespace Fasterflect.Emitter
 {
 	internal abstract class BaseEmitter
 	{
-		internal static readonly Cache<CallInfo, Delegate> cache = new Cache<CallInfo, Delegate>();
-
 		protected static readonly MethodInfo StructGetMethod =
 			typeof(ValueTypeHolder).GetMethod("get_Value", BindingFlags.Public | BindingFlags.Instance);
 
 		protected static readonly MethodInfo StructSetMethod =
 			typeof(ValueTypeHolder).GetMethod("set_Value", BindingFlags.Public | BindingFlags.Instance);
 
-		protected CallInfo CallInfo;
+		protected abstract Type TargetType { get; }
+		protected virtual bool IsStatic => false;
+		/// <summary>
+		/// The CIL should handle inner struct only when the target type is 
+		/// a value type or the wrapper ValueTypeHolder type.  In addition, the call 
+		/// must also be executed in the non-static context since static 
+		/// context doesn't need to handle inner struct case.
+		/// </summary>
+		public bool ShouldHandleInnerStruct => IsTargetTypeStruct && !IsStatic;
+		public bool IsTargetTypeStruct => TargetType.IsValueType;
 		protected DynamicMethod Method;
 		protected EmitHelper Generator;
 
-		protected BaseEmitter(CallInfo callInfo)
+		protected internal Delegate GetDelegate()
 		{
-			CallInfo = callInfo;
-		}
-
-		internal Delegate GetDelegate()
-		{
-			Delegate action = cache.Get(CallInfo);
-			if (action == null) {
-				Method = CreateDynamicMethod();
-				Generator = new EmitHelper(Method.GetILGenerator());
-				action = CreateDelegate();
-				cache.Insert(CallInfo, action, CacheStrategy.Temporary);
-			}
-			return action;
+			Method = CreateDynamicMethod();
+			Generator = new EmitHelper(Method.GetILGenerator());
+			return CreateDelegate();
 		}
 
 		protected internal abstract DynamicMethod CreateDynamicMethod();
@@ -70,7 +67,7 @@ namespace Fasterflect.Emitter
 			Generator
 				.castclass(typeof(ValueTypeHolder)) // (ValueTypeHolder)wrappedStruct
 				.callvirt(StructGetMethod) // <stack>.get_Value()
-				.unbox_any(CallInfo.TargetType) // unbox <stack>
+				.unbox_any(TargetType) // unbox <stack>
 				.stloc(localPosition) // localStr = <stack>
 				.ldloca_s(localPosition); // load &localStr
 		}
@@ -86,7 +83,7 @@ namespace Fasterflect.Emitter
 				.ldarg(argPosition)
 				.castclass(typeof(ValueTypeHolder)) // wrappedStruct = (ValueTypeHolder)this
 				.ldloc(localPosition) // load localStr
-				.boxIfValueType(CallInfo.TargetType) // box <stack>
+				.boxIfValueType(TargetType) // box <stack>
 				.callvirt(StructSetMethod); // wrappedStruct.set_Value(<stack>)
 		}
 	}

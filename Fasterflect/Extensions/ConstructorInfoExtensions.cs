@@ -40,7 +40,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static ConstructorInvoker DelegateForCreateInstance(this ConstructorInfo ctorInfo)
 		{
-			return (ConstructorInvoker)new CtorInvocationEmitter(ctorInfo, FasterflectFlags.InstanceAnyVisibility).GetDelegate();
+			return (ConstructorInvoker)new CtorInvocationEmitter(ctorInfo).GetDelegate();
 		}
 	}
 }

@@ -78,7 +78,7 @@ namespace Fasterflect.Extensions
 		public static ObjectMapper DelegateForMap(this Type sourceType, Type targetType, MemberTypes sourceTypes, MemberTypes targetTypes,
 							   FasterflectFlags bindingFlags, params string[] names)
 		{
-			MapEmitter emitter = new MapEmitter(sourceType, targetType, sourceTypes, targetTypes, bindingFlags, names);
+			MapEmitter emitter = new MapEmitter(sourceType, targetType, names, names);
 			return (ObjectMapper)emitter.GetDelegate();
 		}
 		#endregion

@@ -40,7 +40,7 @@ namespace Fasterflect
 			if (parameters.Length == 0)
 				return Type.EmptyTypes;
 			Type[] types = new Type[parameters.Length];
-			for (int i = 0; i < types.Length; i++) {
+			for (int i = 0; i < types.Length; ++i) {
 				types[i] = parameters[i].ParameterType;
 			}
 			return types;
@@ -51,7 +51,7 @@ namespace Fasterflect
 			if (objects.Length == 0)
 				return Type.EmptyTypes;
 			Type[] types = new Type[objects.Length];
-			for (int i = 0; i < types.Length; i++) {
+			for (int i = 0; i < types.Length; ++i) {
 				object obj = objects[i];
 				types[i] = obj?.GetType();
 			}
