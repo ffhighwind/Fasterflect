@@ -10,17 +10,17 @@ Fasterflect is 50x faster than .NET reflection, 8x faster than FastMember, and 2
 
 |                         Property Getters |      Median |   Ratio |
 |----------------------------------------- |------------:|--------:|
-| Direct Access                            | 0.0591 ns   | 0.02 |
-| Delegate.CreateDelegate (T,string)       | 1.8963 ns   | 0.60 |
-| Fasterflect (object, object)             | **3.1387 ns** | **1.00** |
-| Magnum - Expression.Compile (object, object) | 10.8061 ns | 3.44 |
-| Sigil.ILEmit (T, string)                 | 12.7648 ns  | 4.07 |
-| Sigil.ILEmit (object, object)            | 13.9060 ns   | 4.43 |
-| FastMember (object, object)              | 31.3559 ns  | 9.99 |
-| MethodInfo.Invoke	                   | 126.8898 ns | 40.43 |
-| PropertyInfo                             | 134.3230 ns  | 42.80 |
-| PropertyInfo - uncached                  | 194.3128 ns | 61.91 |
-| Delegate.DynamicInvoke                   | 714.3736 ns | 227.60 |
+| Direct Access                            | 0.059 ns   | 0.02 |
+| Delegate.CreateDelegate (T,string)       | 1.896 ns   | 0.60 |
+| Fasterflect (object, object)             | **3.139 ns** | **1.00** |
+| Magnum - Expression.Compile (object, object) | 10.806 ns | 3.44 |
+| Sigil.ILEmit (T, string)                 | 12.765 ns  | 4.07 |
+| Sigil.ILEmit (object, object)            | 13.906 ns   | 4.43 |
+| FastMember (object, object)              | 31.356 ns  | 9.99 |
+| MethodInfo.Invoke	                   | 126.890 ns | 40.43 |
+| PropertyInfo                             | 134.323 ns  | 42.80 |
+| PropertyInfo - uncached                  | 194.313 ns | 61.91 |
+| Delegate.DynamicInvoke                   | 714.374 ns | 227.60 |
 
 |                           Property Setters |     Median |  Ratio |
 |------------------------------------------- |-----------:|-------:|
