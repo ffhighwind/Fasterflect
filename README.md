@@ -8,33 +8,34 @@ This framework is based on [Fasterflect](https://github.com/buunguyen/Fasterflec
 
 Fasterflect is 50x faster than .NET reflection, 8x faster than FastMember, and 2-10x slower than direct access. Note also that Fasterflect only uses *objects* as arguments and return types. This slows down the methods because data needs to be boxed and unboxed. However, this is usually the only time that reflection is useful. If you know the generic types at compile time then you can probably use an interface instead of reflection.
 
-|                         Property Getters |        Mean |   Ratio |
+|                         Property Getters |      Median |   Ratio |
 |----------------------------------------- |------------:|--------:|
-| Direct Access                            |   0.0000 ns |   0.000 |
-| Delegate.CreateDelegate (Func<T,string>) |   1.7718 ns |   0.582 |
-| **Fasterflect**                          | **3.0426 ns** | **1.000** |
-| Magnum (Expression.Compile)              |  10.6231 ns |   3.492 |
-| ILEmit (Func<T,string>)                  |  12.3850 ns |   4.071 |
-| ILEmit Func<object,object>               |  13.9188 ns |   4.574 |
-| FastMember                               |  30.7529 ns |  10.109 |
-| MethodInfo.Invoke                        | 124.4104 ns |  40.895 |
-| PropertyInfo (cached)                    | 133.4586 ns |  43.869 |
-| PropertyInfo (uncached)                  | 193.6173 ns |  63.643 |
-| Delegate.DynamicInvoke                   | 701.8960 ns | 230.719 |
+| Direct Access                            | 0.0591 ns   | 0.02 |
+| Delegate.CreateDelegate (T,string)       | 1.8963 ns   | 0.60 |
+| Fasterflect (object, object)             | **3.1387 ns** | **1.00** |
+| Magnum - Expression.Compile (object, object) | 10.8061 | 3.44 |
+| Sigil.ILEmit (T, string)                 | 12.7648 ns  | 4.07 |
+| Sigil.ILEmit (object, object)            | 13.9060 ns   | 4.43 |
+| FastMember (object, object)              | 31.3559 ns  | 9.99 |
+| MethodInfo.Invoke	                   | 126.8898 ns | 40.43 |
+| PropertyInfo                             | 134.3230 ns  | 42.80 |
+| PropertyInfo - uncached                  | 194.3128 ns | 61.91 |
+| Delegate.DynamicInvoke                   | 714.3736 ns | 227.60 |
 
-|                           Property Setters |       Mean |  Ratio |
+|                           Property Setters |     Median |  Ratio |
 |------------------------------------------- |-----------:|-------:|
-| Direct Access                              |   1.300 ns |   0.33 |
-| Delegate.CreateDelegate (Action<T,string>) |   3.036 ns |   0.78 |
-| ILEmit (Action<T,string>)                  |   3.081 ns |   0.79 |
-| ILEmit (Action<object,object>)             |   3.905 ns |   1.00 |
-| **Fasterflect**                            | **3.907 ns** | **1.00** |
-| Magnum (Expression.Compile)                |  10.508 ns |   2.69 |
-| FastMember                                 |  32.130 ns |   8.22 |
-| MethodInfo.Invoke                          | 191.305 ns |  48.96 |
-| PropertyInfo (cached)                      | 200.824 ns |  51.39 |
-| PropertyInfo (uncached)                    | 259.840 ns |  66.51 |
-| Delegate.DynamicInvoke                     | 763.633 ns | 195.48 |
+| Direct Access	                             | 1.266 ns	  | 0.33 |
+| Delegate.CreateDelegate (T, string)	     | 3.048 ns	  | 0.79 |
+| Sigil.ILEmit (T, string)	             | 2.987 ns   | 0.78 |
+| Sigil.ILEmit (object, object)              | 3.735 ns   | 0.97 |
+| Fasterflect (object, object)               | **3.838 ns** | **1.00** |
+| Magnum - Expression.Compile (object, object) | 10.626 ns | 2.77 |
+| FastMember (object, object)                | 33.402 ns | 8.70 |
+| MethodInfo.Invoke                          | 196.676 ns | 51.24 |
+| PropertyInfo                               | 202.662 ns | 52.80 |
+| PropertyInfo - uncached                    | 265.131 ns | 69.08 |
+| Delegate.DynamicInvoke                     | 795.812 ns | 207.35 |
+
 
 [Other Benchmarks](https://github.com/ffhighwind/Fasterflect/wiki/Benchmarks)
 

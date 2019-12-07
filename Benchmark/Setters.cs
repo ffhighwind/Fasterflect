@@ -42,7 +42,6 @@ namespace Benchmark
 		private static readonly string propertyName = "PublicHost";
 
 		private static readonly TestUri testUri;
-		private static readonly Object @object;
 		private static readonly Type @class;
 		private static readonly PropertyInfo property;
 
@@ -54,14 +53,12 @@ namespace Benchmark
 		public static readonly Delegate setDelegateDynamic; // Dynamic Delegate
 		public static readonly MemberSetter ffsetter; // Fasterflect
 		public static readonly MethodInfo getsetMethod;
-		public static readonly MemberSetter memberSetter;
 
 		private static readonly bool allowNonPublicFieldAccess = true;
 
 		static Setters()
 		{
 			testUri = new TestUri("SomeHost");
-			@object = testUri;
 			@class = testUri.GetType();
 			property = @class.GetProperty(propertyName, bindingFlags);
 			fastProperty = new FastProperty(property, bindingFlags);
@@ -91,88 +88,64 @@ namespace Benchmark
 				.Call(getsetMethod)
 				.Return();
 			objsetter = objSetterEmiterAction.CreateDelegate();
-
-			var objSetterEmiter = Emit<MemberSetter>
-				.NewDynamicMethod("SetMSTestUriProperty")
-				.LoadArgument(0)
-				.CastClass(typeof(TestUri))
-				.LoadArgument(1)
-				.CastClass(typeof(string))
-				.Call(getsetMethod)
-				.Return();
-			memberSetter = objSetterEmiter.CreateDelegate();
 		}
 
-		[Benchmark]
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Direct_Inlining()
-		{
-			testUri.PublicHost = "Testing";
-		}
-
-		[Benchmark]
+		[Benchmark(Description = "Direct Access")]
 		[MethodImpl(MethodImplOptions.NoInlining)]
 		public void Direct_NoInlining()
 		{
 			testUri.PublicHost = "Testing";
 		}
 
-		[Benchmark]
+		[Benchmark(Description = "Delegate.CreateDelegate (T, string)")]
 		public void ActionTstring()
 		{
 			setDelegate(testUri, "Testing");
 		}
 
-		[Benchmark(Baseline = true)]
-		public void Fasterflect()
-		{
-			ffsetter(testUri, "Testing");
-		}
-
-		[Benchmark]
-		public void ILEmit_MemberSetter()
-		{
-			memberSetter(testUri, "Testing");
-		}
-
-		[Benchmark]
-		public void Magnum_CompiledExpressionTrees()
-		{
-			fastProperty.Set(testUri, "Testing");
-		}
-
-		[Benchmark]
+		[Benchmark(Description = "Sigil.ILEmit (T, string)")]
 		public void ILEmit_ActionTstring()
 		{
 			setter(testUri, "Testing");
 		}
 
-		[Benchmark]
+		[Benchmark(Description = "Sigil.ILEmit (object, object)")]
 		public void ILEmit_ActionObjObj()
 		{
 			objsetter(testUri, "Testing");
 		}
 
-		[Benchmark]
+		[Benchmark(Baseline = true, Description = "Fasterflect (object, object)")]
+		public void Fasterflect()
+		{
+			ffsetter(testUri, "Testing");
+		}
+
+		[Benchmark(Description = "Magnum - Expression.Compile (object, object)")]
+		public void Magnum_CompiledExpressionTrees()
+		{
+			fastProperty.Set(testUri, "Testing");
+		}
+
+		[Benchmark(Description = "FastMember (object, object)")]
 		public void FastMember()
 		{
 			fastMember[testUri, propertyName] = "Testing";
 		}
 
-
-		[Benchmark]
+		[Benchmark(Description = "MethodInfo.Invoke")]
 		public void MethodInfoInvoke()
 		{
 			getsetMethod.Invoke(testUri, new object[] { "Testing" });
 		}
 
-		[Benchmark]
+		[Benchmark(Description = "PropertyInfo")]
 		public void PropertyInfo_Cached()
 		{
 			property.SetValue(testUri, "Testing", null);
 		}
 
-		[Benchmark]
+		[Benchmark(Description = "PropertyInfo - uncached")]
 		public void PropertyInfo()
 		{
 			Type @class = testUri.GetType();
@@ -180,7 +153,7 @@ namespace Benchmark
 			property.SetValue(testUri, "Testing", null);
 		}
 
-		[Benchmark]
+		[Benchmark(Description = "Delegate.DynamicInvoke")]
 		public void DelegateDynamicInvoke()
 		{
 			setDelegateDynamic.DynamicInvoke(testUri, "Testing");
