@@ -381,8 +381,12 @@ namespace Fasterflect
 		/// <returns>A <see cref="Fasterflect.MultiSetter"/> which sets the values of the given members.</returns>
 		public static MultiSetter MultiSetter(Type type, FasterflectFlags bindingFlags, params string[] memberNames)
 		{
-			IList<MemberInfo> members = ReflectLookup.Members(type, MemberTypes.Field | MemberTypes.Property, bindingFlags, memberNames);
-			MultiSetter value = MultiSetter(type, members);
+			MultiSetCallInfo callInfo = new MultiSetCallInfo(type, bindingFlags, memberNames);
+			MultiSetter value = MultiSetters.Get(callInfo);
+			if (value != null)
+				return value;
+			value = (MultiSetter)new MultiSetEmitter(callInfo).GetDelegate();
+			MultiSetters.Insert(callInfo, value);
 			return value;
 		}
 
@@ -398,7 +402,7 @@ namespace Fasterflect
 			MultiSetter value = MultiSetters.Get(callInfo);
 			if (value != null)
 				return value;
-			value = (MultiSetter)new MultiSetEmitter(callInfo).GetDelegate();
+			value = (MultiSetter)new MultiSetEmitter(type, members).GetDelegate();
 			MultiSetters.Insert(callInfo, value);
 			return value;
 		}
@@ -626,7 +630,8 @@ namespace Fasterflect
 		}
 
 		/// <summary>
-		/// 
+		/// Creates a delegate that can map values from fields and properties on the source object to fields and properties with the 
+		/// same name on the target object.
 		/// </summary>
 		/// <param name="sourceType">The type of the source object.</param>
 		/// <param name="targetType">The type of the target object.</param>
@@ -642,7 +647,7 @@ namespace Fasterflect
 		}
 
 		/// <summary>
-		/// 
+		/// Creates a delegate that can map values from fields and properties on the source object to fields and properties on the target object.
 		/// </summary>
 		/// <param name="sourceType">The type of the source object.</param>
 		/// <param name="targetType">The type of the target object.</param>
@@ -657,6 +662,26 @@ namespace Fasterflect
 			if (value != null)
 				return value;
 			value = (ObjectMapper)new MapEmitter(callInfo).GetDelegate();
+			Mappers.Insert(callInfo, value);
+			return value;
+		}
+
+		/// <summary>
+		/// Creates a delegate that can map values from fields and properties on the source object to fields and properties on the target object.
+		/// </summary>
+		/// <param name="sourceType">The type of the source object.</param>
+		/// <param name="targetType">The type of the target object.</param>
+		/// <param name="bindingFlags"></param>
+		/// <param name="sources">The member names (Fields, Properties or both) to include on the source.</param>
+		/// <param name="targets">The member names (Fields, Properties or both) to include on the target.</param>
+		/// <returns>An <see cref="ObjectMapper"/> which sets the target using the matching source members.</returns>
+		internal static ObjectMapper Mapper(Type sourceType, Type targetType, IList<MemberInfo> sources, IList<MemberInfo> targets)
+		{
+			MapCallInfo callInfo = new MapCallInfo(sourceType, targetType, sources, targets);
+			ObjectMapper value = Mappers.Get(callInfo);
+			if (value != null)
+				return value;
+			value = (ObjectMapper)new MapEmitter(sourceType, targetType, sources, targets).GetDelegate();
 			Mappers.Insert(callInfo, value);
 			return value;
 		}

@@ -32,7 +32,9 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object CreateInstance(this ConstructorInfo ctorInfo, params object[] parameters)
 		{
-			return ctorInfo.DelegateForCreateInstance()(parameters);
+			ConstructorInvoker ctor = ctorInfo.DelegateForCreateInstance();
+			object value = ctor(parameters);
+			return value;
 		}
 
 		/// <summary>
@@ -40,7 +42,8 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static ConstructorInvoker DelegateForCreateInstance(this ConstructorInfo ctorInfo)
 		{
-			return (ConstructorInvoker)new CtorInvocationEmitter(ctorInfo).GetDelegate();
+			ConstructorInvoker ctor = Reflect.Constructor(ctorInfo);
+			return ctor;
 		}
 	}
 }

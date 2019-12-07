@@ -39,30 +39,47 @@ namespace FasterflectTest.Common
 
 		protected static void VerifyProperties(Type type, object sample)
 		{
-			IList<System.Reflection.PropertyInfo> properties = sample.GetType().Properties();
-			properties.ForEach(propInfo => Assert.AreEqual(propInfo.Get(sample),
-															type.GetPropertyValue(propInfo.Name.FirstCharUpper())));
+			Type sampleType = sample.GetType();
+			IList<PropertyInfo> properties = sampleType.Properties();
+			foreach (PropertyInfo propInfo in properties) {
+				string name = propInfo.Name.FirstCharUpper();
+				object value1 = propInfo.Get(sample);
+				object value2 = type.GetPropertyValue(name);
+				Assert.AreEqual(value1, value2);
+			}
 		}
 
 		protected static void VerifyProperties(object obj, object sample)
 		{
-			IList<PropertyInfo> properties = sample.GetType().Properties();
-			properties.ForEach(propInfo => Assert.AreEqual(propInfo.Get(sample),
-															obj.GetPropertyValue(propInfo.Name.FirstCharUpper())));
+			Type sampleType = sample.GetType();
+			IList<PropertyInfo> properties = sampleType.Properties();
+			foreach (PropertyInfo propInfo in properties) {
+				string name = propInfo.Name.FirstCharUpper();
+				object value1 = propInfo.Get(sample);
+				object value2 = obj.GetPropertyValue(name);
+				Assert.AreEqual(value1, value2);
+			}
 		}
 
 		protected static void VerifyFields(Type type, object sample)
 		{
-			IList<PropertyInfo> properties = sample.GetType().Properties();
-			properties.ForEach(propInfo => Assert.AreEqual(propInfo.Get(sample), type.GetFieldValue(propInfo.Name.FirstCharLower())));
+			Type sampleType = sample.GetType();
+			IList<PropertyInfo> properties = sampleType.Properties();
+			foreach (PropertyInfo propInfo in properties) {
+				string name = propInfo.Name.FirstCharLower();
+				object value1 = propInfo.Get(sample);
+				object value2 = type.GetFieldValue(name);
+				Assert.AreEqual(value1, value2);
+			}
 		}
 
 		protected static void VerifyFields(object obj, object sample)
 		{
 			IList<PropertyInfo> properties = sample.GetType().Properties();
-			foreach (var propInfo in properties) {
+			foreach (PropertyInfo propInfo in properties) {
+				string name = propInfo.Name.FirstCharLower();
 				object value1 = propInfo.Get(sample);
-				object value2 = obj.GetFieldValue(propInfo.Name.FirstCharLower());
+				object value2 = obj.GetFieldValue(name);
 				Assert.AreEqual(value1, value2);
 			}
 		}

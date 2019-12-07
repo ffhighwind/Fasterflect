@@ -22,6 +22,7 @@
 using Fasterflect.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -29,26 +30,27 @@ namespace Fasterflect.Emitter
 {
 	internal class MultiSetEmitter : BaseEmitter
 	{
-		public MultiSetEmitter(Type targetType, IList<MemberInfo> members) 
-			: this(new MultiSetCallInfo(targetType, members))
+		public MultiSetEmitter(Type targetType, IList<MemberInfo> members)
 		{
-		}
-
-		public MultiSetEmitter(MultiSetCallInfo callInfo)
-		{
-			CallInfo = callInfo;
-			IsStatic = true;
-			for (int i = 0, count = callInfo.Members.Count; i < count; ++i) {
-				bool isstatic = callInfo.Members[i].IsStatic();
+			TargetType = targetType;
+			Members = members;
+			for (int i = 0, count = Members.Count; i < count; ++i) {
+				bool isstatic = Members[i].IsStatic();
 				if (!isstatic) {
 					IsStatic = false;
-					break;
+					return;
 				}
 			}
+			IsStatic = true;
 		}
 
-		protected override Type TargetType => CallInfo.TargetType;
-		public MultiSetCallInfo CallInfo { get; }
+		public MultiSetEmitter(MultiSetCallInfo callInfo) 
+			: this(callInfo.TargetType, ReflectLookup.MembersExact(callInfo.TargetType, callInfo.Flags, callInfo.Members.ToArray()))
+		{
+		}
+
+		protected override Type TargetType { get; }
+		protected IList<MemberInfo> Members { get; }
 		protected override bool IsStatic { get; }
 
 		protected internal override DynamicMethod CreateDynamicMethod()
@@ -59,7 +61,6 @@ namespace Fasterflect.Emitter
 
 		protected internal override Delegate CreateDelegate()
 		{
-			IList<MemberInfo> members = CallInfo.Members;
 			bool handleInnerStruct = ShouldHandleInnerStruct;
 			if (!IsStatic) {
 				Generator.ldarg_0.end();                     // load arg-0 (this)
@@ -75,7 +76,7 @@ namespace Fasterflect.Emitter
 					Generator.castclass(TargetType);   // (TargetType)this
 				}
 			}
-
+			IList<MemberInfo> members = Members;
 			for (int i = 0, count = members.Count; i < count; ++i) {
 				MemberInfo method = members[i];
 				if (method == null)

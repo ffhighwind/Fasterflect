@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 
 namespace Fasterflect.Emitter
@@ -33,18 +34,24 @@ namespace Fasterflect.Emitter
 	internal class MultiSetCallInfo
 	{
 		public Type TargetType { get; }
-		public readonly IList<MemberInfo> Members;
+		public FasterflectFlags Flags { get; }
+		public IList<string> Members { get; }
 
-		public MultiSetCallInfo(Type targetType, IList<MemberInfo> members)
+		public MultiSetCallInfo(Type targetType, IList<MemberInfo> members) : this(targetType, FasterflectFlags.StaticInstanceAnyVisibility, members.Select(m => m.Name).ToArray())
+		{
+		}
+
+		public MultiSetCallInfo(Type targetType, FasterflectFlags bindingFlags, IList<string> members)
 		{
 			TargetType = targetType;
+			Flags = bindingFlags;
 			Members = members;
 		}
 
 		public override bool Equals(object obj)
 		{
 			if (obj is MultiSetCallInfo other) {
-				if (other.Members.Count == Members.Count) {
+				if (other.Members.Count == Members.Count && other.Flags == Flags) {
 					for (int i = 0, count = Members.Count; i < count; ++i) {
 						if (!Members[i].Equals(other.Members[i]))
 							return false;
@@ -59,6 +66,7 @@ namespace Fasterflect.Emitter
 		{
 			int hashCode = 688758924;
 			hashCode = hashCode * -1521134295 + TargetType.GetHashCode();
+			hashCode = hashCode * -1521134295 + Flags.GetHashCode();
 			for (int i = 0, count = Members.Count; i < count; ++i) {
 				hashCode = hashCode * -1521134295 + Members[i].GetHashCode();
 			}

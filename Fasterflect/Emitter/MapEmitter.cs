@@ -16,9 +16,9 @@
 // The latest version of this file can be found at http://fasterflect.codeplex.com/
 #endregion
 
-using Fasterflect.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -26,21 +26,37 @@ namespace Fasterflect.Emitter
 {
 	internal class MapEmitter : BaseEmitter
 	{
-		protected Type SourceType => CallInfo.SourceType;
-		protected override Type TargetType => CallInfo.TargetType;
-		protected MemberInfo[] Sources { get; }
-		protected MemberInfo[] Targets { get; }
+		protected Type OtherType { get; }
+		protected override Type TargetType { get; }
+		protected IList<MemberInfo> Sources { get; }
+		protected IList<MemberInfo> Targets { get; }
+
+		public MapEmitter(Type sourceType, Type otherType, IList<MemberInfo> sources, IList<MemberInfo> targets)
+		{
+			TargetType = sourceType;
+			OtherType = otherType;
+			Sources = sources;
+			Targets = targets == null || targets.Count == 0 ? sources : targets;
+		}
 
 		public MapEmitter(MapCallInfo callInfo)
 		{
-			CallInfo = callInfo;
+			TargetType = callInfo.SourceType;
+			OtherType = callInfo.TargetType;
+			if (callInfo.Sources.Count == 0) {
+				IList<MemberInfo> sources = ReflectLookup.Members(TargetType, MemberTypes.Field | MemberTypes.Property, callInfo.Flags);
+				Targets = ReflectLookup.Members(OtherType, MemberTypes.Field | MemberTypes.Property, callInfo.Flags, sources.Select(m => m.Name).ToArray());
+				Sources = ReflectLookup.MembersExact(TargetType, callInfo.Flags, Targets.Select(m => m.Name).ToArray());
+			}
+			else {
+				Sources = ReflectLookup.MembersExact(TargetType, callInfo.Flags, callInfo.Sources.ToArray());
+				Targets = callInfo.Targets == null ? Sources : ReflectLookup.MembersExact(OtherType, callInfo.Flags, callInfo.Targets.ToArray());
+			}
 		}
-
-		public MapCallInfo CallInfo { get; }
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
-			return CreateDynamicMethod(SourceType.Name, SourceType, null, new[] { typeof(object), typeof(object) });
+			return CreateDynamicMethod(TargetType.Name, TargetType, null, new[] { typeof(object), typeof(object) });
 		}
 
 		protected internal override Delegate CreateDelegate()
@@ -55,12 +71,12 @@ namespace Fasterflect.Emitter
 					.unbox_any(TargetType) // unbox <stack>
 					.stloc(0); // localStr = <stack>
 			}
-			for (int i = 0, count = Sources.Length; i < count; ++i) {
+			for (int i = 0, count = Sources.Count; i < count; ++i) {
 				if (handleInnerStruct)
 					Generator.ldloca_s(0).end(); // load &localStr
 				else
 					Generator.ldarg_1.castclass(TargetType).end(); // ((TargetType)target)
-				Generator.ldarg_0.castclass(SourceType);
+				Generator.ldarg_0.castclass(OtherType);
 				GenerateGetMemberValue(Sources[i]);
 				GenerateSetMemberValue(Targets[i]);
 			}

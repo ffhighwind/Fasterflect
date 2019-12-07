@@ -40,7 +40,7 @@ namespace Fasterflect.Extensions
 		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static ObjectMapper DelegateForMap(this Type sourceType, Type targetType, params string[] names)
 		{
-			return DelegateForMap(sourceType, targetType, FasterflectFlags.InstanceAnyVisibility, names);
+			return Reflect.Mapper(sourceType, targetType, names);
 		}
 
 		/// <summary>
@@ -56,9 +56,7 @@ namespace Fasterflect.Extensions
 		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static ObjectMapper DelegateForMap(this Type sourceType, Type targetType, FasterflectFlags bindingFlags, params string[] names)
 		{
-			MapCallInfo callInfo = new MapCallInfo(sourceType, targetType, bindingFlags, names, names);
-			MapEmitter emitter = new MapEmitter(callInfo);
-			return (ObjectMapper)emitter.GetDelegate();
+			return Reflect.Mapper(sourceType, targetType, bindingFlags, names);
 		}
 		#endregion
 	}
@@ -81,7 +79,10 @@ namespace Fasterflect.Extensions
 		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static void Map(this object source, object target, params string[] names)
 		{
-			DelegateForMap(source.GetType(), target.GetTypeAdjusted(), names)(source, target);
+			Type sourceType = source.GetType();
+			Type targetType = target.GetTypeAdjusted();
+			ObjectMapper mapper = DelegateForMap(sourceType, targetType, names);
+			mapper(source, target);
 		}
 
 		/// <summary>
@@ -97,7 +98,10 @@ namespace Fasterflect.Extensions
 		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static void Map(this object source, object target, FasterflectFlags bindingFlags, params string[] names)
 		{
-			DelegateForMap(source.GetType(), target.GetTypeAdjusted(), bindingFlags, names)(source, target);
+			Type sourceType = source.GetType();
+			Type targetType = target.GetTypeAdjusted();
+			ObjectMapper mapper = Reflect.Mapper(sourceType, targetType, bindingFlags, names);
+			mapper(source, target);
 		}
 		#endregion
 

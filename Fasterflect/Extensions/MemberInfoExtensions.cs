@@ -32,8 +32,9 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		internal static object Get(this MemberInfo memberInfo)
 		{
-			MemberGetter @delegate = (MemberGetter)new MemberGetEmitter(memberInfo).GetDelegate();
-			return @delegate(null);
+			MemberGetter getter = Reflect.Getter(memberInfo);
+			object value = getter(null);
+			return value;
 		}
 
 		/// <summary>
@@ -41,8 +42,8 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		internal static void Set(this MemberInfo memberInfo, object value)
 		{
-			MemberSetter @delegate = (MemberSetter)new MemberSetEmitter(memberInfo).GetDelegate();
-			@delegate(null, value);
+			MemberSetter setter = Reflect.Setter(memberInfo);
+			setter(null, value);
 		}
 
 		/// <summary>
@@ -51,8 +52,9 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		internal static object Get(this MemberInfo memberInfo, object obj)
 		{
-			MemberGetter @delegate = (MemberGetter)new MemberGetEmitter(memberInfo).GetDelegate();
-			return @delegate(obj);
+			MemberGetter getter = Reflect.Getter(memberInfo);
+			object value = getter(obj);
+			return value;
 		}
 
 		/// <summary>
@@ -61,8 +63,8 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		internal static void Set(this MemberInfo memberInfo, object obj, object value)
 		{
-			MemberSetter @delegate = (MemberSetter)new MemberSetEmitter(memberInfo).GetDelegate();
-			@delegate(obj, value);
+			MemberSetter setter = Reflect.Setter(memberInfo);
+			setter(obj, value);
 		}
 
 		#region MemberInfo Helpers

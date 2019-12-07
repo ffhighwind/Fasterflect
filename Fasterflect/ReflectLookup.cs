@@ -366,6 +366,7 @@ namespace Fasterflect
 		#region Member Lookup (Multiple)
 		/// <summary>
 		/// Gets all public and non-public instance members on the given <paramref name="type"/>.
+		/// These are returned in random order.
 		/// </summary>
 		/// <returns>A list of all members on the type. This value will never be null.</returns>
 		/// <param name="type">The type to reflect on.</param>
@@ -377,7 +378,7 @@ namespace Fasterflect
 
 		/// <summary>
 		/// Gets all public and non-public instance members on the given <paramref name="type"/> that 
-		/// match the specified <paramref name="bindingFlags"/>.
+		/// match the specified <paramref name="bindingFlags"/>. These are returned in random order.
 		/// </summary>
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		/// <param name="type">The type to reflect on.</param>
@@ -392,6 +393,7 @@ namespace Fasterflect
 		/// <summary>
 		/// Gets all public and non-public instance members of the given <paramref name="memberTypes"/> on the 
 		/// given <paramref name="type"/>, optionally filtered by the supplied <paramref name="names"/> list.
+		/// These are returned in random order.
 		/// </summary>
 		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the result.</param>
 		/// <param name="type">The type on which to reflect.</param>
@@ -409,7 +411,7 @@ namespace Fasterflect
 		/// <summary>
 		/// Gets all members of the given <paramref name="memberTypes"/> on the given <paramref name="type"/> that 
 		/// match the specified <paramref name="bindingFlags"/>, optionally filtered by the supplied <paramref name="names"/>
-		/// list (in accordance with the given <paramref name="bindingFlags"/>).
+		/// list (in accordance with the given <paramref name="bindingFlags"/>). These are returned in random order.
 		/// </summary>
 		/// <param name="type">The type to reflect on.</param>
 		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the result.</param>
@@ -458,6 +460,27 @@ namespace Fasterflect
 			while (baseType != null && baseType != typeof(object)) {
 				members.AddRange(baseType.FindMembers(memberTypes, bindingFlags, null, null));
 				baseType = baseType.BaseType;
+			}
+			return members;
+		}
+
+		/// <summary>
+		/// Gets all members of the given <paramref name="memberTypes"/> on the given <paramref name="type"/> that 
+		/// match the specified <paramref name="bindingFlags"/>, filtered by the supplied <paramref name="names"/>
+		/// list (in accordance with the given <paramref name="bindingFlags"/>). These are returned in the same order and a
+		/// <see cref="MissingMemberException"/> is thrown if any member is missing.
+		/// </summary>
+		/// <param name="type">The type to reflect on.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
+		/// the search behavior and result filtering.</param>
+		/// <param name="names">The optional list of names against which to filter the result.</param>
+		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
+		public static MemberInfo[] MembersExact(Type type, FasterflectFlags bindingFlags, params string[] names)
+		{
+			MemberInfo[] members = new MemberInfo[names.Length];
+			for (int i = 0, count = names.Length; i < count; ++i) {
+				string name = names[i];
+				members[i] = Member(type, name, bindingFlags) ?? throw new MissingMemberException(type.FullName, name);
 			}
 			return members;
 		}
