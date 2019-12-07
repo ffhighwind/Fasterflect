@@ -36,7 +36,7 @@ namespace Fasterflect
 		private static readonly Cache<FieldInfo, MemberSetter> FieldSetters = new Cache<FieldInfo, MemberSetter>();
 		private static readonly Cache<PropertyInfo, MemberGetter> PropertyGetters = new Cache<PropertyInfo, MemberGetter>();
 		private static readonly Cache<PropertyInfo, MemberSetter> PropertySetters = new Cache<PropertyInfo, MemberSetter>();
-		private static readonly Cache<Type, ConstructorInvoker> Constructors = new Cache<Type, ConstructorInvoker>();
+		private static readonly Cache<CtorInfo, ConstructorInvoker> Constructors = new Cache<CtorInfo, ConstructorInvoker>();
 		private static readonly Cache<ConstructorInfo, ConstructorInvoker> ParamConstructors = new Cache<ConstructorInfo, ConstructorInvoker>();
 		private static readonly Cache<MethodInfo, MethodInvoker> Methods = new Cache<MethodInfo, MethodInvoker>();
 		private static readonly Cache<Type, ArrayElementSetter> ArraySetters = new Cache<Type, ArrayElementSetter>();
@@ -67,24 +67,17 @@ namespace Fasterflect
 		/// <returns>A <see cref="ConstructorInvoker"/> which invokes the given <see cref="ConstructorInfo"/>.</returns>
 		public static ConstructorInvoker Constructor(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
 		{
-			ConstructorInvoker value;
-			if (parameterTypes.Length == 0) {
-				value = Constructors.Get(type);
-				if (value != null)
-					return value;
-				if(type.IsValueType) {
-					value = (ConstructorInvoker)new CtorInvocationEmitter(type).GetDelegate();
-				}
-				else {
-					ConstructorInfo ctor = ReflectLookup.Constructor(type, bindingFlags, parameterTypes) ?? throw new MissingMemberException(type.FullName, "ctor");
-					value = (ConstructorInvoker)new CtorInvocationEmitter(ctor).GetDelegate();
-				}
-				Constructors.Insert(type, value);
-			}
+			CtorInfo ctorInfo = new CtorInfo(type, bindingFlags, parameterTypes);
+			ConstructorInvoker value = Constructors.Get(ctorInfo);
+			if (value != null)
+				return value;
+			if (parameterTypes.Length == 0 && type.IsValueType)
+				value = (ConstructorInvoker)new CtorInvocationEmitter(type).GetDelegate();
 			else {
-				ConstructorInfo ctor = ReflectLookup.Constructor(type, parameterTypes) ?? throw new MissingMemberException(type.FullName, "ctor");
+				ConstructorInfo ctor = ReflectLookup.Constructor(type, bindingFlags, parameterTypes) ?? throw new MissingMemberException(type.FullName, "ctor");
 				value = Constructor(ctor);
 			}
+			Constructors.Insert(ctorInfo, value);
 			return value;
 		}
 
@@ -635,7 +628,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="sourceType">The type of the source object.</param>
 		/// <param name="targetType">The type of the target object.</param>
-		/// <param name="bindingFlags"></param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the members.</param>
 		/// <param name="names">The optional list of member names against which to filter the members that are
 		/// to be mapped. If this parameter is an empty string then no name filtering will be applied.</param>
 		/// <returns>An <see cref="ObjectMapper"/> which sets the target using the matching source members.</returns>
@@ -651,7 +644,7 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="sourceType">The type of the source object.</param>
 		/// <param name="targetType">The type of the target object.</param>
-		/// <param name="bindingFlags"></param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to filter the members.</param>
 		/// <param name="sourceNames">The member names (Fields, Properties or both) to include on the source.</param>
 		/// <param name="targetNames">The member names (Fields, Properties or both) to include on the target.</param>
 		/// <returns>An <see cref="ObjectMapper"/> which sets the target using the matching source members.</returns>
@@ -671,7 +664,6 @@ namespace Fasterflect
 		/// </summary>
 		/// <param name="sourceType">The type of the source object.</param>
 		/// <param name="targetType">The type of the target object.</param>
-		/// <param name="bindingFlags"></param>
 		/// <param name="sources">The member names (Fields, Properties or both) to include on the source.</param>
 		/// <param name="targets">The member names (Fields, Properties or both) to include on the target.</param>
 		/// <returns>An <see cref="ObjectMapper"/> which sets the target using the matching source members.</returns>

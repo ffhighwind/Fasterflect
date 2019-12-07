@@ -21,36 +21,56 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using Fasterflect.Extensions;
 
 namespace Fasterflect.Emitter
 {
 	internal class MapEmitter : BaseEmitter
 	{
-		protected Type OtherType { get; }
+		protected Type SourceType { get; }
 		protected override Type TargetType { get; }
-		protected IList<MemberInfo> Sources { get; }
-		protected IList<MemberInfo> Targets { get; }
+		protected IList<MemberInfo> Sources { get; private set; }
+		protected IList<MemberInfo> Targets { get; private set; }
 
-		public MapEmitter(Type sourceType, Type otherType, IList<MemberInfo> sources, IList<MemberInfo> targets)
+		public MapEmitter(Type sourceType, Type targetType, IList<MemberInfo> sources, IList<MemberInfo> targets)
 		{
-			TargetType = sourceType;
-			OtherType = otherType;
+			TargetType = targetType;
+			SourceType = sourceType;
 			Sources = sources;
-			Targets = targets == null || targets.Count == 0 ? sources : targets;
+			Targets = targets;
 		}
 
 		public MapEmitter(MapCallInfo callInfo)
 		{
-			TargetType = callInfo.SourceType;
-			OtherType = callInfo.TargetType;
-			if (callInfo.Sources.Count == 0) {
-				IList<MemberInfo> sources = ReflectLookup.Members(TargetType, MemberTypes.Field | MemberTypes.Property, callInfo.Flags);
-				Targets = ReflectLookup.Members(OtherType, MemberTypes.Field | MemberTypes.Property, callInfo.Flags, sources.Select(m => m.Name).ToArray());
-				Sources = ReflectLookup.MembersExact(TargetType, callInfo.Flags, Targets.Select(m => m.Name).ToArray());
+			TargetType = callInfo.TargetType;
+			SourceType = callInfo.SourceType;
+			StringComparison comparison = callInfo.Flags.IsSet(FasterflectFlags.IgnoreCase)
+											? StringComparison.OrdinalIgnoreCase
+											: StringComparison.Ordinal;
+			IEnumerable<MemberInfo> sources = callInfo.SourceType.Members(MemberTypes.Field | MemberTypes.Property, callInfo.Flags, callInfo.Sources.ToArray()).Where(s => s.IsReadable());
+			List<MemberInfo> targets = callInfo.TargetType.Members(MemberTypes.Field | MemberTypes.Property, callInfo.Flags, callInfo.Targets.ToArray()).Where(t => t.IsWritable()).ToList();
+			Sources = new List<MemberInfo>();
+			Targets = new List<MemberInfo>();
+			if (callInfo.Targets.Count == 0) {
+				foreach (MemberInfo source in sources) {
+					foreach (MemberInfo target in targets) {
+						if (source.Name.Equals(target.Name, comparison)
+							&& target.Type().IsAssignableFrom(source.Type())) {
+							Sources.Add(source);
+							Targets.Add(target);
+						}
+					}
+				}
 			}
 			else {
-				Sources = ReflectLookup.MembersExact(TargetType, callInfo.Flags, callInfo.Sources.ToArray());
-				Targets = callInfo.Targets == null ? Sources : ReflectLookup.MembersExact(OtherType, callInfo.Flags, callInfo.Targets.ToArray());
+				foreach (MemberInfo source in sources) {
+					foreach (MemberInfo target in targets) {
+						if (target.Type().IsAssignableFrom(source.Type())) {
+							Sources.Add(source);
+							Targets.Add(target);
+						}
+					}
+				}
 			}
 		}
 
@@ -63,20 +83,20 @@ namespace Fasterflect.Emitter
 		{
 			bool handleInnerStruct = ShouldHandleInnerStruct;
 			if (handleInnerStruct) {
-				Generator.ldarg_1.end();                     // load arg-1 (target)
-				Generator.DeclareLocal(TargetType); // TargetType localStr;
+				Generator.ldarg_1.end();                // load arg-1 (target)
+				Generator.DeclareLocal(TargetType);     // TargetType localStr;
 				Generator
-					.castclass(typeof(ValueTypeHolder)) // (ValueTypeHolder)wrappedStruct
-					.callvirt(StructGetMethod) // <stack>.get_Value()
-					.unbox_any(TargetType) // unbox <stack>
-					.stloc(0); // localStr = <stack>
+					.castclass(typeof(ValueTypeHolder))   // (ValueTypeHolder)wrappedStruct
+					.callvirt(StructGetMethod)            // <stack>.get_Value()
+					.unbox_any(TargetType)                // unbox <stack>
+					.stloc(0);                            // localStr = <stack>
 			}
 			for (int i = 0, count = Sources.Count; i < count; ++i) {
 				if (handleInnerStruct)
 					Generator.ldloca_s(0).end(); // load &localStr
 				else
 					Generator.ldarg_1.castclass(TargetType).end(); // ((TargetType)target)
-				Generator.ldarg_0.castclass(OtherType);
+				Generator.ldarg_0.castclass(SourceType);
 				GenerateGetMemberValue(Sources[i]);
 				GenerateSetMemberValue(Targets[i]);
 			}
