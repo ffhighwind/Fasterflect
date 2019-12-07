@@ -13,7 +13,7 @@ Fasterflect is 50x faster than .NET reflection, 8x faster than FastMember, and 2
 | Direct Access                            | 0.0591 ns   | 0.02 |
 | Delegate.CreateDelegate (T,string)       | 1.8963 ns   | 0.60 |
 | Fasterflect (object, object)             | **3.1387 ns** | **1.00** |
-| Magnum - Expression.Compile (object, object) | 10.8061 | 3.44 |
+| Magnum - Expression.Compile (object, object) | 10.8061 ns | 3.44 |
 | Sigil.ILEmit (T, string)                 | 12.7648 ns  | 4.07 |
 | Sigil.ILEmit (object, object)            | 13.9060 ns   | 4.43 |
 | FastMember (object, object)              | 31.3559 ns  | 9.99 |
