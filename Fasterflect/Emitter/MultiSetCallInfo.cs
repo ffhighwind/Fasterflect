@@ -46,10 +46,6 @@ namespace Fasterflect.Emitter
 			if (obj is MultiSetCallInfo other) {
 				if (other.Members.Count == Members.Count) {
 					for (int i = 0, count = Members.Count; i < count; ++i) {
-						MemberInfo mi = other.Members[i];
-						MemberInfo mi2 = Members[i];
-						if (ReferenceEquals(mi, mi2))
-							continue;
 						if (!Members[i].Equals(other.Members[i]))
 							return false;
 					}

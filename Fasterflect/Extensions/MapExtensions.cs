@@ -56,29 +56,8 @@ namespace Fasterflect.Extensions
 		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static ObjectMapper DelegateForMap(this Type sourceType, Type targetType, FasterflectFlags bindingFlags, params string[] names)
 		{
-			const MemberTypes memberTypes = MemberTypes.Field | MemberTypes.Property;
-			return DelegateForMap(sourceType, targetType, memberTypes, memberTypes, bindingFlags, names);
-		}
-
-		/// <summary>
-		/// Creates a delegate that can map values from fields and properties on the source object to fields and properties with the 
-		/// same name on the target object.
-		/// </summary>
-		/// <param name="sourceType">The type of the source object.</param>
-		/// <param name="targetType">The type of the target object.</param>
-		/// <param name="sourceTypes">The member types (Fields, Properties or both) to include on the source.</param>
-		/// <param name="targetTypes">The member types (Fields, Properties or both) to include on the target.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> used to define the scope when locating members. If
-		/// <paramref name="sourceTypes"/> is different from <paramref name="targetTypes"/> the flag value
-		/// <see cref="FasterflectFlags.IgnoreCase"/> will automatically be applied.</param>
-		/// <param name="names">The optional list of member names against which to filter the members that are
-		/// to be mapped. If this parameter is <see langword="null"/> or empty no name filtering will be applied. The default 
-		/// behavior is to check for an exact, case-sensitive match. Pass <see cref="FasterflectFlags.PartialNameMatch"/> to 
-		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
-		public static ObjectMapper DelegateForMap(this Type sourceType, Type targetType, MemberTypes sourceTypes, MemberTypes targetTypes,
-							   FasterflectFlags bindingFlags, params string[] names)
-		{
-			MapEmitter emitter = new MapEmitter(sourceType, targetType, names, names);
+			MapCallInfo callInfo = new MapCallInfo(sourceType, targetType, bindingFlags, names, names);
+			MapEmitter emitter = new MapEmitter(callInfo);
 			return (ObjectMapper)emitter.GetDelegate();
 		}
 		#endregion
@@ -102,7 +81,7 @@ namespace Fasterflect.Extensions
 		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static void Map(this object source, object target, params string[] names)
 		{
-			Fasterflect.Extensions.MapExtensions.DelegateForMap(source.GetType(), target.GetTypeAdjusted(), names)(source, target);
+			DelegateForMap(source.GetType(), target.GetTypeAdjusted(), names)(source, target);
 		}
 
 		/// <summary>
@@ -118,28 +97,7 @@ namespace Fasterflect.Extensions
 		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static void Map(this object source, object target, FasterflectFlags bindingFlags, params string[] names)
 		{
-			Fasterflect.Extensions.MapExtensions.DelegateForMap(source.GetType(), target.GetTypeAdjusted(), bindingFlags, names)(source, target);
-		}
-
-		/// <summary>
-		/// Maps values from members on the source object to members with the same name on the target object.
-		/// </summary>
-		/// <param name="source">The source object from which member values are read.</param>
-		/// <param name="target">The target object to which member values are written.</param>
-		/// <param name="sourceTypes">The member types (Fields, Properties or both) to include on the source.</param>
-		/// <param name="targetTypes">The member types (Fields, Properties or both) to include on the target.</param>
-		/// <param name="bindingFlags">The <see cref="FasterflectFlags"/> used to define the scope when locating members. If
-		/// <paramref name="sourceTypes"/> is different from <paramref name="targetTypes"/> the flag value
-		/// <see cref="FasterflectFlags.IgnoreCase"/> will automatically be applied.</param>
-		/// <param name="names">The optional list of member names against which to filter the members that are
-		/// to be mapped. If this parameter is <see langword="null"/> or empty no name filtering will be applied. The default 
-		/// behavior is to check for an exact, case-sensitive match. Pass <see cref="FasterflectFlags.PartialNameMatch"/> to 
-		/// filter members by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
-		public static void Map(this object source, object target, MemberTypes sourceTypes, MemberTypes targetTypes,
-								FasterflectFlags bindingFlags, params string[] names)
-		{
-			Fasterflect.Extensions.MapExtensions.DelegateForMap(source.GetType(), target.GetTypeAdjusted(), sourceTypes, targetTypes, bindingFlags, names)(
-				source, target);
+			DelegateForMap(source.GetType(), target.GetTypeAdjusted(), bindingFlags, names)(source, target);
 		}
 		#endregion
 
@@ -155,7 +113,7 @@ namespace Fasterflect.Extensions
 		/// filter fields by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static void MapFields(this object source, object target, params string[] names)
 		{
-			source.Map(target, MemberTypes.Field, MemberTypes.Field, FasterflectFlags.InstanceAnyVisibility, names);
+			source.Map(target, FasterflectFlags.InstanceAnyVisibility | BindingFlags.SetField | BindingFlags.GetField, names);
 		}
 
 		/// <summary>
@@ -169,7 +127,7 @@ namespace Fasterflect.Extensions
 		/// filter properties by substring and <see cref="FasterflectFlags.IgnoreCase"/> to ignore case.</param>
 		public static void MapProperties(this object source, object target, params string[] names)
 		{
-			source.Map(target, MemberTypes.Property, MemberTypes.Property, FasterflectFlags.InstanceAnyVisibility, names);
+			source.Map(target, FasterflectFlags.InstanceAnyVisibility | BindingFlags.GetProperty | BindingFlags.SetProperty, names);
 		}
 
 		/// <summary>
@@ -184,22 +142,7 @@ namespace Fasterflect.Extensions
 		/// to filter members by substring.</param>
 		public static void MapFieldsToProperties(this object source, object target, params string[] names)
 		{
-			source.Map(target, MemberTypes.Field, MemberTypes.Property, FasterflectFlags.InstanceAnyVisibility, names);
-		}
-
-		/// <summary>
-		/// Maps values from properties on the source object to fields with the same name (ignoring case) 
-		/// on the target object.
-		/// </summary>
-		/// <param name="source">The source object from which property values are read.</param>
-		/// <param name="target">The target object to which field values are written.</param>
-		/// <param name="names">The optional list of member names against which to filter the members that are
-		/// to be mapped. If this parameter is <see langword="null"/> or empty no name filtering will be applied. The default 
-		/// behavior is to check for an exact, case-insensitive match. Pass <see cref="FasterflectFlags.PartialNameMatch"/>
-		/// to filter members by substring.</param>
-		public static void MapPropertiesToFields(this object source, object target, params string[] names)
-		{
-			source.Map(target, MemberTypes.Property, MemberTypes.Field, FasterflectFlags.InstanceAnyVisibility, names);
+			source.Map(target, FasterflectFlags.InstanceAnyVisibility | BindingFlags.GetProperty | BindingFlags.SetProperty | BindingFlags.SetField | BindingFlags.GetField, names);
 		}
 		#endregion
 	}

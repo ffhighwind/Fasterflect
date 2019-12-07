@@ -100,8 +100,11 @@ namespace FasterflectTest.Invocation
 		public void TestAccessInstanceFieldViaFieldInfo()
 		{
 			RunWith((object person) => {
-				FieldInfo fieldInfo = person.UnwrapIfWrapped().GetType().Field("name");
-				string name = (string)fieldInfo.Get(person) + " updated";
+				object unwrapped = person.UnwrapIfWrapped();
+				Type type = unwrapped.GetType();
+				FieldInfo fieldInfo = type.Field("name");
+				string str = (string)fieldInfo.Get(person);
+				string name = str + " updated";
 				fieldInfo.Set(person, name);
 				VerifyFields(person, new { name });
 			});

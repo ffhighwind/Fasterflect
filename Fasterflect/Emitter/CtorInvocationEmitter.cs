@@ -26,8 +26,8 @@ namespace Fasterflect.Emitter
 {
 	internal class CtorInvocationEmitter : InvocationEmitter
 	{
-		public CtorInvocationEmitter(ConstructorInfo ctorInfo)
-			: base(new CallInfo(ctorInfo))
+		public CtorInvocationEmitter(ConstructorInfo ctor)
+			: base(ctor)
 		{
 		}
 
@@ -38,7 +38,7 @@ namespace Fasterflect.Emitter
 
 		protected internal override Delegate CreateDelegate()
 		{
-			if (IsTargetTypeStruct && CallInfo.HasNoParam) // no-arg struct needs special initialization
+			if (IsTargetTypeStruct && HasNoParam) // no-arg struct needs special initialization
 			{
 				Generator
 					.DeclareLocal(TargetType);   // TargetType tmp
@@ -56,9 +56,9 @@ namespace Fasterflect.Emitter
 					.newarr(TargetType.GetElementType());   // new T[args[0]]
 			}
 			else {
-				ConstructorInfo ctorInfo = (ConstructorInfo)CallInfo.MemberInfo;
+				ConstructorInfo ctorInfo = (ConstructorInfo)MemberInfo;
 				byte startUsableLocalIndex = 0;
-				if (CallInfo.HasRefParam) {
+				if (HasRefParam) {
 					startUsableLocalIndex = CreateLocalsForByRefParams(0, ctorInfo); // create by_ref_locals from argument array
 					Generator.DeclareLocal(TargetType);                     // TargetType tmp;
 				}
@@ -66,7 +66,7 @@ namespace Fasterflect.Emitter
 				PushParamsOrLocalsToStack(0);                 // push arguments and by_ref_locals
 				Generator.newobj(ctorInfo);                   // ctor (<stack>)
 
-				if (CallInfo.HasRefParam) {
+				if (HasRefParam) {
 					Generator.stloc(startUsableLocalIndex);   // tmp = <stack>;
 					AssignByRefParamsToArray(0);              // store by_ref_locals back to argument array
 					Generator.ldloc(startUsableLocalIndex);   // tmp

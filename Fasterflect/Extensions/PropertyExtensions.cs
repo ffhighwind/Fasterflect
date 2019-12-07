@@ -199,7 +199,7 @@ namespace Fasterflect.Extensions
 		/// <returns><paramref name="obj"/>.</returns>
 		internal static object SetPropertyValue(this object obj, string name, object value)
 		{
-			Fasterflect.Extensions.PropertyExtensions.DelegateForSetPropertyValue(obj.GetTypeAdjusted(), name)(obj, value);
+			DelegateForSetPropertyValue(obj.GetTypeAdjusted(), name)(obj, value);
 			return obj;
 		}
 
@@ -208,7 +208,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		internal static object GetPropertyValue(this object obj, string name)
 		{
-			return Fasterflect.Extensions.PropertyExtensions.DelegateForGetPropertyValue(obj.GetTypeAdjusted(), name)(obj);
+			return DelegateForGetPropertyValue(obj.GetTypeAdjusted(), name)(obj);
 		}
 
 		/// <summary>
@@ -218,7 +218,7 @@ namespace Fasterflect.Extensions
 		/// <returns><paramref name="obj"/>.</returns>
 		internal static object SetPropertyValue(this object obj, string name, object value, FasterflectFlags bindingFlags)
 		{
-			Fasterflect.Extensions.PropertyExtensions.DelegateForSetPropertyValue(obj.GetTypeAdjusted(), name, bindingFlags)(obj, value);
+			DelegateForSetPropertyValue(obj.GetTypeAdjusted(), name, bindingFlags)(obj, value);
 			return obj;
 		}
 
@@ -228,7 +228,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		internal static object GetPropertyValue(this object obj, string name, FasterflectFlags bindingFlags)
 		{
-			return Fasterflect.Extensions.PropertyExtensions.DelegateForGetPropertyValue(obj.GetTypeAdjusted(), name, bindingFlags)(obj);
+			return DelegateForGetPropertyValue(obj.GetTypeAdjusted(), name, bindingFlags)(obj);
 		}
 
 		/// <summary>
@@ -277,7 +277,7 @@ namespace Fasterflect.Extensions
 		/// </example>
 		internal static object SetIndexer(this object obj, params object[] parameters)
 		{
-			Fasterflect.Extensions.PropertyExtensions.DelegateForSetIndexer(obj.GetTypeAdjusted(), parameters.ToTypeArray())(obj, parameters);
+			DelegateForSetIndexer(obj.GetTypeAdjusted(), parameters.ToTypeArray())(obj, parameters);
 			return obj;
 		}
 
@@ -299,7 +299,7 @@ namespace Fasterflect.Extensions
 		/// </example>
 		internal static object SetIndexer(this object obj, Type[] parameterTypes, params object[] parameters)
 		{
-			Fasterflect.Extensions.PropertyExtensions.DelegateForSetIndexer(obj.GetTypeAdjusted(), parameterTypes)(obj, parameters);
+			DelegateForSetIndexer(obj.GetTypeAdjusted(), parameterTypes)(obj, parameters);
 			return obj;
 		}
 
@@ -314,7 +314,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The value returned by the indexer.</returns>
 		internal static object GetIndexer(this object obj, params object[] parameters)
 		{
-			return Fasterflect.Extensions.PropertyExtensions.DelegateForGetIndexer(obj.GetTypeAdjusted(), parameters.ToTypeArray())(obj, parameters);
+			return DelegateForGetIndexer(obj.GetTypeAdjusted(), parameters.ToTypeArray())(obj, parameters);
 		}
 
 		/// <summary>
@@ -326,7 +326,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The value returned by the indexer.</returns>
 		internal static object GetIndexer(this object obj, Type[] parameterTypes, params object[] parameters)
 		{
-			return Fasterflect.Extensions.PropertyExtensions.DelegateForGetIndexer(obj.GetTypeAdjusted(), parameterTypes)(obj, parameters);
+			return DelegateForGetIndexer(obj.GetTypeAdjusted(), parameterTypes)(obj, parameters);
 		}
 
 		/// <summary>
@@ -348,8 +348,7 @@ namespace Fasterflect.Extensions
 		/// </example>
 		internal static object SetIndexer(this object obj, FasterflectFlags bindingFlags, params object[] parameters)
 		{
-			Fasterflect.Extensions.PropertyExtensions.DelegateForSetIndexer(obj.GetTypeAdjusted(), bindingFlags, parameters.ToTypeArray())(obj,
-																										parameters);
+			DelegateForSetIndexer(obj.GetTypeAdjusted(), bindingFlags, parameters.ToTypeArray())(obj, parameters);
 			return obj;
 		}
 
@@ -372,7 +371,7 @@ namespace Fasterflect.Extensions
 		/// </example>
 		internal static object SetIndexer(this object obj, Type[] parameterTypes, FasterflectFlags bindingFlags, params object[] parameters)
 		{
-			Fasterflect.Extensions.PropertyExtensions.DelegateForSetIndexer(obj.GetTypeAdjusted(), bindingFlags, parameterTypes)(obj, parameters);
+			DelegateForSetIndexer(obj.GetTypeAdjusted(), bindingFlags, parameterTypes)(obj, parameters);
 			return obj;
 		}
 
@@ -388,8 +387,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The value returned by the indexer.</returns>
 		internal static object GetIndexer(this object obj, FasterflectFlags bindingFlags, params object[] parameters)
 		{
-			return Fasterflect.Extensions.PropertyExtensions.DelegateForGetIndexer(obj.GetTypeAdjusted(), bindingFlags, parameters.ToTypeArray())(obj,
-																											   parameters);
+			return DelegateForGetIndexer(obj.GetTypeAdjusted(), bindingFlags, parameters.ToTypeArray())(obj, parameters);
 		}
 
 		/// <summary>
@@ -402,7 +400,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The value returned by the indexer.</returns>
 		internal static object GetIndexer(this object obj, Type[] parameterTypes, FasterflectFlags bindingFlags, params object[] parameters)
 		{
-			return Fasterflect.Extensions.PropertyExtensions.DelegateForGetIndexer(obj.GetTypeAdjusted(), bindingFlags, parameterTypes)(obj, parameters);
+			return DelegateForGetIndexer(obj.GetTypeAdjusted(), bindingFlags, parameterTypes)(obj, parameters);
 		}
 		#endregion
 

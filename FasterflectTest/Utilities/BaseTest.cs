@@ -39,7 +39,7 @@ namespace FasterflectTest.Common
 
 		protected static void VerifyProperties(Type type, object sample)
 		{
-			System.Collections.Generic.IList<System.Reflection.PropertyInfo> properties = sample.GetType().Properties();
+			IList<System.Reflection.PropertyInfo> properties = sample.GetType().Properties();
 			properties.ForEach(propInfo => Assert.AreEqual(propInfo.Get(sample),
 															type.GetPropertyValue(propInfo.Name.FirstCharUpper())));
 		}
@@ -60,17 +60,27 @@ namespace FasterflectTest.Common
 		protected static void VerifyFields(object obj, object sample)
 		{
 			IList<PropertyInfo> properties = sample.GetType().Properties();
-			properties.ForEach(propInfo => Assert.AreEqual(propInfo.Get(sample), obj.GetFieldValue(propInfo.Name.FirstCharLower())));
+			foreach (var propInfo in properties) {
+				object value1 = propInfo.Get(sample);
+				object value2 = obj.GetFieldValue(propInfo.Name.FirstCharLower());
+				Assert.AreEqual(value1, value2);
+			}
 		}
 
 		protected void RunWith(Action<Type> assertionAction)
 		{
-			Types.ForEach(assertionAction);
+			foreach (Type type in Types) {
+				assertionAction(type);
+			}
 		}
 
 		protected void RunWith(Action<object> assertionAction)
 		{
-			Types.Select(t => t.CreateInstance().WrapIfValueType()).ForEach(assertionAction);
+			foreach (Type type in Types) {
+				object instance = type.CreateInstance();
+				object wrapped = instance.WrapIfValueType();
+				assertionAction(wrapped);
+			}
 		}
 	}
 }

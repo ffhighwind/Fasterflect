@@ -259,8 +259,10 @@ namespace Fasterflect
 		{
 			int current = Thread.CurrentThread.ManagedThreadId;
 			while (Interlocked.CompareExchange(ref owner, current, 0) != current) { }
-			IList<TKey> keys = entries.Where(kvp => kvp.Value is WeakReference && !(kvp.Value as WeakReference).IsAlive).Select(kvp => kvp.Key).ToList();
-			keys.ForEach(k => entries.Remove(k));
+			List<TKey> keys = entries.Where(kvp => kvp.Value is WeakReference && !(kvp.Value as WeakReference).IsAlive).Select(kvp => kvp.Key).ToList();
+			foreach(var key in keys) {
+				entries.Remove(key);
+			}
 			int count = entries.Count;
 			if (current != Interlocked.Exchange(ref owner, 0))
 				throw new UnauthorizedAccessException("Thread had access to cache even though it shouldn't have.");

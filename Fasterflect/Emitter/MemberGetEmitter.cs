@@ -29,29 +29,10 @@ namespace Fasterflect.Emitter
 		public MemberGetEmitter(MemberInfo memberInfo)
 		{
 			MemberInfo = memberInfo;
-			if (memberInfo is PropertyInfo property) {
-				TargetType = property.PropertyType;
-			}
-			else {
-				FieldInfo field = (FieldInfo)memberInfo;
-				TargetType = field.FieldType;
-			}
-		}
-
-		public MemberGetEmitter(PropertyInfo property)
-		{
-			MemberInfo = property;
-			TargetType = property.PropertyType;
-		}
-
-		public MemberGetEmitter(FieldInfo field)
-		{
-			MemberInfo = field;
-			TargetType = field.FieldType;
 		}
 
 		public MemberInfo MemberInfo { get; }
-		protected override Type TargetType { get; }
+		protected override Type TargetType => MemberInfo.DeclaringType;
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{

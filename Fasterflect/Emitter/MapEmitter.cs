@@ -31,34 +31,12 @@ namespace Fasterflect.Emitter
 		protected MemberInfo[] Sources { get; }
 		protected MemberInfo[] Targets { get; }
 
-		public MapEmitter(Type sourceType, Type targetType, string[] sourceNames, string[] targetNames)
-			: this(new MapCallInfo(sourceType, targetType, StringComparer.Ordinal, sourceNames, targetNames))
-		{
-		}
-
 		public MapEmitter(MapCallInfo callInfo)
 		{
 			CallInfo = callInfo;
-			//if()
 		}
 
 		public MapCallInfo CallInfo { get; }
-
-		/*
-		private IEnumerable<KeyValuePair<MemberInfo, MemberInfo>> GetMatchingMembers()
-		{
-			StringComparison comparison = BindingFlags.IsSet(FasterflectFlags.IgnoreCase)
-											? StringComparison.OrdinalIgnoreCase
-											: StringComparison.Ordinal;
-			var query = from s in sourceType.Members(sourceMemberTypes, BaseInfo.BindingFlags, names)
-						from t in BaseInfo.TargetType.Members(targetMemberTypes, BaseInfo.BindingFlags, names)
-						where s.Name.Equals(t.Name, comparison) &&
-							  t.Type().IsAssignableFrom(s.Type()) &&
-							  s.IsReadable() && t.IsWritable()
-						select new { Source = s, Target = t };
-			return query.ToDictionary(k => k.Source, v => v.Target);
-		}
-		*/
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{

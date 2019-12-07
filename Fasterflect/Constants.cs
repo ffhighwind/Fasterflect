@@ -34,7 +34,7 @@ namespace Fasterflect
 		/// <summary>
 		/// new object[0]
 		/// </summary>
-		public static readonly object[] EmptyObjectArray =  new object[0];
+		public static readonly object[] EmptyObjectArray = new object[0];
 		/// <summary>
 		/// new string[0]
 		/// </summary>

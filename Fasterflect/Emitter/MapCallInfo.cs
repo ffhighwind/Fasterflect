@@ -31,17 +31,19 @@ namespace Fasterflect.Emitter
 	{
 		public Type TargetType { get; }
 		public Type SourceType { get; }
-		public string[] Sources { get; }
-		public string[] Targets { get; }
+		public IList<string> Sources { get; }
+		public IList<string> Targets { get; }
 		public StringComparer Comparer { get; }
+		public FasterflectFlags Flags { get; }
 
-		public MapCallInfo(Type sourceType, Type targetType, StringComparer comparer, string[] sourceNames, string[] targetNames)
+		public MapCallInfo(Type sourceType, Type targetType, FasterflectFlags flags, IList<string> sourceNames, IList<string> targetNames)
 		{
 			SourceType = sourceType;
 			TargetType = targetType;
 			Sources = sourceNames;
 			Targets = targetNames == null || targetNames == sourceNames ? Constants.EmptyStringArray : targetNames;
-			Comparer = comparer;
+			Flags = flags;
+			Comparer = flags.IsSet(BindingFlags.IgnoreCase) ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
 		}
 
 		public override bool Equals(object obj)
@@ -51,18 +53,17 @@ namespace Fasterflect.Emitter
 			}
 			if (other.SourceType != SourceType
 				|| other.TargetType != TargetType
-				|| other.Sources.Length != Sources.Length) {
+				|| other.Sources.Count != Sources.Count
+				|| other.Targets.Count != Targets.Count) {
 				return false;
 			}
-			for (int i = 0, count = Sources.Length; i < count; ++i) {
+			for (int i = 0, count = Sources.Count; i < count; ++i) {
 				if (!Comparer.Equals(Sources[i], other.Sources[i]))
 					return false;
 			}
-			if(Targets == null) {
-				for (int i = 0, count = Targets.Length; i < count; ++i) {
-					if (!Comparer.Equals(Targets[i], other.Targets[i]))
-						return false;
-				}
+			for (int i = 0, count = Targets.Count; i < count; ++i) {
+				if (!Comparer.Equals(Targets[i], other.Targets[i]))
+					return false;
 			}
 			return true;
 		}
@@ -72,10 +73,10 @@ namespace Fasterflect.Emitter
 			int hashCode = 167991888;
 			hashCode = hashCode * -1521134295 + TargetType.GetHashCode();
 			hashCode = hashCode * -1521134295 + SourceType.GetHashCode();
-			for (int i = 0, count = Sources.Length; i < count; ++i) {
+			for (int i = 0, count = Sources.Count; i < count; ++i) {
 				hashCode = hashCode * -1521134295 + Sources[i].GetHashCode();
 			}
-			for (int i = 0, count = Targets.Length; i < count; ++i) {
+			for (int i = 0, count = Targets.Count; i < count; ++i) {
 				hashCode = hashCode * -1521134295 + Targets[i].GetHashCode();
 			}
 			return hashCode;

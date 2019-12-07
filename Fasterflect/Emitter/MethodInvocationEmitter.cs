@@ -24,8 +24,8 @@ namespace Fasterflect.Emitter
 {
 	internal class MethodInvocationEmitter : InvocationEmitter
 	{
-		public MethodInvocationEmitter(MethodInfo methodInfo)
-			: base(new CallInfo(methodInfo))
+		public MethodInvocationEmitter(MethodInfo method)
+			: base(method)
 		{
 		}
 
@@ -37,11 +37,11 @@ namespace Fasterflect.Emitter
 
 		protected internal override Delegate CreateDelegate()
 		{
-			MethodInfo method = (MethodInfo)CallInfo.MemberInfo;
+			MethodInfo method = (MethodInfo)MemberInfo;
 			const byte paramArrayIndex = 1;
 			bool hasReturnType = method.ReturnType != typeof(void);
 			byte startUsableLocalIndex = 0;
-			if (CallInfo.HasRefParam) {
+			if (HasRefParam) {
 				startUsableLocalIndex = CreateLocalsForByRefParams(paramArrayIndex, method);
 				// create by_ref_locals from argument array
 				Generator.DeclareLocal(hasReturnType ? method.ReturnType : typeof(object)); // T result;
@@ -74,7 +74,7 @@ namespace Fasterflect.Emitter
 
 		protected void GenerateInvocation(MethodInfo methodInfo, byte paramArrayIndex, byte structLocalPosition)
 		{
-			if (!CallInfo.IsStatic) {
+			if (!IsStatic) {
 				Generator.ldarg_0.end(); // load arg-0 (this/null);
 				if (ShouldHandleInnerStruct) {
 					Generator.DeclareLocal(TargetType); // TargetType tmpStr;

@@ -31,24 +31,24 @@ namespace Fasterflect.Emitter
 		{
 			MemberInfo = memberInfo;
 			if (memberInfo is PropertyInfo property) {
-				TargetType = property.PropertyType;
+				TargetType = property.DeclaringType;
 			}
 			else {
 				FieldInfo field = (FieldInfo)memberInfo;
-				TargetType = field.FieldType;
+				TargetType = field.DeclaringType;
 			}
 		}
 
 		public MemberSetEmitter(PropertyInfo property)
 		{
 			MemberInfo = property;
-			TargetType = property.PropertyType;
+			TargetType = property.DeclaringType;
 		}
 
 		public MemberSetEmitter(FieldInfo field)
 		{
 			MemberInfo = field;
-			TargetType = field.FieldType;
+			TargetType = field.DeclaringType;
 		}
 
 		public MemberInfo MemberInfo { get; }

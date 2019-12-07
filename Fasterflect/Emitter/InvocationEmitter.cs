@@ -17,27 +17,43 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Fasterflect.Emitter
 {
 	internal abstract class InvocationEmitter : BaseEmitter
 	{
-		protected InvocationEmitter(CallInfo callInfo)
+		protected InvocationEmitter(ConstructorInfo ctor)
 		{
-			CallInfo = callInfo;
+			MemberInfo = ctor;
+			IsStatic = ctor.IsStatic;
+			IsGeneric = ctor.IsGenericMethod;
+			ParamTypes = ctor.GetParameters().ToTypeArray();
 		}
 
-		protected override Type TargetType => CallInfo.TargetType;
-		public CallInfo CallInfo { get; protected set; }
+		protected InvocationEmitter(MethodInfo method)
+		{
+			MemberInfo = method;
+			IsStatic = method.IsStatic;
+			IsGeneric = method.IsGenericMethod;
+			ParamTypes = method.GetParameters().ToTypeArray();
+		}
+
+		protected MemberInfo MemberInfo { get; }
+		protected override bool IsStatic { get; }
+		protected bool IsGeneric { get; }
+		protected override Type TargetType => MemberInfo.DeclaringType;
+		protected Type[] ParamTypes { get; }
+		protected bool HasNoParam => ParamTypes == Type.EmptyTypes;
+		protected bool HasRefParam => ParamTypes.Any(t => t.IsByRef);
 
 		protected byte CreateLocalsForByRefParams(byte paramArrayIndex, MethodBase invocationInfo)
 		{
-			Type[] paramTypes = CallInfo.ParamTypes;
 			byte numberOfByRefParams = 0;
 			ParameterInfo[] parameters = invocationInfo.GetParameters();
-			for (int i = 0, count = paramTypes.Length; i < count; ++i) {
-				Type paramType = paramTypes[i];
+			for (int i = 0, count = ParamTypes.Length; i < count; ++i) {
+				Type paramType = ParamTypes[i];
 				if (paramType.IsByRef) {
 					Type type = paramType.GetElementType();
 					Generator.DeclareLocal(type);
@@ -59,10 +75,9 @@ namespace Fasterflect.Emitter
 
 		protected void AssignByRefParamsToArray(int paramArrayIndex)
 		{
-			Type[] paramTypes = CallInfo.ParamTypes;
 			byte currentByRefParam = 0;
-			for (int i = 0, count = paramTypes.Length; i < count; ++i) {
-				Type paramType = paramTypes[i];
+			for (int i = 0, count = ParamTypes.Length; i < count; ++i) {
+				Type paramType = ParamTypes[i];
 				if (paramType.IsByRef) {
 					Generator
 						.ldarg(paramArrayIndex)
@@ -77,10 +92,9 @@ namespace Fasterflect.Emitter
 
 		protected void PushParamsOrLocalsToStack(int paramArrayIndex)
 		{
-			Type[] paramTypes = CallInfo.ParamTypes;
 			byte currentByRefParam = 0;
-			for (int i = 0, count = paramTypes.Length; i < count; ++i) {
-				Type paramType = paramTypes[i];
+			for (int i = 0, count = ParamTypes.Length; i < count; ++i) {
+				Type paramType = ParamTypes[i];
 				if (paramType.IsByRef) {
 					Generator.ldloca_s(currentByRefParam++);
 				}

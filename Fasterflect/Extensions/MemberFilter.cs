@@ -22,17 +22,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Fasterflect
+namespace Fasterflect.Extensions
 {
 	internal static class MemberFilter
 	{
-		public static bool IsReservedName(this string name)
+		internal static bool IsReservedName(this string name)
 		{
 			name = name.ToLowerInvariant();
 			return name == ".ctor" || name == ".cctor";
 		}
 
-		public static string TrimExplicitlyImplementedName(this string name)
+		internal static string TrimExplicitlyImplementedName(this string name)
 		{
 			int index = name.IsReservedName() ? -1 : name.LastIndexOf('.') + 1;
 			return index > 0 ? name.Substring(index) : name;
@@ -41,7 +41,7 @@ namespace Fasterflect
 		/// <summary>
 		/// This method applies name filtering to a set of members.
 		/// </summary>
-		public static List<T> Filter<T>(this IEnumerable<T> members, FasterflectFlags bindingFlags, string[] names)
+		public static List<T> Filter<T>(this IEnumerable<T> members, FasterflectFlags bindingFlags, params string[] names)
 			where T : MemberInfo
 		{
 			List<T> result = new List<T>();
@@ -123,7 +123,7 @@ namespace Fasterflect
 		/// <summary>
 		/// This method applies member type filtering to a set of members.
 		/// </summary>
-		public static List<T> Filter<T>(this IEnumerable<T> members, FasterflectFlags bindingFlags, MemberTypes memberTypes)
+		public static List<T> Filter<T>(this IEnumerable<T> members, MemberTypes memberTypes)
 			where T : MemberInfo
 		{
 			List<T> result = new List<T>();

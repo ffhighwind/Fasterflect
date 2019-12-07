@@ -126,6 +126,7 @@ namespace FasterflectTest.Services
 		#endregion
 
 		#region MapPropertiesToFields
+		/*
 		[TestMethod]
 		public void TestMapPropertiesToFields()
 		{
@@ -139,7 +140,7 @@ namespace FasterflectTest.Services
 			//Person target = new Person();
 			//source.MapPropertiesToFields(target);
 			//Verify(new Person(42, birthday, "Arthur Dent"), target);
-		}
+		}*/
 
 		//[TestMethod]
 		//public void TestMapPropertiesToFieldsWithStatic()
@@ -151,7 +152,7 @@ namespace FasterflectTest.Services
 		//           VerifyFields(type, new { totalPeopleCreated });
 		//       });
 		//}
-
+		/*
 		[TestMethod]
 		public void TestMapPropertiesToFieldsWithFilter()
 		{
@@ -171,6 +172,7 @@ namespace FasterflectTest.Services
 			source.MapPropertiesToFields(employee);
 			VerifyFields(employee, source);
 		}
+		*/
 		#endregion
 
 		#region MapFields

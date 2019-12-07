@@ -129,7 +129,7 @@ namespace FasterflectBenchmark
 					.ToList();
 			Dictionary<string, string> stringDictionary = stringList.ToDictionary(s => s, s => s);
 			Cache<string, string> stringCache = new Cache<string, string>();
-			stringList.ForEach(s => stringCache.Insert(s, s, CacheStrategy.Permanent));
+			stringList.ForEach(s => stringCache.Insert(s, s));
 
 			string key = stringList[index];
 			Dictionary<string, Action> initMap = new Dictionary<string, Action> { };
@@ -137,13 +137,12 @@ namespace FasterflectBenchmark
 							{
 								{ "Dictionary ContainsKey", () => stringDictionary.ContainsKey(key) },
 								{ "Dictionary Indexer", () => { string x = stringDictionary[key]; } },
-								{
-									"Dictionary TryGetValue", () =>
+								{ "Dictionary TryGetValue", () =>
 															  {
 																  string s;
 																  stringDictionary.TryGetValue(key, out s);
 															  }
-									},
+								},
                                 //{"List Contains", () => stringList.Contains(key) },
                                 //{"List Linq First", () => stringList.First(item => item == key) },
                                 { "Cache GetValue", () => stringCache.Get(key) },
@@ -153,24 +152,24 @@ namespace FasterflectBenchmark
 
 		private static void RunHashCodeBenchmark()
 		{
-			BaseInfo callInfo = new BaseInfo(TargetType, null, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "name",
-										 new[] { typeof(int), typeof(string) }, null, true);
-			BaseInfo callInfoOther = new BaseInfo(typeof(BaseInfo), null, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "other",
-											  new[] { typeof(string) }, null, true);
+			//BaseInfo callInfo = new BaseInfo(TargetType, null, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "name",
+			//							 new[] { typeof(int), typeof(string) }, null, true);
+			//BaseInfo callInfoOther = new BaseInfo(typeof(BaseInfo), null, FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "other",
+			//								  new[] { typeof(string) }, null, true);
 			SourceInfo sourceInfo = SourceInfo.CreateFromType(new { ID = 42, Name = "Test" }.GetType());
 			SourceInfo sourceInfoOther = SourceInfo.CreateFromType(new { id = 42, Name = "Test" }.GetType());
 
 			Dictionary<string, Action> initMap = new Dictionary<string, Action> { };
 			Dictionary<string, Action> actionMap = new Dictionary<string, Action>
 							{
-								{ "CallInfo GetHashCode", () => callInfo.GetHashCode() },
-								{ "CallInfo Equals Other", () => callInfo.Equals(callInfoOther) },
+								//{ "CallInfo GetHashCode", () => callInfo.GetHashCode() },
+								//{ "CallInfo Equals Other", () => callInfo.Equals(callInfoOther) },
 								{ "SourceInfo GetHashCode", () => sourceInfo.GetHashCode() },
 								{ "SourceInfo Equals Other", () => sourceInfo.Equals(sourceInfoOther) },
 								{ "string GetHashCode", () => "foo".GetHashCode() },
 								{ "string Equals", () => "foo".Equals("bar") },
-								{ "new CallInfo", () => new BaseInfo(TargetType, null,  FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "name",
-																	  new[] { typeof(int), typeof(string) }, null, true) },
+								//{ "new CallInfo", () => new BaseInfo(TargetType, null,  FasterflectFlags.InstanceAnyVisibility, MemberTypes.Field, "name",
+								//									  new[] { typeof(int), typeof(string) }, null, true) },
 								{ "new SourceInfo", () => new SourceInfo(TargetType, new[] { "ID", "Name" }, new[] { typeof(int), typeof(string) }) },
 								{ "new SourceInfo anon", () => SourceInfo.CreateFromType(new { ID = 42, Name = "Test" }.GetType()) },
 							};
