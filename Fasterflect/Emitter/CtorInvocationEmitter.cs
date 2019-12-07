@@ -31,6 +31,11 @@ namespace Fasterflect.Emitter
 		{
 		}
 
+		public CtorInvocationEmitter(Type type)
+			: base(type)
+		{
+		}
+
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
 			return CreateDynamicMethod("ctor", TargetType, typeof(object), Constants.ArrayOfObjectType);

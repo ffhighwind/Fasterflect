@@ -134,7 +134,9 @@ namespace Fasterflect.Extensions
 		/// <returns><paramref name="obj"/>.</returns>
 		public static object SetFieldValue(this object obj, string name, object value)
 		{
-			Fasterflect.Extensions.FieldExtensions.DelegateForSetFieldValue(obj.GetTypeAdjusted(), name)(obj, value);
+			Type type = obj.GetTypeAdjusted();
+			MemberSetter setter = DelegateForSetFieldValue(type, name);
+			setter(obj, value);
 			return obj;
 		}
 
@@ -143,7 +145,10 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object GetFieldValue(this object obj, string name)
 		{
-			return Fasterflect.Extensions.FieldExtensions.DelegateForGetFieldValue(obj.GetTypeAdjusted(), name)(obj);
+			Type type = obj.GetTypeAdjusted();
+			MemberGetter getter = DelegateForGetFieldValue(type, name);
+			object value = getter(obj);
+			return value;
 		}
 
 		/// <summary>
@@ -153,7 +158,9 @@ namespace Fasterflect.Extensions
 		/// <returns><paramref name="obj"/>.</returns>
 		public static object SetFieldValue(this object obj, string name, object value, FasterflectFlags bindingFlags)
 		{
-			Fasterflect.Extensions.FieldExtensions.DelegateForSetFieldValue(obj.GetTypeAdjusted(), name, bindingFlags)(obj, value);
+			Type type = obj.GetTypeAdjusted();
+			MemberSetter setter = DelegateForSetFieldValue(type, name, bindingFlags);
+			setter(obj, value);
 			return obj;
 		}
 
@@ -163,7 +170,10 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object GetFieldValue(this object obj, string name, FasterflectFlags bindingFlags)
 		{
-			return Fasterflect.Extensions.FieldExtensions.DelegateForGetFieldValue(obj.GetTypeAdjusted(), name, bindingFlags)(obj);
+			Type type = obj.GetTypeAdjusted();
+			MemberGetter getter = DelegateForGetFieldValue(type, name, bindingFlags);
+			object value = getter(obj);
+			return value;
 		}
 		#endregion
 

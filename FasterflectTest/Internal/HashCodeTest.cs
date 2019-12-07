@@ -61,8 +61,14 @@ namespace FasterflectTest.Internal
 		public void TestHashCodeUniqueness()
 		{
 			Type[] types = new[] { typeof(A1), typeof(B1), typeof(A2), typeof(B2) };
-			IEnumerable<object> instances = types.Select(t => t.CreateInstance());
-			Assert.AreEqual(types.Length, instances.Select(t => t.GetHashCode()).Distinct().Count());
+			List<object> instances = new List<object>();
+			foreach (Type type in types) {
+				object instance = type.CreateInstance();
+				instances.Add(instance);
+			}
+			List<int> hashCodes = instances.Select(t => t.GetHashCode()).ToList();
+			List<int> distinctHashCodes = hashCodes.Distinct().ToList();
+			Assert.AreEqual(types.Length, distinctHashCodes.Count);
 		}
 		/*
 		[TestMethod]

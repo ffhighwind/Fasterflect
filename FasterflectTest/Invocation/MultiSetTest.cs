@@ -20,7 +20,8 @@ namespace FasterflectTest.Invocation
 			//animal.ID = 5;
 			//animal.MovementCapabilities = SampleModel.Animals.Enumerations.MovementCapabilities.Water;
 
-			MultiSetter setter = Reflect.MultiSetter(snake.GetType(), "BirthDay", "ID");
+			Type type = snake.GetType();
+			MultiSetter setter = Reflect.MultiSetter(type, "BirthDay", "ID");
 			setter(snake, new DateTime(2019, 1, 1), 201);
 			Assert.IsTrue(snake.BirthDay == new DateTime(2019, 1, 1) && snake.ID != 201);
 		}
@@ -31,8 +32,8 @@ namespace FasterflectTest.Invocation
 			Person person = new Person();
 			person.Age = 2;
 			person.Name = "John Doe";
-
-			MultiSetter setter = Reflect.MultiSetter(person.GetType(), "Age", "Name");
+			Type type = person.GetType();
+			MultiSetter setter = Reflect.MultiSetter(type, "Age", "Name");
 			setter(person, 5, "Jack Black");
 			Assert.IsTrue(person.Age == 5 && person.Name == "Jack Black");
 		}
@@ -45,8 +46,9 @@ namespace FasterflectTest.Invocation
 			person.Name = "John Doe";
 			person.MetersTravelled = 201;
 
-			PropertyInfo prop = person.GetType().GetProperty("Age");
-			MultiSetter setter = Reflect.MultiSetter(person.GetType(), "Age");
+			Type type = person.GetType();
+			PropertyInfo prop = type.GetProperty("Age");
+			MultiSetter setter = Reflect.MultiSetter(type, "Age");
 
 			ValueTypeHolder h = person;
 			setter(h, 5);
@@ -63,8 +65,8 @@ namespace FasterflectTest.Invocation
 			person.MetersTravelled = 201;
 
 			ValueTypeHolder h = person;
-
-			MultiSetter setter = Reflect.MultiSetter(person.GetType(), "Name", "Age", "MetersTravelled");
+			Type type = person.GetType();
+			MultiSetter setter = Reflect.MultiSetter(type, "Name", "Age", "MetersTravelled");
 			setter(h, "Jack Black", 5, 2.0d);
 			person = (PersonStruct)h;
 			Assert.IsTrue(person.Name == "Jack Black" && person.Age == 5 && person.MetersTravelled == 2);

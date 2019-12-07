@@ -29,6 +29,7 @@ namespace Fasterflect.Emitter
 		}
 
 		protected override Type TargetType { get; }
+		protected Type ElementType { get; }
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{

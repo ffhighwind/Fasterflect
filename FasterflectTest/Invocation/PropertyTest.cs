@@ -67,6 +67,7 @@ namespace FasterflectTest.Invocation
 		public void TestAccessInstanceProperties()
 		{
 			RunWith((object person) => {
+				Type type = person.GetType();
 				string name = (string)person.GetPropertyValue("Name") + " updated";
 				person.SetPropertyValue("Name", name);
 				VerifyProperties(person, new { name });

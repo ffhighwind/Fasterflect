@@ -31,29 +31,30 @@ namespace Fasterflect.Emitter
 		{
 			MemberInfo = memberInfo;
 			if (memberInfo is PropertyInfo property) {
-				TargetType = property.DeclaringType;
+				IsStatic = (property.GetGetMethod(true) ?? property.GetSetMethod(true)).IsStatic;
 			}
 			else {
 				FieldInfo field = (FieldInfo)memberInfo;
-				TargetType = field.DeclaringType;
+				IsStatic = field.IsStatic;
 			}
 		}
 
 		public MemberSetEmitter(PropertyInfo property)
 		{
 			MemberInfo = property;
-			TargetType = property.DeclaringType;
+			IsStatic = (property.GetGetMethod(true) ?? property.GetSetMethod(true)).IsStatic;
 		}
 
 		public MemberSetEmitter(FieldInfo field)
 		{
 			MemberInfo = field;
-			TargetType = field.DeclaringType;
+			IsStatic = field.IsStatic;
 		}
 
 		public MemberInfo MemberInfo { get; }
 
-		protected override Type TargetType { get; }
+		protected override Type TargetType => MemberInfo.DeclaringType;
+		protected override bool IsStatic { get; }
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
@@ -84,7 +85,7 @@ namespace Fasterflect.Emitter
 			}
 			else {
 				PropertyInfo prop = (PropertyInfo) MemberInfo;
-				MethodInfo setMethod = prop.GetSetMethod();
+				MethodInfo setMethod = prop.GetSetMethod(true);
 				Generator.call(setMethod.IsStatic || IsTargetTypeStruct, setMethod);   // (this|tmpStr).set_Prop(value-to-be-set);
 			}
 			if (handleInnerStruct) {

@@ -24,8 +24,19 @@ namespace Fasterflect.Emitter
 {
 	internal abstract class InvocationEmitter : BaseEmitter
 	{
+		protected InvocationEmitter(Type type)
+		{
+			TargetType = type;
+			IsStatic = false;
+			IsGeneric = false;
+			ParamTypes = Type.EmptyTypes;
+			if (!type.IsValueType)
+				MemberInfo = ReflectLookup.Constructor(type, Type.EmptyTypes);
+		}
+
 		protected InvocationEmitter(ConstructorInfo ctor)
 		{
+			TargetType = ctor.DeclaringType;
 			MemberInfo = ctor;
 			IsStatic = ctor.IsStatic;
 			IsGeneric = ctor.IsGenericMethod;
@@ -34,6 +45,7 @@ namespace Fasterflect.Emitter
 
 		protected InvocationEmitter(MethodInfo method)
 		{
+			TargetType = method.DeclaringType;
 			MemberInfo = method;
 			IsStatic = method.IsStatic;
 			IsGeneric = method.IsGenericMethod;
@@ -43,7 +55,7 @@ namespace Fasterflect.Emitter
 		protected MemberInfo MemberInfo { get; }
 		protected override bool IsStatic { get; }
 		protected bool IsGeneric { get; }
-		protected override Type TargetType => MemberInfo.DeclaringType;
+		protected override Type TargetType { get; }
 		protected Type[] ParamTypes { get; }
 		protected bool HasNoParam => ParamTypes == Type.EmptyTypes;
 		protected bool HasRefParam => ParamTypes.Any(t => t.IsByRef);

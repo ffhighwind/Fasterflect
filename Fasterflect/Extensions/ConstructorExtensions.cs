@@ -65,10 +65,10 @@ namespace Fasterflect.Extensions
 		/// <see cref="NullReferenceException"/> is thrown.  If you are not sure as to whether
 		/// any element is <see langword="null"/> or not, use the overload that accepts params <see cref="Type"/> array.
 		/// </remarks>
-		/// <seealso cref="CreateInstance(System.Type,System.Type[],Fasterflect.FasterflectFlags,object[])"/>
+		/// <seealso cref="CreateInstance(System.Type,System.Type[],FasterflectFlags,object[])"/>
 		public static object CreateInstance(this Type type, FasterflectFlags bindingFlags, params object[] parameters)
 		{
-			return Reflect.Constructor(ReflectLookup.Constructor(type, bindingFlags, parameters.ToTypeArray()))(parameters);
+			return Reflect.Constructor(type, bindingFlags, parameters.ToTypeArray())(parameters);
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		public static object CreateInstance(this Type type, Type[] parameterTypes, FasterflectFlags bindingFlags, params object[] parameters)
 		{
-			return Reflect.Constructor(ReflectLookup.Constructor(type, bindingFlags, parameterTypes))(parameters);
+			return Reflect.Constructor(type, bindingFlags, parameterTypes)(parameters);
 		}
 
 		/// <summary>

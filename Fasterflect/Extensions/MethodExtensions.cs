@@ -320,8 +320,11 @@ namespace Fasterflect.Extensions
 		/// <seealso cref="CallMethod(object,string,System.Type[],object[])"/>
 		internal static object CallMethod(this object obj, string name, params object[] parameters)
 		{
-			return Fasterflect.Extensions.MethodExtensions.DelegateForCallMethod(obj.GetTypeAdjusted(), null, name, FasterflectFlags.StaticInstanceAnyVisibility, parameters.ToTypeArray())
-				(obj, parameters);
+			Type type = obj.GetTypeAdjusted();
+			Type[] parameterTypes = parameters.ToTypeArray();
+			MethodInvoker method = DelegateForCallMethod(type, null, name, FasterflectFlags.StaticInstanceAnyVisibility, parameterTypes);
+			object value = method(obj, parameters);
+			return value;
 		}
 
 		/// <summary>
@@ -330,8 +333,11 @@ namespace Fasterflect.Extensions
 		/// <seealso cref="CallMethod(object,string,object[])"/>
 		internal static object CallMethod(this object obj, Type[] genericTypes, string name, params object[] parameters)
 		{
-			return Fasterflect.Extensions.MethodExtensions.DelegateForCallMethod(obj.GetTypeAdjusted(), genericTypes, name, FasterflectFlags.StaticInstanceAnyVisibility, parameters.ToTypeArray())
-				(obj, parameters);
+			Type type = obj.GetTypeAdjusted();
+			Type[] parameterTypes = parameters.ToTypeArray();
+			MethodInvoker method = DelegateForCallMethod(type, genericTypes, name, FasterflectFlags.StaticInstanceAnyVisibility, parameterTypes);
+			object value = method(obj, parameters);
+			return value;
 		}
 
 		/// <summary>
@@ -343,8 +349,10 @@ namespace Fasterflect.Extensions
 		/// <remarks>If the method has no return type, <see langword="null"/> is returned.</remarks>
 		internal static object CallMethod(this object obj, string name, Type[] parameterTypes, params object[] parameters)
 		{
-			return Fasterflect.Extensions.MethodExtensions.DelegateForCallMethod(obj.GetTypeAdjusted(), null, name, FasterflectFlags.StaticInstanceAnyVisibility, parameterTypes)
-				(obj, parameters);
+			Type type = obj.GetTypeAdjusted();
+			MethodInvoker method = DelegateForCallMethod(type, null, name, FasterflectFlags.StaticInstanceAnyVisibility, parameterTypes);
+			object value = method(obj, parameters);
+			return value;
 		}
 
 		/// <summary>
@@ -353,8 +361,10 @@ namespace Fasterflect.Extensions
 		/// <seealso cref="CallMethod(object,string,Type[],object[])"/>
 		internal static object CallMethod(this object obj, Type[] genericTypes, string name, Type[] parameterTypes, params object[] parameters)
 		{
-			return Fasterflect.Extensions.MethodExtensions.DelegateForCallMethod(obj.GetTypeAdjusted(), genericTypes, name, FasterflectFlags.StaticInstanceAnyVisibility, parameterTypes)
-				(obj, parameters);
+			Type type = obj.GetTypeAdjusted();
+			MethodInvoker method = DelegateForCallMethod(type, genericTypes, name, FasterflectFlags.StaticInstanceAnyVisibility, parameterTypes);
+			object value = method(obj, parameters);
+			return value;
 		}
 
 		/// <summary>
@@ -372,8 +382,11 @@ namespace Fasterflect.Extensions
 		/// <seealso cref="CallMethod(object,string,System.Type[],Fasterflect.FasterflectFlags,object[])"/>
 		internal static object CallMethod(this object obj, string name, FasterflectFlags bindingFlags, params object[] parameters)
 		{
-			return Fasterflect.Extensions.MethodExtensions.DelegateForCallMethod(obj.GetTypeAdjusted(), null, name, bindingFlags, parameters.ToTypeArray())
-				(obj, parameters);
+			Type type = obj.GetTypeAdjusted();
+			Type[] parameterTypes = parameters.ToTypeArray();
+			MethodInvoker method = DelegateForCallMethod(type, null, name, bindingFlags, parameterTypes);
+			object value = method(obj, parameters);
+			return value;
 		}
 
 		/// <summary>
@@ -382,8 +395,11 @@ namespace Fasterflect.Extensions
 		/// <seealso cref="CallMethod(object,string,FasterflectFlags,object[])"/>
 		internal static object CallMethod(this object obj, Type[] genericTypes, string name, FasterflectFlags bindingFlags, params object[] parameters)
 		{
-			return Fasterflect.Extensions.MethodExtensions.DelegateForCallMethod(obj.GetTypeAdjusted(), genericTypes, name, bindingFlags)
-				(obj, parameters);
+			Type type = obj.GetTypeAdjusted();
+			Type[] parameterTypes = parameters.ToTypeArray();
+			MethodInvoker method = DelegateForCallMethod(type, genericTypes, name, bindingFlags, parameterTypes);
+			object value = method(obj, parameters);
+			return value;
 		}
 
 		/// <summary>
@@ -395,8 +411,10 @@ namespace Fasterflect.Extensions
 		/// <remarks>If the method has no return type, <see langword="null"/> is returned.</remarks>
 		internal static object CallMethod(this object obj, string name, Type[] parameterTypes, FasterflectFlags bindingFlags, params object[] parameters)
 		{
-			return Fasterflect.Extensions.MethodExtensions.DelegateForCallMethod(obj.GetTypeAdjusted(), null, name, bindingFlags, parameterTypes)
-				(obj, parameters);
+			Type type = obj.GetTypeAdjusted();
+			MethodInvoker method = DelegateForCallMethod(type, null, name, bindingFlags, parameterTypes);
+			object value = method(obj, parameters);
+			return value;
 		}
 
 		/// <summary>
@@ -406,8 +424,10 @@ namespace Fasterflect.Extensions
 		internal static object CallMethod(this object obj, Type[] genericTypes, string name, Type[] parameterTypes, FasterflectFlags bindingFlags,
 			params object[] parameters)
 		{
-			return Fasterflect.Extensions.MethodExtensions.DelegateForCallMethod(obj.GetTypeAdjusted(), genericTypes, name, bindingFlags, parameterTypes)
-				(obj, parameters);
+			Type type = obj.GetTypeAdjusted();
+			MethodInvoker method = DelegateForCallMethod(type, genericTypes, name, bindingFlags, parameterTypes);
+			object value = method(obj, parameters);
+			return value;
 		}
 		#endregion
 	}

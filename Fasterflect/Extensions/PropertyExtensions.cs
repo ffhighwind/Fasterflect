@@ -199,7 +199,9 @@ namespace Fasterflect.Extensions
 		/// <returns><paramref name="obj"/>.</returns>
 		internal static object SetPropertyValue(this object obj, string name, object value)
 		{
-			DelegateForSetPropertyValue(obj.GetTypeAdjusted(), name)(obj, value);
+			Type type = obj.GetTypeAdjusted();
+			MemberSetter setter = DelegateForSetPropertyValue(type, name);
+			setter(obj, value);
 			return obj;
 		}
 
@@ -208,7 +210,10 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		internal static object GetPropertyValue(this object obj, string name)
 		{
-			return DelegateForGetPropertyValue(obj.GetTypeAdjusted(), name)(obj);
+			Type type = obj.GetTypeAdjusted();
+			MemberGetter getter = DelegateForGetPropertyValue(type, name);
+			object value = getter(obj);
+			return value;
 		}
 
 		/// <summary>
@@ -218,7 +223,9 @@ namespace Fasterflect.Extensions
 		/// <returns><paramref name="obj"/>.</returns>
 		internal static object SetPropertyValue(this object obj, string name, object value, FasterflectFlags bindingFlags)
 		{
-			DelegateForSetPropertyValue(obj.GetTypeAdjusted(), name, bindingFlags)(obj, value);
+			Type type = obj.GetTypeAdjusted();
+			MemberSetter setter = DelegateForSetPropertyValue(type, name, bindingFlags);
+			setter(obj, value);
 			return obj;
 		}
 
@@ -228,7 +235,10 @@ namespace Fasterflect.Extensions
 		/// </summary>
 		internal static object GetPropertyValue(this object obj, string name, FasterflectFlags bindingFlags)
 		{
-			return DelegateForGetPropertyValue(obj.GetTypeAdjusted(), name, bindingFlags)(obj);
+			Type type = obj.GetTypeAdjusted();
+			MemberGetter getter = DelegateForGetPropertyValue(type, name, bindingFlags);
+			object value = getter(obj);
+			return value;
 		}
 
 		/// <summary>
