@@ -838,6 +838,7 @@ namespace Fasterflect.Emitter
 			return call(methodInfo);
 		}
 
+#if NET45 || NETSTANDARD2_1
 		/// <summary>
 		/// Calls ILGenerator.EmitCalli(<see cref="OpCodes.Calli"/>, <see cref="CallingConvention"/>, Type, Type[]) that
 		/// calls the method indicated on the evaluation stack (as a pointer to an entry point) 
@@ -850,13 +851,27 @@ namespace Fasterflect.Emitter
 		/// <seealso cref="System.Reflection.Emit.ILGenerator.EmitCalli(OpCode,CallingConvention,Type,Type[])"></seealso>
 		public EmitHelper calli(CallingConvention unmanagedCallConv, Type returnType, Type[] parameterTypes)
 		{
-#if NET45 || NETSTANDARD2_1
 			ILGenerator.EmitCalli(OpCodes.Calli, unmanagedCallConv, returnType, parameterTypes);
 			return this;
-#else
-			throw new NotSupportedException(nameof(EmitHelper.calli));
-#endif
+
+			//throw new NotSupportedException(nameof(EmitHelper.calli));
 		}
+#else
+		/// <summary>
+		/// Calls ILGenerator.EmitCalli(<see cref="OpCodes.Calli"/>, <see cref="CallingConvention"/>, Type, Type[]) that
+		/// calls the method indicated on the evaluation stack (as a pointer to an entry point) 
+		/// with arguments described by a calling convention using an unmanaged calling convention.
+		/// </summary>
+		/// <param name="unmanagedCallConv">The unmanaged calling convention to be used.</param>
+		/// <param name="returnType">The Type of the result.</param>
+		/// <param name="parameterTypes">The types of the required arguments to the instruction.</param>
+		/// <seealso cref="OpCodes.Calli">OpCodes.Calli</seealso>
+		public EmitHelper calli(CallingConvention unmanagedCallConv, Type returnType, Type[] parameterTypes)
+		{
+			throw new NotSupportedException(nameof(EmitHelper.calli));
+		}
+
+#endif
 
 		/// <summary>
 		/// Calls ILGenerator.EmitCalli(<see cref="OpCodes.Calli"/>, <see cref="CallingConvention"/>, <see cref="Type"/>, <see cref="Type"/>[], <see cref="Type"/>[]) 

@@ -466,14 +466,10 @@ namespace Fasterflect
 		}
 
 		/// <summary>
-		/// Gets all members of the given <paramref name="type"/> that match the specified <paramref name="bindingFlags"/>,
-		/// filtered by the supplied <paramref name="names"/> list. These are returned in the same order and a <see cref="MissingMemberException"/> 
-		/// is thrown if any member is missing.
+		/// Gets all members of the given <paramref name="type"/> filtered by the supplied <paramref name="names"/> list.
+		/// These are returned in the same order and a <see cref="MissingMemberException"/> is thrown if any member is missing.
 		/// </summary>
 		/// <param name="type">The type to reflect on.</param>
-		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
-		/// the search behavior and result filtering.</param>
-		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the result.</param>
 		/// <param name="names">The optional list of names against which to filter the result.</param>
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		public static MemberInfo[] MembersExact(Type type, params string[] names)
@@ -486,6 +482,8 @@ namespace Fasterflect
 		/// These are returned in the same order and a <see cref="MissingMemberException"/> is thrown if any member is missing.
 		/// </summary>
 		/// <param name="type">The type to reflect on.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
+		/// the search behavior and result filtering.</param>
 		/// <param name="names">The optional list of names against which to filter the result.</param>
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		public static MemberInfo[] MembersExact(Type type, FasterflectFlags bindingFlags, params string[] names)
@@ -504,12 +502,12 @@ namespace Fasterflect
 		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the result.</param>
 		/// <param name="names">The optional list of names against which to filter the result.</param>
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
-		public static MemberInfo[] MembersExact(Type type, FasterflectFlags bindingFlags, MemberTypes memberType, params string[] names)
+		public static MemberInfo[] MembersExact(Type type, FasterflectFlags bindingFlags, MemberTypes memberTypes, params string[] names)
 		{
 			MemberInfo[] members = new MemberInfo[names.Length];
 			for (int i = 0, count = names.Length; i < count; ++i) {
 				string name = names[i];
-				members[i] = Member(type, name, bindingFlags, memberType) ?? throw new MissingMemberException(type.FullName, name);
+				members[i] = Member(type, name, bindingFlags, memberTypes) ?? throw new MissingMemberException(type.FullName, name);
 			}
 			return members;
 		}

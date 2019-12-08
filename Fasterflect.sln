@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Benchmark\Benc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FasterflectExampleStruct", "FasterflectExampleStruct\FasterflectExampleStruct.csproj", "{180C6F67-9630-4E8A-BF5D-0E37519CFD5B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FasterflectExamplePrimitive", "FasterflectExamplePrimitive\FasterflectExamplePrimitive.csproj", "{EE591FEC-2B89-4FA6-90DA-DC212DED3963}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,18 @@ Global
 		{180C6F67-9630-4E8A-BF5D-0E37519CFD5B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{180C6F67-9630-4E8A-BF5D-0E37519CFD5B}.Release|x86.ActiveCfg = Release|Any CPU
 		{180C6F67-9630-4E8A-BF5D-0E37519CFD5B}.Release|x86.Build.0 = Release|Any CPU
+		{EE591FEC-2B89-4FA6-90DA-DC212DED3963}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE591FEC-2B89-4FA6-90DA-DC212DED3963}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE591FEC-2B89-4FA6-90DA-DC212DED3963}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EE591FEC-2B89-4FA6-90DA-DC212DED3963}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EE591FEC-2B89-4FA6-90DA-DC212DED3963}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EE591FEC-2B89-4FA6-90DA-DC212DED3963}.Debug|x86.Build.0 = Debug|Any CPU
+		{EE591FEC-2B89-4FA6-90DA-DC212DED3963}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE591FEC-2B89-4FA6-90DA-DC212DED3963}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE591FEC-2B89-4FA6-90DA-DC212DED3963}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EE591FEC-2B89-4FA6-90DA-DC212DED3963}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EE591FEC-2B89-4FA6-90DA-DC212DED3963}.Release|x86.ActiveCfg = Release|Any CPU
+		{EE591FEC-2B89-4FA6-90DA-DC212DED3963}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
