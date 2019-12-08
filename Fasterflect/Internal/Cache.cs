@@ -140,6 +140,7 @@ namespace Fasterflect
 		#endregion
 	}
 }
+
 #elif NET35
 using System;
 using System.Collections.Generic;

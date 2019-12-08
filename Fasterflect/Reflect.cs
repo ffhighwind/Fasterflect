@@ -31,6 +31,7 @@ namespace Fasterflect
 	/// </summary>
 	public static class Reflect
 	{
+		#region Cache
 		private static readonly Cache<MemberCallInfo, MemberGetter> Getters = new Cache<MemberCallInfo, MemberGetter>();
 		private static readonly Cache<MemberCallInfo, MemberSetter> Setters = new Cache<MemberCallInfo, MemberSetter>();
 		private static readonly Cache<CtorInfo, ConstructorInvoker> Constructors = new Cache<CtorInfo, ConstructorInvoker>();
@@ -39,9 +40,10 @@ namespace Fasterflect
 		private static readonly Cache<Type, ArrayElementGetter> ArrayGetters = new Cache<Type, ArrayElementGetter>();
 		private static readonly Cache<MultiSetCallInfo, MultiSetter> MultiSetters = new Cache<MultiSetCallInfo, MultiSetter>();
 		private static readonly Cache<MapCallInfo, ObjectMapper> Mappers = new Cache<MapCallInfo, ObjectMapper>();
+		#endregion Cache
 
 		#region Constructor
-		internal static ConstructorInvoker Constructor(Type type, FasterflectFlags bindingFlags, ConstructorInfo ctor, Type[] parameterTypes)
+		internal static ConstructorInvoker Constructor(Type type, BindingFlags bindingFlags, ConstructorInfo ctor, Type[] parameterTypes)
 		{
 			bindingFlags &= FasterflectFlags.InstanceAnyDeclaredOnly;
 			CtorInfo info = new CtorInfo(type, bindingFlags, parameterTypes);
@@ -74,7 +76,7 @@ namespace Fasterflect
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> to use when searching for the <see cref="ConstructorInfo"/>.</param>
 		/// <param name="parameterTypes">The <see cref="ConstructorInfo"/>'s parameters types.</param>
 		/// <returns>A <see cref="ConstructorInvoker"/> which invokes the given <see cref="ConstructorInfo"/>.</returns>
-		public static ConstructorInvoker Constructor(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
+		public static ConstructorInvoker Constructor(Type type, BindingFlags bindingFlags, params Type[] parameterTypes)
 		{
 			return Constructor(type, bindingFlags, null, parameterTypes);
 		}

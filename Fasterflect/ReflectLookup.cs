@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+
 namespace Fasterflect
 {
 	/// <summary>
@@ -52,7 +53,7 @@ namespace Fasterflect
 		/// <param name="bindingFlags">The search criteria to use when reflecting.</param>
 		/// <param name="parameterTypes">The types of the constructor parameters in order.</param>
 		/// <returns>The matching constructor or null if no match was found.</returns>
-		public static ConstructorInfo Constructor(Type type, FasterflectFlags bindingFlags, params Type[] parameterTypes)
+		public static ConstructorInfo Constructor(Type type, BindingFlags bindingFlags, params Type[] parameterTypes)
 		{
 			return type.GetConstructor(bindingFlags, null, parameterTypes, null);
 		}
@@ -74,7 +75,7 @@ namespace Fasterflect
 		/// <param name="type">The type to reflect on.</param>
 		/// <param name="bindingFlags">The search criteria to use when reflecting.</param>
 		/// <returns>A list of matching constructors. This value will never be null.</returns>
-		public static IList<ConstructorInfo> Constructors(Type type, FasterflectFlags bindingFlags)
+		public static IList<ConstructorInfo> Constructors(Type type, BindingFlags bindingFlags)
 		{
 			return type.GetConstructors(bindingFlags);
 		}

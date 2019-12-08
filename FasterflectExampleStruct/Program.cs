@@ -16,7 +16,7 @@ namespace FasterflectExampleStruct
 
 	public static class Program
 	{
-		public static void Main(string[] args)
+		public static void Main()
 		{
 			ConstructorInvoker ctor = Reflect.Constructor(typeof(Animal), typeof(string), typeof(int));
 			MemberGetter getName = Reflect.Getter(typeof(Animal), "Name");

@@ -20,9 +20,11 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 
 namespace Fasterflect.Emitter
 {
+	[DebuggerStepThrough]
 	internal class CallInfo
 	{
 		public CallInfo(Type targetType, string name, FasterflectFlags bindingFlags, Type[] genericTypes, Type[] parameterTypes)

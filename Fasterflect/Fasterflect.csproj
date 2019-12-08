@@ -2,11 +2,11 @@
   <PropertyGroup>
     <TargetFrameworks>net45;net35;netstandard2.1;netstandard2.0;netcoreapp2.0</TargetFrameworks>
     <AssemblyName>Fasterflect.Reflect</AssemblyName>
-    <Version>3.0.3</Version>
+    <Version>3.1.0</Version>
     <Authors>Buu Nguyen, Morten Mertner, Wesley Hamilton</Authors>
     <Description>Reflection library that achieves greater performance than the built-in .NET reflection.</Description>
     <NeutralLanguage>en-us</NeutralLanguage>
-    <PackageReleaseNotes>Added more framework support. Added DataReaderFactory.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added lots to ReflectLookup (Members, Attributes, etc). Fixed MultiSetter. Fixed another bug. Improved caching performance.</PackageReleaseNotes>
     <PackageTags>reflection reflection-emit dynamic-method .net35 .net45 .netstandard2 .netstandard2.1 .netcoreapp2.0 </PackageTags>
     <PackageLicense>Apache-2.0</PackageLicense>
     <PackageProjectUrl>https://github.com/ffhighwind/Fasterflect</PackageProjectUrl>
@@ -20,6 +20,8 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Configurations>Debug;Release</Configurations>
     <NoWarn>1701;1702</NoWarn>
+    <AssemblyVersion>3.1.0.0</AssemblyVersion>
+    <FileVersion>3.1.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|netcoreapp2.0'">

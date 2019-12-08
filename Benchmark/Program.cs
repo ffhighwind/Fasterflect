@@ -29,11 +29,11 @@ namespace Benchmark
 {
 	public class Program
 	{
-		public static void Main(string[] args)
+		public static void Main()
 		{
 			// Produces benchmark data in bin\Release\BenchmarkDotNet.Artifacts\results
-			var getterSummary = BenchmarkRunner.Run<Getters>();
-			var setterSummary = BenchmarkRunner.Run<Setters>();
+			_ = BenchmarkRunner.Run<Getters>();
+			_ = BenchmarkRunner.Run<Setters>();
 		}
 	}
 }

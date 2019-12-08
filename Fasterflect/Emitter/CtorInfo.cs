@@ -20,13 +20,15 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace Fasterflect.Emitter
 {
+	[DebuggerStepThrough]
 	internal class CtorInfo
 	{
-		public CtorInfo(Type targetType, FasterflectFlags bindingFlags, Type[] parameterTypes)
+		public CtorInfo(Type targetType, BindingFlags bindingFlags, Type[] parameterTypes)
 		{
 			TargetType = targetType;
 			BindingFlags = bindingFlags;
@@ -34,14 +36,14 @@ namespace Fasterflect.Emitter
 		}
 
 		public Type TargetType { get; }
-		public FasterflectFlags BindingFlags { get; }
+		public BindingFlags BindingFlags { get; }
 		public Type[] ParameterTypes { get; }
 
 		public override bool Equals(object obj)
 		{
 			if (obj is CtorInfo other &&
-				TargetType.Equals(other.TargetType) &&
 				ParameterTypes.Length == other.ParameterTypes.Length &&
+				TargetType.Equals(other.TargetType) &&
 				BindingFlags == other.BindingFlags) {
 				for (int i = 0, count = ParameterTypes.Length; i < count; ++i) {
 					if (!ParameterTypes[i].Equals(other.ParameterTypes[i])) {
