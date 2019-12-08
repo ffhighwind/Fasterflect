@@ -78,7 +78,7 @@ namespace Fasterflect.Extensions.Services
 		/// <returns>The result of the invocation.</returns>
 		public static object TryCreateInstanceWithValues(this Type type, ParameterConverter converter, BindingFlags flags, params object[] parameterValues)
 		{
-			IList<ConstructorInfo> ctors = type.Constructors();
+			IList<ConstructorInfo> ctors = type.Constructors(flags);
 			try {
 				return TryCall(converter, ctors.Cast<MethodBase>(), type, parameterValues);
 			}

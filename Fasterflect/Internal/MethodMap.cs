@@ -301,19 +301,6 @@ namespace Fasterflect
 		#endregion
 		#endregion
 
-		#region Dependency Injection Helpers
-		private bool HasExternalDefaultValue(ParameterInfo parameter)
-		{
-			// TODO plug in code for DI or DI framework here
-			return false;
-		}
-
-		private object GetExternalDefaultValue(ParameterInfo parameter)
-		{
-			return null;
-		}
-		#endregion
-
 		#region Parameter Preparation
 		/// <summary>
 		/// Perform parameter reordering, null handling and type conversion in preparation
