@@ -1,6 +1,5 @@
 ﻿#region License
 
-// Copyright © 2010 Buu Nguyen, Morten Mertner
 // Copyright © 2018 Wesley Hamilton
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -96,7 +95,7 @@ namespace Fasterflect.Emitter
 				}
 				else {
 					PropertyInfo property = (PropertyInfo)method;
-					MethodInfo setMethod = property.GetSetMethod(true);
+					MethodInfo setMethod = property.GetSetMethod(true) ?? throw new MemberAccessException(TargetType.FullName + "." + property.Name);
 					if (!setMethod.IsStatic) {
 						if (handleInnerStruct) {
 							Generator.ldloca_s(0);

@@ -54,7 +54,6 @@ namespace Benchmark
 		public static readonly MemberGetter ffgetter; // Fasterflect
 		public static readonly MethodInfo getgetMethod;
 
-		//private static bool allowNonPublicFieldAccess = false;
 		private static readonly bool allowNonPublicFieldAccess = true;
 
 		static Getters()

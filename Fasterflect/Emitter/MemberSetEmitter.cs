@@ -39,18 +39,6 @@ namespace Fasterflect.Emitter
 			}
 		}
 
-		public MemberSetEmitter(PropertyInfo property)
-		{
-			MemberInfo = property;
-			IsStatic = (property.GetGetMethod(true) ?? property.GetSetMethod(true)).IsStatic;
-		}
-
-		public MemberSetEmitter(FieldInfo field)
-		{
-			MemberInfo = field;
-			IsStatic = field.IsStatic;
-		}
-
 		public MemberInfo MemberInfo { get; }
 
 		protected override Type TargetType => MemberInfo.DeclaringType;

@@ -26,13 +26,8 @@ namespace Fasterflect.Emitter
 {
 	internal class CtorInvocationEmitter : InvocationEmitter
 	{
-		public CtorInvocationEmitter(ConstructorInfo ctor)
-			: base(ctor)
-		{
-		}
-
-		public CtorInvocationEmitter(Type type)
-			: base(type)
+		public CtorInvocationEmitter(Type type, ConstructorInfo ctor)
+			: base(type, ctor)
 		{
 		}
 

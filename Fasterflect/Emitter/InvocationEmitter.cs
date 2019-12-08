@@ -24,23 +24,22 @@ namespace Fasterflect.Emitter
 {
 	internal abstract class InvocationEmitter : BaseEmitter
 	{
-		protected InvocationEmitter(Type type)
+		protected InvocationEmitter(Type type, ConstructorInfo ctor = null)
 		{
-			TargetType = type;
-			IsStatic = false;
-			IsGeneric = false;
-			ParamTypes = Type.EmptyTypes;
-			if (!type.IsValueType)
-				MemberInfo = ReflectLookup.Constructor(type, Type.EmptyTypes);
-		}
-
-		protected InvocationEmitter(ConstructorInfo ctor)
-		{
-			TargetType = ctor.DeclaringType;
-			MemberInfo = ctor;
-			IsStatic = ctor.IsStatic;
-			IsGeneric = ctor.IsGenericMethod;
-			ParamTypes = ctor.GetParameters().ToTypeArray();
+			if (ctor == null) {
+				TargetType = type;
+				IsStatic = false;
+				IsGeneric = false;
+				ParamTypes = Type.EmptyTypes;
+			}
+			else { 
+				TargetType = ctor.DeclaringType;
+				MemberInfo = ctor;
+				IsStatic = ctor.IsStatic;
+				IsGeneric = ctor.IsGenericMethod;
+				ParamTypes = ctor.GetParameters().ToTypeArray();
+				MemberInfo = ctor;
+			}
 		}
 
 		protected InvocationEmitter(MethodInfo method)

@@ -414,8 +414,6 @@ namespace Fasterflect.Extensions
 		}
 		#endregion
 
-		#region Property Combined (Internal)
-
 		#region TryGetValue
 		/// <summary>
 		/// Gets the first (public or non-public) instance property with the given <paramref name="name"/> on the given
@@ -490,8 +488,6 @@ namespace Fasterflect.Extensions
 				return false;
 			}
 		}
-		#endregion
-
 		#endregion
 	}
 }

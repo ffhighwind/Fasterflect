@@ -24,10 +24,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Fasterflect;
-using Fasterflect.Emitter;
 using Fasterflect.Extensions;
 using Fasterflect.Extensions.Services;
-using Fasterflect.Probing;
 
 namespace FasterflectBenchmark
 {

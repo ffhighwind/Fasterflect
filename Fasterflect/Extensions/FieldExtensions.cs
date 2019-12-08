@@ -177,8 +177,6 @@ namespace Fasterflect.Extensions
 		}
 		#endregion
 
-		#region Field Combined
-
 		#region TryGetValue
 		/// <summary>
 		/// Gets the first (public or non-public) instance field with the given <paramref name="name"/> on the given
@@ -212,7 +210,7 @@ namespace Fasterflect.Extensions
 			try {
 				return obj.GetFieldValue(name, bindingFlags);
 			}
-			catch (MissingFieldException) {
+			catch (MissingMemberException) {
 				return null;
 			}
 		}
@@ -249,12 +247,10 @@ namespace Fasterflect.Extensions
 				obj.SetFieldValue(name, value, bindingFlags);
 				return true;
 			}
-			catch (MissingFieldException) {
+			catch (MissingMemberException) {
 				return false;
 			}
 		}
-		#endregion
-
 		#endregion
 	}
 }

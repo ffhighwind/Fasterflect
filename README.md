@@ -113,7 +113,7 @@ Reflect is the static factory for all reflection-based delegates. Every delegate
 
 ## [ReflectLookup](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/ReflectLookup.cs)
 
-This allows searching for reflection based objects using either FasterflectFlags or BindingFlags. This is up to 2x slower than .NET reflection, but it allows partial matching (string.Contains) and case insensitive search (string.OrdinalIgnoreCase).
+This allows searching for reflection based objects using either FasterflectFlags or BindingFlags. This is up to 2x slower than .NET reflection, but it allows partial matching (string.Contains).
 
 ## ValueTypes/Structs
 

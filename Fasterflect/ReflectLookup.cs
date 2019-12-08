@@ -41,7 +41,7 @@ namespace Fasterflect
 		/// <returns>The matching constructor or null if no match was found.</returns>
 		public static ConstructorInfo Constructor(Type type, params Type[] parameterTypes)
 		{
-			return type.Constructor(FasterflectFlags.InstanceAnyVisibility, parameterTypes);
+			return type.Constructor(FasterflectFlags.InstanceAnyDeclaredOnly, parameterTypes);
 		}
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace Fasterflect
 		/// <returns>A list of matching constructors. This value will never be null.</returns>
 		public static IList<ConstructorInfo> Constructors(Type type, FasterflectFlags bindingFlags)
 		{
-			return type.GetConstructors(bindingFlags); //.Where(ci => !ci.IsAbstract).ToList();
+			return type.GetConstructors(bindingFlags);
 		}
 		#endregion
 
@@ -88,7 +88,7 @@ namespace Fasterflect
 		/// <returns>A single FieldInfo instance of the first found match or null if no match was found.</returns>
 		public static FieldInfo Field(Type type, string name)
 		{
-			return type.Field(name, FasterflectFlags.InstanceAnyVisibility);
+			return Field(type, name, FasterflectFlags.InstanceAnyVisibility);
 		}
 
 		/// <summary>
@@ -100,7 +100,7 @@ namespace Fasterflect
 		{
 			// we need to check all fields to do partial name matches
 			if (bindingFlags.IsAnySet(FasterflectFlags.PartialNameMatch | FasterflectFlags.TrimExplicitlyImplemented)) {
-				return type.Fields(bindingFlags, name).FirstOrDefault();
+				return Fields(type, bindingFlags, name).FirstOrDefault();
 			}
 
 			FieldInfo result = type.GetField(name, bindingFlags);
@@ -196,7 +196,7 @@ namespace Fasterflect
 		/// <returns>A single PropertyInfo instance of the first found match or null if no match was found.</returns>
 		public static PropertyInfo Property(Type type, string name)
 		{
-			return type.Property(name, FasterflectFlags.InstanceAnyVisibility);
+			return Property(type, name, FasterflectFlags.InstanceAnyVisibility);
 		}
 
 		/// <summary>
@@ -241,7 +241,7 @@ namespace Fasterflect
 		/// This value will never be null.</returns>
 		public static IList<PropertyInfo> Properties(Type type, params string[] names)
 		{
-			return type.Properties(FasterflectFlags.InstanceAnyVisibility, names);
+			return Properties(type, FasterflectFlags.InstanceAnyVisibility, names);
 		}
 
 		/// <summary>
@@ -310,7 +310,7 @@ namespace Fasterflect
 		/// <returns>A single MemberInfo instance of the first found match or null if no match was found.</returns>
 		public static MemberInfo Member(Type type, string name)
 		{
-			return type.Members(MemberTypes.All, FasterflectFlags.InstanceAnyVisibility, name).FirstOrDefault();
+			return Members(type, MemberTypes.All, FasterflectFlags.InstanceAnyVisibility, name).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -318,14 +318,13 @@ namespace Fasterflect
 		/// the <paramref name="bindingFlags"/> parameter to define the scope of the search.
 		/// </summary>
 		/// <returns>A single MemberInfo instance of the first found match or null if no match was found.</returns>
-		public static MemberInfo Member(Type type, string name, FasterflectFlags bindingFlags)
+		public static MemberInfo Member(Type type, string name, FasterflectFlags bindingFlags, MemberTypes memberTypes = MemberTypes.All)
 		{
 			// we need to check all members to do partial name matches
 			if (bindingFlags.IsAnySet(FasterflectFlags.PartialNameMatch | FasterflectFlags.TrimExplicitlyImplemented)) {
-				return type.Members(MemberTypes.All, bindingFlags, name).FirstOrDefault();
+				return type.Members(memberTypes, bindingFlags, name).FirstOrDefault();
 			}
-
-			IList<MemberInfo> result = type.GetMember(name, bindingFlags);
+			IList<MemberInfo> result = type.GetMember(name, memberTypes, bindingFlags);
 			if (result.Count > 0) {
 				bool hasSpecialFlags = bindingFlags.IsAnySet(FasterflectFlags.ExcludeBackingMembers | FasterflectFlags.ExcludeExplicitlyImplemented | FasterflectFlags.ExcludeHiddenMembers);
 				if (!hasSpecialFlags)
@@ -335,7 +334,7 @@ namespace Fasterflect
 					return result[0];
 			}
 			if (bindingFlags.IsNotSet(FasterflectFlags.DeclaredOnly) && type.BaseType != typeof(object) && type.BaseType != null) {
-				return type.BaseType.Member(name, bindingFlags);
+				return Member(type.BaseType, name, bindingFlags, memberTypes);
 			}
 			return null;
 		}
@@ -349,7 +348,7 @@ namespace Fasterflect
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> FieldsAndProperties(Type type)
 		{
-			return type.Members(MemberTypes.Field | MemberTypes.Property, FasterflectFlags.InstanceAnyVisibility, null);
+			return Members(type, MemberTypes.Field | MemberTypes.Property, FasterflectFlags.InstanceAnyVisibility, null);
 		}
 
 		/// <summary>
@@ -359,7 +358,7 @@ namespace Fasterflect
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> FieldsAndProperties(Type type, FasterflectFlags bindingFlags)
 		{
-			return type.Members(MemberTypes.Field | MemberTypes.Property, bindingFlags, null);
+			return Members(type, MemberTypes.Field | MemberTypes.Property, bindingFlags, null);
 		}
 		#endregion
 
@@ -373,7 +372,7 @@ namespace Fasterflect
 		/// <returns>A list of all members on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> Members(Type type)
 		{
-			return type.Members(MemberTypes.All, FasterflectFlags.InstanceAnyVisibility, null);
+			return Members(type, MemberTypes.All, FasterflectFlags.InstanceAnyVisibility, null);
 		}
 
 		/// <summary>
@@ -387,7 +386,7 @@ namespace Fasterflect
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> Members(Type type, FasterflectFlags bindingFlags)
 		{
-			return type.Members(MemberTypes.All, bindingFlags, null);
+			return Members(type, MemberTypes.All, bindingFlags, null);
 		}
 
 		/// <summary>
@@ -405,7 +404,7 @@ namespace Fasterflect
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> Members(Type type, MemberTypes memberTypes, params string[] names)
 		{
-			return type.Members(memberTypes, FasterflectFlags.InstanceAnyVisibility, names);
+			return Members(type, memberTypes, FasterflectFlags.InstanceAnyVisibility, names);
 		}
 
 		/// <summary>
@@ -446,12 +445,9 @@ namespace Fasterflect
 		private static IList<MemberInfo> GetMembers(Type type, MemberTypes memberTypes, FasterflectFlags bindingFlags)
 		{
 			bool recurse = bindingFlags.IsNotSet(FasterflectFlags.DeclaredOnly);
-
 			if (!recurse) {
 				return type.FindMembers(memberTypes, bindingFlags, null, null);
 			}
-
-			bindingFlags |= FasterflectFlags.DeclaredOnly;
 			bindingFlags &= ~BindingFlags.FlattenHierarchy;
 
 			List<MemberInfo> members = new List<MemberInfo>();
@@ -465,22 +461,50 @@ namespace Fasterflect
 		}
 
 		/// <summary>
-		/// Gets all members of the given <paramref name="memberTypes"/> on the given <paramref name="type"/> that 
-		/// match the specified <paramref name="bindingFlags"/>, filtered by the supplied <paramref name="names"/>
-		/// list (in accordance with the given <paramref name="bindingFlags"/>). These are returned in the same order and a
-		/// <see cref="MissingMemberException"/> is thrown if any member is missing.
+		/// Gets all members of the given <paramref name="type"/> that match the specified <paramref name="bindingFlags"/>,
+		/// filtered by the supplied <paramref name="names"/> list. These are returned in the same order and a <see cref="MissingMemberException"/> 
+		/// is thrown if any member is missing.
 		/// </summary>
 		/// <param name="type">The type to reflect on.</param>
 		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
 		/// the search behavior and result filtering.</param>
+		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the result.</param>
+		/// <param name="names">The optional list of names against which to filter the result.</param>
+		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
+		public static MemberInfo[] MembersExact(Type type, params string[] names)
+		{
+			return MembersExact(type, FasterflectFlags.StaticInstanceAnyVisibility, MemberTypes.All, names);
+		}
+
+		/// <summary>
+		/// Gets all members of the given <paramref name="type"/> filtered by the supplied <paramref name="names"/> list. 
+		/// These are returned in the same order and a <see cref="MissingMemberException"/> is thrown if any member is missing.
+		/// </summary>
+		/// <param name="type">The type to reflect on.</param>
 		/// <param name="names">The optional list of names against which to filter the result.</param>
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		public static MemberInfo[] MembersExact(Type type, FasterflectFlags bindingFlags, params string[] names)
 		{
+			return MembersExact(type, bindingFlags, MemberTypes.All, names);
+		}
+
+		/// <summary>
+		/// Gets all members of the given <paramref name="type"/> that match the specified <paramref name="bindingFlags"/>,
+		/// filtered by the supplied <paramref name="names"/> list. These are returned in the same order and a <see cref="MissingMemberException"/> 
+		/// is thrown if any member is missing.
+		/// </summary>
+		/// <param name="type">The type to reflect on.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination used to define
+		/// the search behavior and result filtering.</param>
+		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the result.</param>
+		/// <param name="names">The optional list of names against which to filter the result.</param>
+		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
+		public static MemberInfo[] MembersExact(Type type, FasterflectFlags bindingFlags, MemberTypes memberType, params string[] names)
+		{
 			MemberInfo[] members = new MemberInfo[names.Length];
 			for (int i = 0, count = names.Length; i < count; ++i) {
 				string name = names[i];
-				members[i] = Member(type, name, bindingFlags) ?? throw new MissingMemberException(type.FullName, name);
+				members[i] = Member(type, name, bindingFlags, memberType) ?? throw new MissingMemberException(type.FullName, name);
 			}
 			return members;
 		}
@@ -499,7 +523,7 @@ namespace Fasterflect
 		/// due to method overloading the first found match will be returned.</returns>
 		public static MethodInfo Method(Type type, string name)
 		{
-			return type.Method(name, null, FasterflectFlags.InstanceAnyVisibility);
+			return Method(type, name, null, FasterflectFlags.InstanceAnyVisibility);
 		}
 
 		/// <summary>
@@ -508,7 +532,7 @@ namespace Fasterflect
 		/// <seealso cref="Method(Type,string)"/>
 		public static MethodInfo Method(Type type, Type[] genericTypes, string name)
 		{
-			return type.Method(genericTypes, name, FasterflectFlags.InstanceAnyVisibility);
+			return Method(type, genericTypes, name, FasterflectFlags.InstanceAnyVisibility);
 		}
 
 		/// <summary>
@@ -525,7 +549,7 @@ namespace Fasterflect
 		/// due to method overloading the first found match will be returned.</returns>
 		public static MethodInfo Method(Type type, string name, Type[] parameterTypes)
 		{
-			return type.Method(name, parameterTypes, FasterflectFlags.InstanceAnyVisibility);
+			return Method(type, name, parameterTypes, FasterflectFlags.InstanceAnyVisibility);
 		}
 
 		/// <summary>
@@ -534,7 +558,7 @@ namespace Fasterflect
 		/// <seealso cref="Method(Type,string,Type[])"/>
 		public static MethodInfo Method(Type type, Type[] genericTypes, string name, Type[] parameterTypes)
 		{
-			return type.Method(genericTypes, name, parameterTypes, FasterflectFlags.InstanceAnyVisibility);
+			return Method(type, genericTypes, name, parameterTypes, FasterflectFlags.InstanceAnyVisibility);
 		}
 
 		/// <summary>
@@ -552,7 +576,7 @@ namespace Fasterflect
 		/// due to method overloading the first found match will be returned.</returns>
 		public static MethodInfo Method(Type type, string name, FasterflectFlags bindingFlags)
 		{
-			return type.Method(name, null, bindingFlags);
+			return Method(type, name, null, bindingFlags);
 		}
 
 		/// <summary>
@@ -561,7 +585,7 @@ namespace Fasterflect
 		/// <seealso cref="Method(Type,string,FasterflectFlags)"/>
 		public static MethodInfo Method(Type type, Type[] genericTypes, string name, FasterflectFlags bindingFlags)
 		{
-			return type.Method(genericTypes, name, null, bindingFlags);
+			return Method(type, genericTypes, name, null, bindingFlags);
 		}
 
 		/// <summary>
@@ -583,7 +607,7 @@ namespace Fasterflect
 		/// due to method overloading the first found match will be returned.</returns>
 		public static MethodInfo Method(Type type, string name, Type[] parameterTypes, FasterflectFlags bindingFlags)
 		{
-			return type.Method(null, name, parameterTypes, bindingFlags);
+			return Method(type, null, name, parameterTypes, bindingFlags);
 		}
 
 		/// <summary>

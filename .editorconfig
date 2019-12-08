@@ -1,0 +1,4 @@
+﻿[*.{cs,vb}]
+
+# IDE0054: Use compound assignment
+dotnet_style_prefer_compound_assignment = true:none
