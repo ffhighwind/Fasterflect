@@ -31,7 +31,7 @@ namespace Fasterflect
 	/// </summary>
 	public static class ReflectLookup
 	{
-		#region ConstructorInfo
+		#region Constructor
 		/// <summary>
 		/// Gets the constructor corresponding to the supplied <paramref name="parameterTypes"/> on the
 		/// given <paramref name="type"/>.
@@ -321,20 +321,22 @@ namespace Fasterflect
 		public static MemberInfo Member(Type type, string name, FasterflectFlags bindingFlags, MemberTypes memberTypes = MemberTypes.All)
 		{
 			// we need to check all members to do partial name matches
-			if (bindingFlags.IsAnySet(FasterflectFlags.PartialNameMatch | FasterflectFlags.TrimExplicitlyImplemented)) {
-				return type.Members(memberTypes, bindingFlags, name).FirstOrDefault();
-			}
-			IList<MemberInfo> result = type.GetMember(name, memberTypes, bindingFlags);
-			if (result.Count > 0) {
-				bool hasSpecialFlags = bindingFlags.IsAnySet(FasterflectFlags.ExcludeBackingMembers | FasterflectFlags.ExcludeExplicitlyImplemented | FasterflectFlags.ExcludeHiddenMembers);
-				if (!hasSpecialFlags)
-					return result[0];
-				result = result.Filter(bindingFlags);
-				if (result.Count > 0)
-					return result[0];
-			}
-			if (bindingFlags.IsNotSet(FasterflectFlags.DeclaredOnly) && type.BaseType != typeof(object) && type.BaseType != null) {
-				return Member(type.BaseType, name, bindingFlags, memberTypes);
+			for(; ;) {
+				if (bindingFlags.IsAnySet(FasterflectFlags.PartialNameMatch | FasterflectFlags.TrimExplicitlyImplemented)) {
+					return type.Members(memberTypes, bindingFlags, name).FirstOrDefault();
+				}
+				IList<MemberInfo> result = type.GetMember(name, memberTypes, bindingFlags);
+				if (result.Count > 0) {
+					bool hasSpecialFlags = bindingFlags.IsAnySet(FasterflectFlags.ExcludeBackingMembers | FasterflectFlags.ExcludeExplicitlyImplemented | FasterflectFlags.ExcludeHiddenMembers);
+					if (!hasSpecialFlags)
+						return result[0];
+					result = result.Filter(bindingFlags);
+					if (result.Count > 0)
+						return result[0];
+				}
+				type = type.BaseType;
+				if (bindingFlags.IsSet(FasterflectFlags.DeclaredOnly) || type == typeof(object) || type == null)
+					break;
 			}
 			return null;
 		}
@@ -448,6 +450,8 @@ namespace Fasterflect
 			if (!recurse) {
 				return type.FindMembers(memberTypes, bindingFlags, null, null);
 			}
+
+			bindingFlags |= BindingFlags.DeclaredOnly;
 			bindingFlags &= ~BindingFlags.FlattenHierarchy;
 
 			List<MemberInfo> members = new List<MemberInfo>();
@@ -791,6 +795,369 @@ namespace Fasterflect
 				baseType = baseType.BaseType;
 			}
 			return methods;
+		}
+		#endregion
+
+		#region Attribute Lookup (Single)
+		/// <summary>
+		/// Gets the first <see cref="System.Attribute"/> associated with the <paramref name="provider"/>.
+		/// </summary>
+		/// <returns>The first attribute found on the source element.</returns>
+		public static Attribute Attribute(ICustomAttributeProvider provider)
+		{
+			return provider.Attributes().FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Gets the first <see cref="System.Attribute"/> of type <paramref name="attributeType"/> associated with the <paramref name="provider"/>.
+		/// </summary>
+		/// <returns>The first attribute found on the source element.</returns>
+		public static Attribute Attribute(ICustomAttributeProvider provider, Type attributeType)
+		{
+			return provider.Attributes(attributeType).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Gets the first <see cref="System.Attribute"/> of type <typeparamref name="T"/> associated with the <paramref name="provider"/>.
+		/// </summary>
+		/// <returns>The first attribute found on the source element.</returns>
+		public static T Attribute<T>(ICustomAttributeProvider provider) where T : Attribute
+		{
+			return provider.Attributes<T>().FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Gets the first <see cref="System.Attribute"/> of type <typeparamref name="T"/> associated with the 
+		/// enumeration value given in the <paramref name="provider"/> parameter.
+		/// </summary>
+		/// <typeparam name="T">The attribute type to search for.</typeparam>
+		/// <param name="provider">An enumeration value on which to search for the attribute.</param>
+		/// <returns>The first attribute found on the source.</returns>
+		public static T Attribute<T>(Enum provider) where T : Attribute
+		{
+			return provider.Attribute(typeof(T)) as T;
+		}
+
+		/// <summary>
+		/// Gets the first <see cref="System.Attribute"/> of type <paramref name="attributeType"/> associated with the 
+		/// enumeration value given in the <paramref name="provider"/> parameter.
+		/// </summary>
+		/// <param name="provider">An enumeration value on which to search for the attribute.</param>
+		/// <param name="attributeType">The attribute type to search for.</param>
+		/// <returns>The first attribute found on the source.</returns>
+		public static Attribute Attribute(Enum provider, Type attributeType)
+		{
+			Type type = provider.GetType();
+			MemberInfo info = type.Member(provider.ToString(), FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
+			return info.Attribute(attributeType);
+		}
+		#endregion
+
+		#region Attribute Lookup (Multiple)
+		/// <summary>
+		/// Gets the <see cref="System.Attribute"/>s associated with the <paramref name="provider"/>. The resulting
+		/// list of attributes can optionally be filtered by suppliying a list of <paramref name="attributeTypes"/>
+		/// to include.
+		/// </summary>
+		/// <returns>A list of the attributes found on the source element. This value will never be null.</returns>
+		public static IList<Attribute> Attributes(ICustomAttributeProvider provider, params Type[] attributeTypes)
+		{
+			bool hasTypes = attributeTypes != null && attributeTypes.Length > 0;
+			return provider.GetCustomAttributes(true).Cast<Attribute>()
+				.Where(attr => !hasTypes ||
+					   attributeTypes.Any(at => {
+						   Type type = attr.GetType();
+						   return at == type || at.IsSubclassOf(type);
+					   })).ToList();
+		}
+
+		/// <summary>
+		/// Gets all <see cref="System.Attribute"/>s of type <typeparamref name="T"/> associated with the <paramref name="provider"/>.
+		/// </summary>
+		/// <returns>A list of the attributes found on the source element. This value will never be null.</returns>
+		public static IList<T> Attributes<T>(ICustomAttributeProvider provider) where T : Attribute
+		{
+			return provider.GetCustomAttributes(typeof(T), true).Cast<T>().ToList();
+		}
+
+		/// <summary>
+		/// Gets the <see cref="System.Attribute"/>s associated with the enumeration given in <paramref name="provider"/>. 
+		/// </summary>
+		/// <typeparam name="T">The attribute type to search for.</typeparam>
+		/// <param name="provider">An enumeration on which to search for attributes of the given type.</param>
+		/// <returns>A list of the attributes found on the supplied source. This value will never be null.</returns>
+		public static IList<T> Attributes<T>(Enum provider) where T : Attribute
+		{
+			return provider.Attributes(typeof(T)).Cast<T>().ToList();
+		}
+
+		/// <summary>
+		/// Gets the <see cref="System.Attribute"/>s associated with the enumeration given in <paramref name="provider"/>. 
+		/// The resulting list of attributes can optionally be filtered by suppliying a list of <paramref name="attributeTypes"/>
+		/// to include.
+		/// </summary>
+		/// <returns>A list of the attributes found on the supplied source. This value will never be null.</returns>
+		public static IList<Attribute> Attributes(Enum provider, params Type[] attributeTypes)
+		{
+			Type type = provider.GetType();
+			MemberInfo info = type.Member(provider.ToString(), FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
+			return info.Attributes(attributeTypes);
+		}
+		#endregion
+
+		#region HasAttribute Lookup (Presence Detection)
+		/// <summary>
+		/// Determines whether the <paramref name="provider"/> element has an associated <see cref="System.Attribute"/>
+		/// of type <paramref name="attributeType"/>.
+		/// </summary>
+		/// <returns>True if the source element has the associated attribute, false otherwise.</returns>
+		public static bool HasAttribute(ICustomAttributeProvider provider, Type attributeType)
+		{
+			return provider.Attribute(attributeType) != null;
+		}
+
+		/// <summary>
+		/// Determines whether the <paramref name="provider"/> element has an associated <see cref="System.Attribute"/>
+		/// of type <typeparamref name="T"/>.
+		/// </summary>
+		/// <returns>True if the source element has the associated attribute, false otherwise.</returns>
+		public static bool HasAttribute<T>(ICustomAttributeProvider provider) where T : Attribute
+		{
+			return provider.HasAttribute(typeof(T));
+		}
+
+		/// <summary>
+		/// Determines whether the <paramref name="provider"/> element has an associated <see cref="System.Attribute"/>
+		/// of any of the types given in <paramref name="attributeTypes"/>.
+		/// </summary>
+		/// <param name="provider"></param>
+		/// <param name="attributeTypes">The list of attribute types to look for. If this list is <see langword="null"/> or
+		/// empty an <see cref="ArgumentException"/> will be thrown.</param>
+		/// <returns>True if the source element has at least one of the specified attribute types, false otherwise.</returns>
+		public static bool HasAnyAttribute(ICustomAttributeProvider provider, params Type[] attributeTypes)
+		{
+			return provider.Attributes(attributeTypes).Count() > 0;
+		}
+
+		/// <summary>
+		/// Determines whether the <paramref name="provider"/> element has an associated <see cref="System.Attribute"/>
+		/// of all of the types given in <paramref name="attributeTypes"/>.
+		/// </summary>
+		/// <returns>True if the source element has all of the specified attribute types, false otherwise.</returns>
+		public static bool HasAllAttributes(ICustomAttributeProvider provider, params Type[] attributeTypes)
+		{
+			bool hasTypes = attributeTypes != null && attributeTypes.Length > 0;
+			return !hasTypes || attributeTypes.All(at => provider.HasAttribute(at));
+		}
+		#endregion
+
+		#region MembersWith Lookup
+		/// <summary>
+		/// Gets all public and non-public instance members on the given <paramref name="type"/>.
+		/// The resulting list of members can optionally be filtered by supplying a list of 
+		/// <paramref name="attributeTypes"/>, in which case only members decorated with at least one of
+		/// these will be included.
+		/// </summary>
+		/// <param name="type">The type on which to reflect.</param>
+		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the search.</param>
+		/// <param name="attributeTypes">The optional list of attribute types with which members should
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all fields and properties
+		/// will be included in the result.</param>
+		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
+		public static IList<MemberInfo> MembersWith(Type type, MemberTypes memberTypes, params Type[] attributeTypes)
+		{
+			return type.MembersWith(memberTypes, FasterflectFlags.InstanceAnyVisibility, attributeTypes);
+		}
+
+		/// <summary>
+		/// Gets all members of the given <paramref name="memberTypes"/> on the given <paramref name="type"/> 
+		/// that match the specified <paramref name="bindingFlags"/> and are decorated with an
+		/// <see cref="System.Attribute"/> of the given type <typeparamref name="T"/>.
+		/// </summary>
+		/// <param name="type">The type on which to reflect.</param>
+		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the search.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
+		/// used to define the search behavior and result filtering.</param>
+		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
+		public static IList<MemberInfo> MembersWith<T>(Type type, MemberTypes memberTypes, FasterflectFlags bindingFlags)
+		{
+			return type.MembersWith(memberTypes, bindingFlags, typeof(T));
+		}
+
+		/// <summary>
+		/// Gets all members on the given <paramref name="type"/> that match the specified 
+		/// <paramref name="bindingFlags"/>.
+		/// The resulting list of members can optionally be filtered by supplying a list of 
+		/// <paramref name="attributeTypes"/>, in which case only members decorated with at least one of
+		/// these will be included.
+		/// </summary>
+		/// <param name="type">The type on which to reflect.</param>
+		/// <param name="memberTypes">The <see cref="MemberTypes"/> to include in the search.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
+		/// used to define the search behavior and result filtering.</param>
+		/// <param name="attributeTypes">The optional list of attribute types with which members should
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all fields and properties
+		/// matching the given <paramref name="bindingFlags"/> will be included in the result.</param>
+		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
+		public static IList<MemberInfo> MembersWith(Type type, MemberTypes memberTypes, FasterflectFlags bindingFlags, params Type[] attributeTypes)
+		{
+			bool hasTypes = attributeTypes != null && attributeTypes.Length > 0;
+			IEnumerable<MemberInfo> query = from m in type.Members(memberTypes, bindingFlags)
+											where !hasTypes || m.HasAnyAttribute(attributeTypes)
+											select m;
+			return query.ToList();
+		}
+		#endregion
+
+		#region FieldsAndPropertiesWith, FieldsWith, PropertiesWith
+		/// <summary>
+		/// Gets all public and non-public instance fields and properties on the given <paramref name="type"/>.
+		/// The resulting list of members can optionally be filtered by supplying a list of 
+		/// <paramref name="attributeTypes"/>, in which case only members decorated with at least one of
+		/// these will be included.
+		/// </summary>
+		/// <param name="type">The type on which to reflect.</param>
+		/// <param name="attributeTypes">The optional list of attribute types with which members should
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all fields and properties
+		/// will be included in the result.</param>
+		/// <returns>A list of all matching fields and properties on the type. This value will never be null.</returns>
+		public static IList<MemberInfo> FieldsAndPropertiesWith(Type type, params Type[] attributeTypes)
+		{
+			return type.MembersWith(MemberTypes.Field | MemberTypes.Property, attributeTypes);
+		}
+
+		/// <summary>
+		/// Gets all fields and properties on the given <paramref name="type"/> that match the specified 
+		/// <paramref name="bindingFlags"/>.
+		/// The resulting list of members can optionally be filtered by supplying a list of 
+		/// <paramref name="attributeTypes"/>, in which case only members decorated with at least one of
+		/// these will be included.
+		/// </summary>
+		/// <param name="type">The type on which to reflect.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
+		/// used to define the search behavior and result filtering.</param>
+		/// <param name="attributeTypes">The optional list of attribute types with which members should
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all fields and properties
+		/// matching the given <paramref name="bindingFlags"/> will be included in the result.</param>
+		/// <returns>A list of all matching fields and properties on the type. This value will never be null.</returns>
+		public static IList<MemberInfo> FieldsAndPropertiesWith(Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
+		{
+			return type.MembersWith(MemberTypes.Field | MemberTypes.Property, bindingFlags, attributeTypes);
+		}
+
+		/// <summary>
+		/// Gets all fields on the given <paramref name="type"/> that match the specified <paramref name="bindingFlags"/>.
+		/// The resulting list of members can optionally be filtered by supplying a list of 
+		/// <paramref name="attributeTypes"/>, in which case only members decorated with at least one of
+		/// these will be included.
+		/// </summary>
+		/// <param name="type">The type on which to reflect.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
+		/// used to define the search behavior and result filtering.</param>
+		/// <param name="attributeTypes">The optional list of attribute types with which members should
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all fields matching the given 
+		/// <paramref name="bindingFlags"/> will be included in the result.</param>
+		/// <returns>A list of all matching fields on the type. This value will never be null.</returns>
+		public static IList<FieldInfo> FieldsWith(Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
+		{
+			return type.MembersWith(MemberTypes.Field, bindingFlags, attributeTypes).Cast<FieldInfo>().ToList();
+		}
+
+		/// <summary>
+		/// Gets all properties on the given <paramref name="type"/> that match the specified <paramref name="bindingFlags"/>.
+		/// The resulting list of members can optionally be filtered by supplying a list of 
+		/// <paramref name="attributeTypes"/>, in which case only members decorated with at least one of
+		/// these will be included.
+		/// </summary>
+		/// <param name="type">The type on which to reflect.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
+		/// used to define the search behavior and result filtering.</param>
+		/// <param name="attributeTypes">The optional list of attribute types with which members should
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all properties matching the given 
+		/// <paramref name="bindingFlags"/> will be included in the result.</param>
+		/// <returns>A list of all matching properties on the type. This value will never be null.</returns>
+		public static IList<PropertyInfo> PropertiesWith(Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
+		{
+			return type.MembersWith(MemberTypes.Property, bindingFlags, attributeTypes).Cast<PropertyInfo>().ToList();
+		}
+		#endregion
+
+		#region MethodsWith, ConstructorsWith
+		/// <summary>
+		/// Gets all methods on the given <paramref name="type"/> that match the specified <paramref name="bindingFlags"/>.
+		/// The resulting list of members can optionally be filtered by supplying a list of 
+		/// <paramref name="attributeTypes"/>, in which case only members decorated with at least one of
+		/// these will be included.
+		/// </summary>
+		/// <param name="type">The type on which to reflect.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
+		/// used to define the search behavior and result filtering.</param>
+		/// <param name="attributeTypes">The optional list of attribute types with which members should
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all methods matching the given 
+		/// <paramref name="bindingFlags"/> will be included in the result.</param>
+		/// <returns>A list of all matching methods on the type. This value will never be null.</returns>
+		public static IList<MethodInfo> MethodsWith(Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
+		{
+			return type.MembersWith(MemberTypes.Method, bindingFlags, attributeTypes).Cast<MethodInfo>().ToList();
+		}
+
+		/// <summary>
+		/// Gets all constructors on the given <paramref name="type"/> that match the specified <paramref name="bindingFlags"/>.
+		/// The resulting list of members can optionally be filtered by supplying a list of 
+		/// <paramref name="attributeTypes"/>, in which case only members decorated with at least one of
+		/// these will be included.
+		/// </summary>
+		/// <param name="type">The type on which to reflect.</param>
+		/// <param name="bindingFlags">The <see cref="BindingFlags"/> or <see cref="FasterflectFlags"/> combination 
+		/// used to define the search behavior and result filtering.</param>
+		/// <param name="attributeTypes">The optional list of attribute types with which members should
+		/// be decorated. If this parameter is <see langword="null"/> or empty then all constructors matching the given 
+		/// <paramref name="bindingFlags"/> will be included in the result.</param>
+		/// <returns>A list of all matching constructors on the type. This value will never be null.</returns>
+		public static IList<ConstructorInfo> ConstructorsWith(Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
+		{
+			return type.MembersWith(MemberTypes.Constructor, bindingFlags, attributeTypes).Cast<ConstructorInfo>().ToList();
+		}
+		#endregion
+
+		#region MembersAndAttributes Lookup
+		/// <summary>
+		/// Gets a dictionary with all public and non-public instance members on the given <paramref name="type"/> 
+		/// and their associated attributes. Only members of the given <paramref name="memberTypes"/> will
+		/// be included in the result.
+		/// The list of attributes associated with each member can optionally be filtered by supplying a list of
+		/// <paramref name="attributeTypes"/>, in which case only members with at least one of these will be
+		/// included in the result.
+		/// </summary>
+		/// <returns>An dictionary mapping all matching members to their associated attributes. This value
+		/// will never be null. The attribute list associated with each member in the dictionary will likewise
+		/// never be null.</returns>
+		public static IDictionary<MemberInfo, List<Attribute>> MembersAndAttributes(Type type, MemberTypes memberTypes, params Type[] attributeTypes)
+		{
+			return type.MembersAndAttributes(memberTypes, FasterflectFlags.InstanceAnyVisibility, attributeTypes);
+		}
+
+		/// <summary>
+		/// Gets a dictionary with all members on the given <paramref name="type"/> and their associated attributes.
+		/// Only members of the given <paramref name="memberTypes"/> and matching <paramref name="bindingFlags"/> will
+		/// be included in the result.
+		/// The list of attributes associated with each member can optionally be filtered by supplying a list of
+		/// <paramref name="attributeTypes"/>, in which case only members with at least one of these will be
+		/// included in the result.
+		/// </summary>
+		/// <returns>An dictionary mapping all matching members to their associated attributes. This value
+		/// will never be null. The attribute list associated with each member in the dictionary will likewise
+		/// never be null.</returns>
+		public static IDictionary<MemberInfo, List<Attribute>> MembersAndAttributes(Type type,
+																					 MemberTypes memberTypes,
+																					 FasterflectFlags bindingFlags,
+																					 params Type[] attributeTypes)
+		{
+			var members = from m in type.Members(memberTypes, bindingFlags)
+						  let a = m.Attributes(attributeTypes)
+						  where a.Count() > 0
+						  select new { Member = m, Attributes = a.ToList() };
+			return members.ToDictionary(m => m.Member, m => m.Attributes);
 		}
 		#endregion
 	}

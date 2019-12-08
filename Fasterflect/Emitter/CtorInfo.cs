@@ -20,41 +20,31 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Fasterflect.Emitter
 {
-	internal class CallInfo
+	internal class CtorInfo
 	{
-		public CallInfo(Type targetType, string name, FasterflectFlags bindingFlags, Type[] genericTypes, Type[] parameterTypes)
+		public CtorInfo(Type targetType, FasterflectFlags bindingFlags, Type[] parameterTypes)
 		{
 			TargetType = targetType;
-			Name = name;
 			BindingFlags = bindingFlags;
 			ParameterTypes = parameterTypes;
-			GenericTypes = genericTypes;
 		}
 
 		public Type TargetType { get; }
-		public string Name { get; }
 		public FasterflectFlags BindingFlags { get; }
 		public Type[] ParameterTypes { get; }
-		public Type[] GenericTypes { get; }
 
 		public override bool Equals(object obj)
 		{
-			if (obj is CallInfo other &&
-				Name == other.Name &&
+			if (obj is CtorInfo other &&
 				TargetType.Equals(other.TargetType) &&
 				ParameterTypes.Length == other.ParameterTypes.Length &&
-				GenericTypes.Length == other.GenericTypes.Length &&
 				BindingFlags == other.BindingFlags) {
 				for (int i = 0, count = ParameterTypes.Length; i < count; ++i) {
 					if (!ParameterTypes[i].Equals(other.ParameterTypes[i])) {
-						return false;
-					}
-				}
-				for (int i = 0, count = GenericTypes.Length; i < count; ++i) {
-					if (!ParameterTypes[i].Equals(other.GenericTypes[i])) {
 						return false;
 					}
 				}
@@ -65,15 +55,11 @@ namespace Fasterflect.Emitter
 
 		public override int GetHashCode()
 		{
-			int hashCode = -937504810;
+			int hashCode = -25691114;
 			hashCode = hashCode * -1521134295 + TargetType.GetHashCode();
 			hashCode = hashCode * -1521134295 + BindingFlags.GetHashCode();
-			hashCode = hashCode * -1521134295 + Name.GetHashCode();
 			for (int i = 0, count = ParameterTypes.Length; i < count; ++i) {
 				hashCode = hashCode * -1521134295 + ParameterTypes[i].GetHashCode();
-			}
-			for (int i = 0, count = GenericTypes.Length; i < count; ++i) {
-				hashCode = hashCode * -1521134295 + GenericTypes[i].GetHashCode();
 			}
 			return hashCode;
 		}

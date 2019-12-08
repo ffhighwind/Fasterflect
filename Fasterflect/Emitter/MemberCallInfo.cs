@@ -3,9 +3,9 @@ using System.Reflection;
 
 namespace Fasterflect.Emitter
 {
-	internal class MemberInfoCache
+	internal class MemberCallInfo
 	{
-		public MemberInfoCache(Type type, string name, MemberTypes memberTypes, FasterflectFlags bindingFlags)
+		public MemberCallInfo(Type type, string name, MemberTypes memberTypes, FasterflectFlags bindingFlags)
 		{
 			TargetType = type;
 			BindingFlags = bindingFlags;
@@ -20,7 +20,7 @@ namespace Fasterflect.Emitter
 
 		public override bool Equals(object obj)
 		{
-			return obj is MemberInfoCache other &&
+			return obj is MemberCallInfo other &&
 				other != null &&
 				TargetType.Equals(other.TargetType) &&
 				BindingFlags ==  other.BindingFlags &&

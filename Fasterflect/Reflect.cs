@@ -22,7 +22,6 @@
 using Fasterflect.Emitter;
 using System;
 using System.Reflection;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace Fasterflect
@@ -32,9 +31,9 @@ namespace Fasterflect
 	/// </summary>
 	public static class Reflect
 	{
-		private static readonly Cache<MemberInfoCache, MemberGetter> Getters = new Cache<MemberInfoCache, MemberGetter>();
-		private static readonly Cache<MemberInfoCache, MemberSetter> Setters = new Cache<MemberInfoCache, MemberSetter>();
-		private static readonly Cache<CallInfo, ConstructorInvoker> Constructors = new Cache<CallInfo, ConstructorInvoker>();
+		private static readonly Cache<MemberCallInfo, MemberGetter> Getters = new Cache<MemberCallInfo, MemberGetter>();
+		private static readonly Cache<MemberCallInfo, MemberSetter> Setters = new Cache<MemberCallInfo, MemberSetter>();
+		private static readonly Cache<CtorInfo, ConstructorInvoker> Constructors = new Cache<CtorInfo, ConstructorInvoker>();
 		private static readonly Cache<CallInfo, MethodInvoker> Methods = new Cache<CallInfo, MethodInvoker>();
 		private static readonly Cache<Type, ArrayElementSetter> ArraySetters = new Cache<Type, ArrayElementSetter>();
 		private static readonly Cache<Type, ArrayElementGetter> ArrayGetters = new Cache<Type, ArrayElementGetter>();
@@ -45,7 +44,7 @@ namespace Fasterflect
 		internal static ConstructorInvoker Constructor(Type type, FasterflectFlags bindingFlags, ConstructorInfo ctor, Type[] parameterTypes)
 		{
 			bindingFlags &= FasterflectFlags.InstanceAnyDeclaredOnly;
-			CallInfo info = new CallInfo(type, "", bindingFlags, parameterTypes);
+			CtorInfo info = new CtorInfo(type, bindingFlags, parameterTypes);
 			ConstructorInvoker value = Constructors.Get(info);
 			if (value != null)
 				return value;
@@ -94,7 +93,7 @@ namespace Fasterflect
 		#region Getters
 		internal static MemberGetter Getter(Type type, string name, MemberTypes memberType, FasterflectFlags bindingFlags, MemberInfo memberInfo)
 		{
-			MemberInfoCache info = new MemberInfoCache(type, name, memberType, bindingFlags);
+			MemberCallInfo info = new MemberCallInfo(type, name, memberType, bindingFlags);
 			MemberGetter value = Getters.Get(info);
 			if (value != null)
 				return value;
@@ -213,7 +212,7 @@ namespace Fasterflect
 		#region Setters
 		internal static MemberSetter Setter(Type type, string name, MemberTypes memberType, FasterflectFlags bindingFlags, MemberInfo memberInfo)
 		{
-			MemberInfoCache info = new MemberInfoCache(type, name, memberType, bindingFlags);
+			MemberCallInfo info = new MemberCallInfo(type, name, memberType, bindingFlags);
 			MemberSetter value = Setters.Get(info);
 			if (value != null)
 				return value;
@@ -378,18 +377,6 @@ namespace Fasterflect
 		#endregion
 
 		#region Indexers
-		internal static MethodInvoker Method(Type type, string name, FasterflectFlags bindingFlags, MethodInfo method, Type[] genericTypes, Type[] parameterTypes)
-		{
-			CallInfo info = new CallInfo(type, name, bindingFlags, parameterTypes);
-			MethodInvoker value = Methods.Get(info);
-			if (value != null)
-				return value;
-			method = method ?? ReflectLookup.Method(type, genericTypes, name, parameterTypes, bindingFlags) ?? throw new MissingMethodException(type.FullName, name);
-			value = (MethodInvoker)new MethodInvocationEmitter(method).GetDelegate();
-			Methods.Insert(info, value);
-			return value;
-		}
-
 		/// <summary>
 		/// Creates a delegate which can get the value of an indexer.
 		/// </summary>
@@ -447,6 +434,19 @@ namespace Fasterflect
 		#endregion
 
 		#region Methods
+		internal static MethodInvoker Method(Type type, string name, FasterflectFlags bindingFlags, MethodInfo method, Type[] genericTypes, Type[] parameterTypes)
+		{
+			genericTypes = genericTypes ?? Type.EmptyTypes;
+			CallInfo info = new CallInfo(type, name, bindingFlags, genericTypes, parameterTypes);
+			MethodInvoker value = Methods.Get(info);
+			if (value != null)
+				return value;
+			method = method ?? ReflectLookup.Method(type, genericTypes, name, parameterTypes, bindingFlags) ?? throw new MissingMethodException(type.FullName, name);
+			value = (MethodInvoker)new MethodInvocationEmitter(method).GetDelegate();
+			Methods.Insert(info, value);
+			return value;
+		}
+
 		/// <summary>
 		/// Creates a <see cref="MethodInvoker"/> which invokes the given <see cref="MethodInfo"/>.
 		/// </summary>
@@ -454,7 +454,7 @@ namespace Fasterflect
 		/// <returns>A <see cref="MethodInvoker"/> which invokes the given <see cref="MethodInfo"/>.</returns>
 		public static MethodInvoker Method(MethodInfo method)
 		{
-			return Method(method.DeclaringType, "set_Item", FasterflectFlags.StaticInstanceAnyVisibility, method, null, method.GetParameters().ToTypeArray());
+			return Method(method.DeclaringType, "set_Item", FasterflectFlags.StaticInstanceAnyVisibility, method, method.GetGenericArguments(), method.GetParameters().ToTypeArray());
 		}
 
 		/// <summary>

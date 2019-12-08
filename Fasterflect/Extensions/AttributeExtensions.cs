@@ -35,7 +35,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The first attribute found on the source element.</returns>
 		public static Attribute Attribute(this ICustomAttributeProvider provider)
 		{
-			return provider.Attributes().FirstOrDefault();
+			return ReflectLookup.Attribute(provider);
 		}
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The first attribute found on the source element.</returns>
 		public static Attribute Attribute(this ICustomAttributeProvider provider, Type attributeType)
 		{
-			return provider.Attributes(attributeType).FirstOrDefault();
+			return ReflectLookup.Attribute(provider, attributeType);
 		}
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The first attribute found on the source element.</returns>
 		public static T Attribute<T>(this ICustomAttributeProvider provider) where T : Attribute
 		{
-			return provider.Attributes<T>().FirstOrDefault();
+			return ReflectLookup.Attribute<T>(provider);
 		}
 
 		/// <summary>
@@ -65,7 +65,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The first attribute found on the source.</returns>
 		public static T Attribute<T>(this Enum provider) where T : Attribute
 		{
-			return provider.Attribute(typeof(T)) as T;
+			return ReflectLookup.Attribute<T>(provider);
 		}
 
 		/// <summary>
@@ -77,9 +77,7 @@ namespace Fasterflect.Extensions
 		/// <returns>The first attribute found on the source.</returns>
 		public static Attribute Attribute(this Enum provider, Type attributeType)
 		{
-			Type type = provider.GetType();
-			MemberInfo info = type.Member(provider.ToString(), FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
-			return info.Attribute(attributeType);
+			return ReflectLookup.Attribute(provider, attributeType);
 		}
 		#endregion
 
@@ -92,13 +90,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of the attributes found on the source element. This value will never be null.</returns>
 		public static IList<Attribute> Attributes(this ICustomAttributeProvider provider, params Type[] attributeTypes)
 		{
-			bool hasTypes = attributeTypes != null && attributeTypes.Length > 0;
-			return provider.GetCustomAttributes(true).Cast<Attribute>()
-				.Where(attr => !hasTypes ||
-					   attributeTypes.Any(at => {
-						   Type type = attr.GetType();
-						   return at == type || at.IsSubclassOf(type);
-					   })).ToList();
+			return ReflectLookup.Attributes(provider, attributeTypes);
 		}
 
 		/// <summary>
@@ -107,7 +99,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of the attributes found on the source element. This value will never be null.</returns>
 		public static IList<T> Attributes<T>(this ICustomAttributeProvider provider) where T : Attribute
 		{
-			return provider.GetCustomAttributes(typeof(T), true).Cast<T>().ToList();
+			return ReflectLookup.Attributes<T>(provider);
 		}
 
 		/// <summary>
@@ -118,7 +110,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of the attributes found on the supplied source. This value will never be null.</returns>
 		public static IList<T> Attributes<T>(this Enum provider) where T : Attribute
 		{
-			return provider.Attributes(typeof(T)).Cast<T>().ToList();
+			return ReflectLookup.Attributes<T>(provider);
 		}
 
 		/// <summary>
@@ -129,9 +121,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of the attributes found on the supplied source. This value will never be null.</returns>
 		public static IList<Attribute> Attributes(this Enum provider, params Type[] attributeTypes)
 		{
-			Type type = provider.GetType();
-			MemberInfo info = type.Member(provider.ToString(), FasterflectFlags.StaticAnyVisibility | FasterflectFlags.DeclaredOnly);
-			return info.Attributes(attributeTypes);
+			return ReflectLookup.Attributes(provider, attributeTypes);
 		}
 		#endregion
 
@@ -143,7 +133,7 @@ namespace Fasterflect.Extensions
 		/// <returns>True if the source element has the associated attribute, false otherwise.</returns>
 		public static bool HasAttribute(this ICustomAttributeProvider provider, Type attributeType)
 		{
-			return provider.Attribute(attributeType) != null;
+			return ReflectLookup.HasAttribute(provider, attributeType);
 		}
 
 		/// <summary>
@@ -153,7 +143,7 @@ namespace Fasterflect.Extensions
 		/// <returns>True if the source element has the associated attribute, false otherwise.</returns>
 		public static bool HasAttribute<T>(this ICustomAttributeProvider provider) where T : Attribute
 		{
-			return provider.HasAttribute(typeof(T));
+			return ReflectLookup.HasAttribute<T>(provider);
 		}
 
 		/// <summary>
@@ -166,7 +156,7 @@ namespace Fasterflect.Extensions
 		/// <returns>True if the source element has at least one of the specified attribute types, false otherwise.</returns>
 		public static bool HasAnyAttribute(this ICustomAttributeProvider provider, params Type[] attributeTypes)
 		{
-			return provider.Attributes(attributeTypes).Count() > 0;
+			return ReflectLookup.HasAnyAttribute(provider, attributeTypes);
 		}
 
 		/// <summary>
@@ -176,8 +166,7 @@ namespace Fasterflect.Extensions
 		/// <returns>True if the source element has all of the specified attribute types, false otherwise.</returns>
 		public static bool HasAllAttributes(this ICustomAttributeProvider provider, params Type[] attributeTypes)
 		{
-			bool hasTypes = attributeTypes != null && attributeTypes.Length > 0;
-			return !hasTypes || attributeTypes.All(at => provider.HasAttribute(at));
+			return ReflectLookup.HasAllAttributes(provider, attributeTypes);
 		}
 		#endregion
 
@@ -197,7 +186,7 @@ namespace Fasterflect.Extensions
 		public static IList<MemberInfo> MembersWith(this Type type, MemberTypes memberTypes,
 													 params Type[] attributeTypes)
 		{
-			return type.MembersWith(memberTypes, FasterflectFlags.InstanceAnyVisibility, attributeTypes);
+			return ReflectLookup.MembersWith(type, memberTypes, attributeTypes);
 		}
 
 		/// <summary>
@@ -212,7 +201,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all matching members on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> MembersWith<T>(this Type type, MemberTypes memberTypes, FasterflectFlags bindingFlags)
 		{
-			return type.MembersWith(memberTypes, bindingFlags, typeof(T));
+			return ReflectLookup.MembersWith<T>(type, memberTypes, bindingFlags);
 		}
 
 		/// <summary>
@@ -233,11 +222,7 @@ namespace Fasterflect.Extensions
 		public static IList<MemberInfo> MembersWith(this Type type, MemberTypes memberTypes, FasterflectFlags bindingFlags,
 													 params Type[] attributeTypes)
 		{
-			bool hasTypes = attributeTypes != null && attributeTypes.Length > 0;
-			IEnumerable<MemberInfo> query = from m in type.Members(memberTypes, bindingFlags)
-											where !hasTypes || m.HasAnyAttribute(attributeTypes)
-											select m;
-			return query.ToList();
+			return ReflectLookup.MembersWith(type, memberTypes, bindingFlags, attributeTypes);
 		}
 		#endregion
 
@@ -255,7 +240,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all matching fields and properties on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> FieldsAndPropertiesWith(this Type type, params Type[] attributeTypes)
 		{
-			return type.MembersWith(MemberTypes.Field | MemberTypes.Property, attributeTypes);
+			return ReflectLookup.FieldsAndPropertiesWith(type, attributeTypes);
 		}
 
 		/// <summary>
@@ -274,7 +259,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all matching fields and properties on the type. This value will never be null.</returns>
 		public static IList<MemberInfo> FieldsAndPropertiesWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
 		{
-			return type.MembersWith(MemberTypes.Field | MemberTypes.Property, bindingFlags, attributeTypes);
+			return ReflectLookup.FieldsAndPropertiesWith(type, bindingFlags, attributeTypes);
 		}
 
 		/// <summary>
@@ -292,7 +277,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all matching fields on the type. This value will never be null.</returns>
 		public static IList<FieldInfo> FieldsWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
 		{
-			return type.MembersWith(MemberTypes.Field, bindingFlags, attributeTypes).Cast<FieldInfo>().ToList();
+			return ReflectLookup.FieldsWith(type, bindingFlags, attributeTypes);
 		}
 
 		/// <summary>
@@ -310,7 +295,7 @@ namespace Fasterflect.Extensions
 		/// <returns>A list of all matching properties on the type. This value will never be null.</returns>
 		public static IList<PropertyInfo> PropertiesWith(this Type type, FasterflectFlags bindingFlags, params Type[] attributeTypes)
 		{
-			return type.MembersWith(MemberTypes.Property, bindingFlags, attributeTypes).Cast<PropertyInfo>().ToList();
+			return ReflectLookup.PropertiesWith(type, bindingFlags, attributeTypes);
 		}
 		#endregion
 
@@ -368,7 +353,7 @@ namespace Fasterflect.Extensions
 																					 MemberTypes memberTypes,
 																					 params Type[] attributeTypes)
 		{
-			return type.MembersAndAttributes(memberTypes, FasterflectFlags.InstanceAnyVisibility, null);
+			return ReflectLookup.MembersAndAttributes(type, memberTypes, attributeTypes);
 		}
 
 		/// <summary>
@@ -387,11 +372,7 @@ namespace Fasterflect.Extensions
 																					 FasterflectFlags bindingFlags,
 																					 params Type[] attributeTypes)
 		{
-			var members = from m in type.Members(memberTypes, bindingFlags)
-						  let a = m.Attributes(attributeTypes)
-						  where a.Count() > 0
-						  select new { Member = m, Attributes = a.ToList() };
-			return members.ToDictionary(m => m.Member, m => m.Attributes);
+			return ReflectLookup.MembersAndAttributes(type, memberTypes, bindingFlags, attributeTypes);
 		}
 		#endregion
 	}
