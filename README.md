@@ -90,7 +90,7 @@ public class Program
 
 ## [Reflect](https://github.com/ffhighwind/fasterflect/blob/master/Fasterflect/Reflect.cs)
 
-Reflect is the static factory for all reflection-based delegates. Every delegate that is generated is stored in a temporary cache which stores the delegate with a [WeakReference](https://docs.microsoft.com/en-us/dotnet/api/system.weakreference?view=netframework-4.8). This allows delegates to be garbage collected but also ensures that you do cannot waste memory by creating multiple instances of the same delegate.
+Reflect is the static factory for all reflection-based delegates. Every delegate that is generated is stored in a temporary cache using a [WeakReference](https://docs.microsoft.com/en-us/dotnet/api/system.weakreference?view=netframework-4.8). This allows delegates to be garbage collected but also ensures that you do cannot waste memory by creating multiple instances of the same delegate.
 
 | Method | Description |
 | --- | --- |
