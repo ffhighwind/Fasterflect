@@ -1,4 +1,4 @@
-# Intro
+# Introduction
 
 [Nuget: Fasterflect.Reflect](https://www.nuget.org/packages/Fasterflect.Reflect/)
 
