@@ -41,12 +41,12 @@ namespace Fasterflect.Emitter
 		public bool ShouldHandleInnerStruct => IsTargetTypeStruct && !IsStatic;
 		public bool IsTargetTypeStruct => TargetType.IsValueType;
 		protected DynamicMethod Method;
-		protected EmitHelper Generator;
+		protected ILGenerator Gen;
 
 		protected internal Delegate GetDelegate()
 		{
 			Method = CreateDynamicMethod();
-			Generator = new EmitHelper(Method.GetILGenerator());
+			Gen = Method.GetILGenerator();
 			return CreateDelegate();
 		}
 
@@ -63,28 +63,92 @@ namespace Fasterflect.Emitter
 		}
 
 		protected void LoadInnerStructToLocal(byte localPosition)
-		{
-			Generator
-				.castclass(typeof(ValueTypeHolder)) // (ValueTypeHolder)wrappedStruct
-				.callvirt(StructGetMethod) // <stack>.get_Value()
-				.unbox_any(TargetType) // unbox <stack>
-				.stloc(localPosition) // localStr = <stack>
-				.ldloca_s(localPosition); // load &localStr
+		{	
+			Gen.Emit(OpCodes.Castclass, typeof(ValueTypeHolder));
+			Gen.Emit(OpCodes.Callvirt, StructGetMethod);
+			Gen.Emit(OpCodes.Unbox_Any, TargetType);
+			stloc_s(localPosition);
+			Gen.Emit(OpCodes.Ldloca_S, localPosition);
 		}
 
-		protected void StoreLocalToInnerStruct(byte localPosition)
+		/// <summary>
+		/// Calls ILGenerator.Emit(<see cref="OpCodes.Stloc_S"/>, byte) that
+		/// pops the current value from the top of the evaluation stack and stores it 
+		/// in the local variable list at index (short form).
+		/// </summary>
+		/// <param name="index">A local variable index.</param>
+		/// <seealso cref="OpCodes.Stloc_S">OpCodes.Stloc_S</seealso>
+		/// <seealso cref="System.Reflection.Emit.ILGenerator.Emit(OpCode,short)">ILGenerator.Emit</seealso>
+		protected void stloc_s(byte index)
+		{
+			switch (index) {
+				case 0:
+					Gen.Emit(OpCodes.Stloc_0);
+					break;
+				case 1:
+					Gen.Emit(OpCodes.Stloc_1);
+					break;
+				case 2:
+					Gen.Emit(OpCodes.Stloc_2);
+					break;
+				case 3:
+					Gen.Emit(OpCodes.Stloc_3);
+					break;
+				default:
+					Gen.Emit(OpCodes.Stloc_S, index);
+					return;
+			}
+
+		}
+
+		/// <summary>
+		/// Calls ILGenerator.Emit(<see cref="OpCodes.Ldarg"/>, short) or 
+		/// ILGenerator.Emit(<see cref="OpCodes.Ldarg_S"/>, byte) that
+		/// loads an argument (referenced by a specified index value) onto the stack.
+		/// </summary>
+		/// <param name="index">Index of the argument that is pushed onto the stack.</param>
+		/// <seealso cref="OpCodes.Ldarg">OpCodes.Ldarg</seealso>
+		/// <seealso cref="System.Reflection.Emit.ILGenerator.Emit(OpCode,short)">ILGenerator.Emit</seealso>
+		public void ldarg(int index)
+		{
+			switch (index) {
+				case 0:
+					Gen.Emit(OpCodes.Ldarg_0);
+					break;
+				case 1:
+					Gen.Emit(OpCodes.Ldarg_1);
+					break;
+				case 2:
+					Gen.Emit(OpCodes.Ldarg_2);
+					break;
+				case 3:
+					Gen.Emit(OpCodes.Ldarg_3);
+					break;
+				default:
+					if (index <= byte.MaxValue)
+						Gen.Emit(OpCodes.Ldarg_S, (byte)index);
+					else if (index <= short.MaxValue)
+						Gen.Emit(OpCodes.Ldarg, (short)index);
+					else
+						throw new ArgumentOutOfRangeException(nameof(index));
+					break;
+			}
+		}
+
+		protected void StoreLocalToInnerStruct(short localPosition)
 		{
 			StoreLocalToInnerStruct(0, localPosition); // 0: 'this'
 		}
 
-		protected void StoreLocalToInnerStruct(byte argPosition, byte localPosition)
-		{
-			Generator
-				.ldarg(argPosition)
-				.castclass(typeof(ValueTypeHolder)) // wrappedStruct = (ValueTypeHolder)this
-				.ldloc(localPosition) // load localStr
-				.boxIfValueType(TargetType) // box <stack>
-				.callvirt(StructSetMethod); // wrappedStruct.set_Value(<stack>)
+		protected void StoreLocalToInnerStruct(short argPosition, short localPosition)
+		{			
+			Gen.Emit(OpCodes.Ldarg, argPosition);
+			Gen.Emit(OpCodes.Castclass, typeof(ValueTypeHolder));
+			Gen.Emit(OpCodes.Ldloc, localPosition);
+			if (TargetType.IsValueType)
+				Gen.Emit(OpCodes.Box, TargetType);
+			Gen.Emit(OpCodes.Callvirt, StructSetMethod);
+		
 		}
 	}
 }

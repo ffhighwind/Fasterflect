@@ -18,10 +18,10 @@
 
 #endregion
 
-using Fasterflect.Extensions;
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
+using Fasterflect.Extensions;
 
 namespace Fasterflect.Emitter
 {
@@ -53,33 +53,37 @@ namespace Fasterflect.Emitter
 		{
 			bool handleInnerStruct = ShouldHandleInnerStruct;
 			if (IsStatic) {
-				Generator.ldarg_1.end();                   // load value-to-be-set
+				Gen.Emit(OpCodes.Ldarg_1); // load value-to-be-set             
 			}
 			else {
-				Generator.ldarg_0.end();                   // load arg-0 (this)
+				Gen.Emit(OpCodes.Ldarg_0);        // load arg-0 (this)            
 				if (handleInnerStruct) {
-					Generator.DeclareLocal(TargetType);    // TargetType tmpStr
-					LoadInnerStructToLocal(0);             // tmpStr = ((ValueTypeHolder)this)).Value;
-					Generator.ldarg_1.end();               // load value-to-be-set;
+					Gen.DeclareLocal(TargetType); // TargetType tmpStr
+					LoadInnerStructToLocal(0);    // tmpStr = ((ValueTypeHolder)this)).Value;          
+					Gen.Emit(OpCodes.Ldarg_1);    // load value-to-be-set;
 				}
 				else {
-					Generator.castclass(TargetType)   // (TargetType)this
-					         .ldarg_1.end();          // load value-to-be-set;
+					Gen.Emit(OpCodes.Castclass, TargetType); // (TargetType)this
+					Gen.Emit(OpCodes.Ldarg_1);               // load value-to-be-set;   
 				}
 			}
-			Generator.CastFromObject(MemberInfo.Type());   // unbox | cast value-to-be-set
+
+			Type type = MemberInfo.Type();
+			if (type != typeof(object)) {
+				Gen.Emit(type.IsValueType ? OpCodes.Unbox_Any : OpCodes.Castclass, type);
+			}
 			if (MemberInfo is FieldInfo field) {
-				Generator.stfld(field.IsStatic, field);    // (this|tmpStr).field = value-to-be-set;
+				Gen.Emit(field.IsStatic ? OpCodes.Stsfld : OpCodes.Stfld, field); // (this|tmpStr).field = value-to-be-set;
 			}
 			else {
 				PropertyInfo prop = (PropertyInfo) MemberInfo;
 				MethodInfo setMethod = prop.GetSetMethod(true);
-				Generator.call(setMethod.IsStatic || IsTargetTypeStruct, setMethod);   // (this|tmpStr).set_Prop(value-to-be-set);
+				Gen.Emit(setMethod.IsStatic || IsTargetTypeStruct ? OpCodes.Call : OpCodes.Callvirt, setMethod); // (this|tmpStr).set_Prop(value-to-be-set);
 			}
 			if (handleInnerStruct) {
 				StoreLocalToInnerStruct(0); // ((ValueTypeHolder)this)).Value = tmpStr
 			}
-			Generator.ret();
+			Gen.Emit(OpCodes.Ret);
 			return Method.CreateDelegate(typeof(MemberSetter));
 		}
 	}

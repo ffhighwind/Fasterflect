@@ -29,11 +29,11 @@ namespace Fasterflect.Emitter
 		public MemberGetEmitter(MemberInfo memberInfo)
 		{
 			MemberInfo = memberInfo;
-			if(memberInfo is PropertyInfo property) {
+			if (memberInfo is PropertyInfo property) {
 				IsStatic = (property.GetGetMethod(true) ?? property.GetSetMethod(true)).IsStatic;
 			}
 			else {
-				FieldInfo field = (FieldInfo)memberInfo;
+				FieldInfo field = (FieldInfo) memberInfo;
 				IsStatic = field.IsStatic;
 			}
 		}
@@ -47,6 +47,7 @@ namespace Fasterflect.Emitter
 			return CreateDynamicMethod("getter", TargetType, typeof(object), new[] { typeof(object) });
 		}
 
+		/*
 		protected internal override Delegate CreateDelegate()
 		{
 			bool handleInnerStruct = ShouldHandleInnerStruct;
@@ -62,7 +63,7 @@ namespace Fasterflect.Emitter
 			}
 			if (MemberInfo is FieldInfo field) {
 				if (field.DeclaringType.IsEnum) { // special enum handling as ldsfld does not support enums
-					Generator.ldc_i4((int)field.GetValue(field.DeclaringType)).boxIfValueType(field.FieldType);
+					Generator.ldc_i4((int) field.GetValue(field.DeclaringType)).boxIfValueType(field.FieldType);
 				}
 				else {
 					Generator.ldfld(field.IsStatic, field)        // (this|tmpStr).field OR TargetType.field
@@ -70,7 +71,7 @@ namespace Fasterflect.Emitter
 				}
 			}
 			else {
-				PropertyInfo prop = (PropertyInfo)MemberInfo;
+				PropertyInfo prop = (PropertyInfo) MemberInfo;
 				MethodInfo getMethod = prop.GetGetMethod(true);
 				Generator.call(getMethod.IsStatic || IsTargetTypeStruct, getMethod)  // (this|tmpStr).prop OR TargetType.prop
 						 .boxIfValueType(prop.PropertyType);                         // (object)<stack>
@@ -81,6 +82,44 @@ namespace Fasterflect.Emitter
 				Generator.ldloc_1.end();      // push resultLocal
 			}
 			Generator.ret();
+			return Method.CreateDelegate(typeof(MemberGetter));
+		}
+		*/
+
+		protected internal override Delegate CreateDelegate()
+		{
+			bool handleInnerStruct = ShouldHandleInnerStruct;
+			if (handleInnerStruct) {
+				Gen.Emit(OpCodes.Ldarg_0); // load arg-0 (this)
+				Gen.DeclareLocal(TargetType); // TargetType tmpStr
+				LoadInnerStructToLocal(0);         // tmpStr = ((ValueTypeHolder)this)).Value
+				Gen.DeclareLocal(typeof(object)); // object result;
+			}
+			else if (!IsStatic) {
+				Gen.Emit(OpCodes.Ldarg_0); // load arg-0 (this)
+				Gen.Emit(OpCodes.Castclass, TargetType); // (TargetType)this
+			}
+			if (MemberInfo is FieldInfo field) {
+				if (field.DeclaringType.IsEnum) // special enum handling as ldsfld does not support enums
+					Gen.Emit(OpCodes.Ldc_I4, (int) field.GetValue(field.DeclaringType));
+				else
+					Gen.Emit(field.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, field);  // (this|tmpStr).field OR TargetType.field
+				if (field.FieldType.IsValueType)
+					Gen.Emit(OpCodes.Box, field.FieldType); // (object)<stack>
+			}
+			else {
+				PropertyInfo prop = (PropertyInfo) MemberInfo;
+				MethodInfo getMethod = prop.GetGetMethod(true);
+				Gen.Emit(getMethod.IsStatic || IsTargetTypeStruct ? OpCodes.Call : OpCodes.Callvirt, getMethod); // (this|tmpStr).prop OR TargetType.prop
+				if (prop.PropertyType.IsValueType)
+					Gen.Emit(OpCodes.Box, prop.PropertyType); // (object)<stack>
+			}
+			if (handleInnerStruct) {
+				Gen.Emit(OpCodes.Stloc_1);  // resultLocal = <stack>
+				StoreLocalToInnerStruct(0); // ((ValueTypeHolder)this)).Value = tmpStr
+				Gen.Emit(OpCodes.Ldloc_1);  // push resultLocal
+			}
+			Gen.Emit(OpCodes.Ret);
 			return Method.CreateDelegate(typeof(MemberGetter));
 		}
 	}

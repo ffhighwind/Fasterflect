@@ -37,6 +37,7 @@ namespace Fasterflect.Emitter
 
 		protected internal override Delegate CreateDelegate()
 		{
+			/*
 			Type elementType = TargetType.GetElementType();
 			Generator
 				.ldarg_0                       // load array
@@ -46,6 +47,19 @@ namespace Fasterflect.Emitter
 				.CastFromObject(elementType)   // (unbox | cast) value
 				.stelem(elementType)           // array[index] = value
 				.ret();
+			return Method.CreateDelegate(typeof(ArrayElementSetter));
+			*/
+
+			Type elementType = TargetType.GetElementType();
+			Gen.Emit(OpCodes.Ldarg_0);
+			Gen.Emit(OpCodes.Castclass, TargetType);
+			Gen.Emit(OpCodes.Ldarg_1);
+			Gen.Emit(OpCodes.Ldarg_2);
+			if (elementType == typeof(object)) {
+				Gen.Emit(elementType.IsValueType ? OpCodes.Unbox_Any : OpCodes.Castclass, elementType);
+			}
+			Gen.Emit(OpCodes.Stelem, elementType);
+			Gen.Emit(OpCodes.Ret);
 			return Method.CreateDelegate(typeof(ArrayElementSetter));
 		}
 	}

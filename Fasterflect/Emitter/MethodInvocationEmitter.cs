@@ -37,55 +37,59 @@ namespace Fasterflect.Emitter
 
 		protected internal override Delegate CreateDelegate()
 		{
-			MethodInfo method = (MethodInfo)MemberInfo;
+			MethodInfo method = (MethodInfo) MemberInfo;
 			const byte paramArrayIndex = 1;
 			bool hasReturnType = method.ReturnType != typeof(void);
 			byte startUsableLocalIndex = 0;
 			if (HasRefParam) {
 				startUsableLocalIndex = CreateLocalsForByRefParams(paramArrayIndex, method);
 				// create by_ref_locals from argument array
-				Generator.DeclareLocal(hasReturnType ? method.ReturnType : typeof(object)); // T result;
-				GenerateInvocation(method, paramArrayIndex, (byte)(startUsableLocalIndex + 1));
+				Gen.DeclareLocal(hasReturnType ? method.ReturnType : typeof(object)); // T result;
+				GenerateInvocation(method, paramArrayIndex, (byte) (startUsableLocalIndex + 1));
 				if (hasReturnType) {
-					Generator.stloc(startUsableLocalIndex); // result = <stack>;
+					stloc_s(startUsableLocalIndex); // result = <stack>;
 				}
 				AssignByRefParamsToArray(paramArrayIndex); // store by_ref_locals back to argument array
 			}
 			else {
-				Generator.DeclareLocal(hasReturnType ? method.ReturnType : typeof(object)); // T result;
-				GenerateInvocation(method, paramArrayIndex, (byte)(startUsableLocalIndex + 1));
+				Gen.DeclareLocal(hasReturnType ? method.ReturnType : typeof(object)); // T result;
+				GenerateInvocation(method, paramArrayIndex, (byte) (startUsableLocalIndex + 1));
 				if (hasReturnType) {
-					Generator.stloc(startUsableLocalIndex); // result = <stack>;
-				}
+					stloc_s(startUsableLocalIndex); // result = <stack>;
+				}				
 			}
 			if (ShouldHandleInnerStruct) {
-				StoreLocalToInnerStruct((byte)(startUsableLocalIndex + 1)); // ((ValueTypeHolder)this)).Value = tmpStr; 
+				StoreLocalToInnerStruct((short) (startUsableLocalIndex + 1)); // ((ValueTypeHolder)this)).Value = tmpStr; 
 			}
-			if (hasReturnType) {
-				Generator.ldloc(startUsableLocalIndex)    // push result;
-					.boxIfValueType(method.ReturnType);   // box result;
+			if (hasReturnType) {				
+				Gen.Emit(OpCodes.Ldloc, (short)startUsableLocalIndex); // push result;
+				if (method.ReturnType.IsValueType) {
+					Gen.Emit(OpCodes.Box, method.ReturnType); // box result;
+				}
 			}
 			else {
-				Generator.ldnull.end(); // load null
+				Gen.Emit(OpCodes.Ldnull); // load null
 			}
-			Generator.ret();
+			Gen.Emit(OpCodes.Ret);
 			return Method.CreateDelegate(typeof(MethodInvoker));
 		}
 
 		protected void GenerateInvocation(MethodInfo methodInfo, byte paramArrayIndex, byte structLocalPosition)
 		{
 			if (!IsStatic) {
-				Generator.ldarg_0.end(); // load arg-0 (this/null);
+				Gen.Emit(OpCodes.Ldarg_0); // load arg-0 (this/null);
 				if (ShouldHandleInnerStruct) {
-					Generator.DeclareLocal(TargetType); // TargetType tmpStr;
+					Gen.DeclareLocal(TargetType); // TargetType tmpStr;
 					LoadInnerStructToLocal(structLocalPosition); // tmpStr = ((ValueTypeHolder)this)).Value;
 				}
 				else {
-					Generator.castclass(TargetType); // (TargetType)arg-0;
+					Gen.Emit(OpCodes.Castclass, TargetType); // (TargetType)arg-0;
 				}
 			}
 			PushParamsOrLocalsToStack(paramArrayIndex); // push arguments and by_ref_locals
-			Generator.call(methodInfo.IsStatic || IsTargetTypeStruct, methodInfo); // call OR callvirt
+			Gen.Emit(methodInfo.IsStatic || IsTargetTypeStruct ? OpCodes.Call : OpCodes.Callvirt, methodInfo); // call OR callvirt
 		}
 	}
 }
+ 
+ 

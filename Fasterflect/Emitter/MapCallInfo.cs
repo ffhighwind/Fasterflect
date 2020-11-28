@@ -37,7 +37,7 @@ namespace Fasterflect.Emitter
 		public FasterflectFlags Flags { get; }
 
 		public MapCallInfo(Type sourceType, Type targetType, IList<MemberInfo> sources, IList<MemberInfo> targets)
-			: this(sourceType, targetType, FasterflectFlags.InstanceAnyVisibility, sources.Select(m => m.Name).ToArray(), targets.Select(m => m.Name).ToArray())
+			: this(sourceType, targetType, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, sources.Select(m => m.Name).ToArray(), targets.Select(m => m.Name).ToArray())
 		{
 		}
 

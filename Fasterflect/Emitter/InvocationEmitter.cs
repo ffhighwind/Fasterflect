@@ -19,6 +19,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Fasterflect.Emitter
 {
@@ -32,7 +33,7 @@ namespace Fasterflect.Emitter
 				IsGeneric = false;
 				ParamTypes = Type.EmptyTypes;
 			}
-			else { 
+			else {
 				TargetType = ctor.DeclaringType;
 				MemberInfo = ctor;
 				IsStatic = ctor.IsStatic;
@@ -67,16 +68,16 @@ namespace Fasterflect.Emitter
 				Type paramType = ParamTypes[i];
 				if (paramType.IsByRef) {
 					Type type = paramType.GetElementType();
-					Generator.DeclareLocal(type);
+					Gen.DeclareLocal(type);
 					if (!parameters[i].IsOut) // no initialization necessary is 'out' parameter
 					{
-						Generator
-							.ldarg(paramArrayIndex)
-							.ldc_i4(i)
-							.ldelem_ref
-							.CastFromObject(type)
-							.stloc(numberOfByRefParams)
-							.end();
+						Gen.Emit(OpCodes.Ldarg, (short) paramArrayIndex);
+						Gen.Emit(OpCodes.Ldc_I4, i);
+						Gen.Emit(OpCodes.Ldelem_Ref);
+						if (type == typeof(object)) {
+							Gen.Emit(type.IsValueType ? OpCodes.Unbox_Any : OpCodes.Castclass, type);
+						}
+						stloc_s(numberOfByRefParams);
 					}
 					numberOfByRefParams++;
 				}
@@ -90,13 +91,15 @@ namespace Fasterflect.Emitter
 			for (int i = 0, count = ParamTypes.Length; i < count; ++i) {
 				Type paramType = ParamTypes[i];
 				if (paramType.IsByRef) {
-					Generator
-						.ldarg(paramArrayIndex)
-						.ldc_i4(i)
-						.ldloc(currentByRefParam++)
-						.boxIfValueType(paramType.GetElementType())
-						.stelem_ref
-						.end();
+					
+					Gen.Emit(OpCodes.Ldarg, paramArrayIndex);
+					Gen.Emit(OpCodes.Ldc_I4, i);
+					Gen.Emit(OpCodes.Ldloc, (short) currentByRefParam);
+					currentByRefParam++;
+					Type type = paramType.GetElementType();
+					if (type.IsValueType)
+						Gen.Emit(OpCodes.Box, type);
+					Gen.Emit(OpCodes.Stelem_Ref);
 				}
 			}
 		}
@@ -107,14 +110,16 @@ namespace Fasterflect.Emitter
 			for (int i = 0, count = ParamTypes.Length; i < count; ++i) {
 				Type paramType = ParamTypes[i];
 				if (paramType.IsByRef) {
-					Generator.ldloca_s(currentByRefParam++);
+					Gen.Emit(OpCodes.Ldloca_S, currentByRefParam);
+					currentByRefParam++;
 				}
-				else {
-					Generator
-						.ldarg(paramArrayIndex)
-						.ldc_i4(i)
-						.ldelem_ref
-						.CastFromObject(paramType);
+				else {					
+					ldarg(paramArrayIndex);
+					Gen.Emit(OpCodes.Ldc_I4, i);
+					Gen.Emit(OpCodes.Ldelem_Ref);
+					if (paramType != typeof(object)) {
+						Gen.Emit(paramType.IsValueType ? OpCodes.Unbox_Any : OpCodes.Castclass, paramType);
+					}					
 				}
 			}
 		}

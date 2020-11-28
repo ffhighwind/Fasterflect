@@ -36,7 +36,8 @@ namespace Fasterflect.Emitter
 		public FasterflectFlags Flags { get; }
 		public IList<string> Members { get; }
 
-		public MultiSetCallInfo(Type targetType, IList<MemberInfo> members) : this(targetType, FasterflectFlags.StaticInstanceAnyVisibility, members.Select(m => m.Name).ToArray())
+		public MultiSetCallInfo(Type targetType, IList<MemberInfo> members) : this(targetType, 
+			BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, members.Select(m => m.Name).ToArray())
 		{
 		}
 

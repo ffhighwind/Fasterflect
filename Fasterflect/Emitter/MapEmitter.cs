@@ -44,9 +44,9 @@ namespace Fasterflect.Emitter
 		{
 			TargetType = callInfo.TargetType;
 			SourceType = callInfo.SourceType;
-			StringComparison comparison = callInfo.Flags.IsSet(FasterflectFlags.IgnoreCase)
-											? StringComparison.OrdinalIgnoreCase
-											: StringComparison.Ordinal;
+			StringComparison comparison = (callInfo.Flags & BindingFlags.IgnoreCase) != 0
+				? StringComparison.OrdinalIgnoreCase
+				: StringComparison.Ordinal;
 			IEnumerable<MemberInfo> sources = callInfo.SourceType.Members(MemberTypes.Field | MemberTypes.Property, callInfo.Flags, callInfo.Sources.ToArray()).Where(s => s.IsReadable());
 			List<MemberInfo> targets = callInfo.TargetType.Members(MemberTypes.Field | MemberTypes.Property, callInfo.Flags, callInfo.Targets.ToArray()).Where(t => t.IsWritable()).ToList();
 			Sources = new List<MemberInfo>();
@@ -83,49 +83,52 @@ namespace Fasterflect.Emitter
 		{
 			bool handleInnerStruct = ShouldHandleInnerStruct;
 			if (handleInnerStruct) {
-				Generator.ldarg_1.end();                // load arg-1 (target)
-				Generator.DeclareLocal(TargetType);     // TargetType localStr;
-				Generator
-					.castclass(typeof(ValueTypeHolder))   // (ValueTypeHolder)wrappedStruct
-					.callvirt(StructGetMethod)            // <stack>.get_Value()
-					.unbox_any(TargetType)                // unbox <stack>
-					.stloc(0);                            // localStr = <stack>
+				Gen.Emit(OpCodes.Ldarg_1);     // load arg-1 (target)          
+				Gen.DeclareLocal(TargetType);  // TargetType localStr;
+				Gen.Emit(OpCodes.Castclass, typeof(ValueTypeHolder)); // (ValueTypeHolder)wrappedStruct
+				Gen.Emit(OpCodes.Callvirt, StructGetMethod);          // <stack>.get_Value()
+				Gen.Emit(OpCodes.Unbox_Any, TargetType); // unbox <stack>
+				Gen.Emit(OpCodes.Stloc_0); // localStr = <stack>                      
 			}
 			for (int i = 0, count = Sources.Count; i < count; ++i) {
-				if (handleInnerStruct)
-					Generator.ldloca_s(0).end(); // load &localStr
-				else
-					Generator.ldarg_1.castclass(TargetType).end(); // ((TargetType)target)
-				Generator.ldarg_0.castclass(SourceType);
+				if (handleInnerStruct) {
+					Gen.Emit(OpCodes.Ldloca_S, (byte) 0); // load &localStr
+				}
+				else {
+					Gen.Emit(OpCodes.Ldarg_1);
+					Gen.Emit(OpCodes.Castclass, TargetType);  // ((TargetType)target)
+				}
+				Gen.Emit(OpCodes.Ldarg_0);
+				Gen.Emit(OpCodes.Castclass, SourceType);
 				GenerateGetMemberValue(Sources[i]);
 				GenerateSetMemberValue(Targets[i]);
 			}
 			if (handleInnerStruct) {
 				StoreLocalToInnerStruct(1, 0);     // ((ValueTypeHolder)this)).Value = tmpStr
 			}
-			Generator.ret();
+			Gen.Emit(OpCodes.Ret);
 			return Method.CreateDelegate(typeof(ObjectMapper));
 		}
 
 		private void GenerateGetMemberValue(MemberInfo member)
 		{
 			if (member is FieldInfo field) {
-				Generator.ldfld(field);
+				Gen.Emit(OpCodes.Ldfld, field);
 			}
 			else {
 				MethodInfo method = ((PropertyInfo)member).GetGetMethod(true);
-				Generator.callvirt(method, null);
+				Gen.EmitCall(OpCodes.Callvirt, method, null);
 			}
 		}
 
 		private void GenerateSetMemberValue(MemberInfo member)
 		{
 			if (member is FieldInfo field) {
-				Generator.stfld(field);
+				Gen.Emit(OpCodes.Stfld, field);
 			}
 			else {
 				MethodInfo method = ((PropertyInfo)member).GetSetMethod(true);
-				Generator.callvirt(method, null);
+				Gen.EmitCall(OpCodes.Callvirt, method, null);
 			}
 		}
 	}

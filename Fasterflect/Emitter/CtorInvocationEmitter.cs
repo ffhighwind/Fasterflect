@@ -38,44 +38,40 @@ namespace Fasterflect.Emitter
 
 		protected internal override Delegate CreateDelegate()
 		{
-			if (IsTargetTypeStruct && HasNoParam) // no-arg struct needs special initialization
-			{
-				Generator
-					.DeclareLocal(TargetType);   // TargetType tmp
-				Generator
-					.ldloca_s(0)            // &tmp
-					.initobj(TargetType)    // init_obj(&tmp)
-					.ldloc_0.end();         // load tmp
+			if (IsTargetTypeStruct && HasNoParam) { // no-arg struct needs special initialization
+				Gen.DeclareLocal(TargetType); // TargetType tmp
+				Gen.Emit(OpCodes.Ldloca_S, (byte)0);  // &tmp
+				Gen.Emit(OpCodes.Initobj, TargetType); // init_obj(&tmp)
+				Gen.Emit(OpCodes.Ldloc_0); // load tmp
 			}
 			else if (TargetType.IsArray) {
-				Generator
-					.ldarg_0                                // load args[] (method arguments)
-					.ldc_i4_0                               // load 0
-					.ldelem_ref                             // load args[0] (length)
-					.unbox_any(typeof(int))                 // unbox stack
-					.newarr(TargetType.GetElementType());   // new T[args[0]]
+				Gen.Emit(OpCodes.Ldarg_0); // load args[] (method arguments)
+				Gen.Emit(OpCodes.Ldc_I4_0); // load 0
+				Gen.Emit(OpCodes.Ldelem_Ref); // load args[0] (length)
+				Gen.Emit(OpCodes.Unbox_Any, typeof(int)); // unbox stack
+				Gen.Emit(OpCodes.Newarr, TargetType.GetElementType()); // new T[args[0]]
 			}
 			else {
-				ConstructorInfo ctorInfo = (ConstructorInfo)MemberInfo;
+				ConstructorInfo ctorInfo = (ConstructorInfo) MemberInfo;
 				byte startUsableLocalIndex = 0;
 				if (HasRefParam) {
 					startUsableLocalIndex = CreateLocalsForByRefParams(0, ctorInfo); // create by_ref_locals from argument array
-					Generator.DeclareLocal(TargetType);                     // TargetType tmp;
+					Gen.DeclareLocal(TargetType); // TargetType tmp;
 				}
-
-				PushParamsOrLocalsToStack(0);                 // push arguments and by_ref_locals
-				Generator.newobj(ctorInfo);                   // ctor (<stack>)
-
+				PushParamsOrLocalsToStack(0); // push arguments and by_ref_locals
+				Gen.Emit(OpCodes.Newobj, ctorInfo); // ctor (<stack>)
 				if (HasRefParam) {
-					Generator.stloc(startUsableLocalIndex);   // tmp = <stack>;
-					AssignByRefParamsToArray(0);              // store by_ref_locals back to argument array
-					Generator.ldloc(startUsableLocalIndex);   // tmp
+					stloc_s(startUsableLocalIndex); // tmp = <stack>;
+					AssignByRefParamsToArray(0);    // store by_ref_locals back to argument array
+					Gen.Emit(OpCodes.Ldloc, (short)startUsableLocalIndex); // tmp
 				}
 			}
-			Generator
-				.boxIfValueType(TargetType)
-				.ret();                       // return (box)<stack>;
+			if (TargetType.IsValueType)
+				Gen.Emit(OpCodes.Box, TargetType);
+			Gen.Emit(OpCodes.Ret); // return (box)<stack>;
 			return Method.CreateDelegate(typeof(ConstructorInvoker));
 		}
 	}
 }
+ 
+ 

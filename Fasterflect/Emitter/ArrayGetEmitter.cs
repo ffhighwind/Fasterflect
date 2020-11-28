@@ -41,14 +41,15 @@ namespace Fasterflect.Emitter
 		protected internal override Delegate CreateDelegate()
 		{
 			Type elementType = TargetType.GetElementType();
-			Generator
-				.ldarg_0 // load array
-				.castclass(TargetType) // (T[])array
-				.ldarg_1 // load index
-				.ldelem(elementType) // load array[index]
-				.boxIfValueType(elementType) // [box] return
-				.ret();
+			Gen.Emit(OpCodes.Ldarg_0);
+			Gen.Emit(OpCodes.Castclass, TargetType);
+			Gen.Emit(OpCodes.Ldarg_1);
+			Gen.Emit(OpCodes.Ldelem, elementType);
+			if (TargetType.IsValueType)
+				Gen.Emit(OpCodes.Box, TargetType);
+			Gen.Emit(OpCodes.Ret);
 			return Method.CreateDelegate(typeof(ArrayElementGetter));
 		}
 	}
 }
+ 

@@ -28,7 +28,7 @@ namespace Fasterflect.Emitter
 	[DebuggerStepThrough]
 	internal class CtorInfo
 	{
-		public CtorInfo(Type targetType, BindingFlags bindingFlags, Type[] parameterTypes)
+		public CtorInfo(Type targetType, FasterflectFlags bindingFlags, Type[] parameterTypes)
 		{
 			TargetType = targetType;
 			BindingFlags = bindingFlags;
@@ -36,7 +36,7 @@ namespace Fasterflect.Emitter
 		}
 
 		public Type TargetType { get; }
-		public BindingFlags BindingFlags { get; }
+		public FasterflectFlags BindingFlags { get; }
 		public Type[] ParameterTypes { get; }
 
 		public override bool Equals(object obj)
