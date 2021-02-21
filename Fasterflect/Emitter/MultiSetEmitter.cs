@@ -58,67 +58,6 @@ namespace Fasterflect.Emitter
 				new[] { typeof(object), typeof(object).MakeArrayType() });
 		}
 
-		/*
-		protected internal override Delegate CreateDelegate()
-		{
-			bool handleInnerStruct = ShouldHandleInnerStruct;
-			if (!IsStatic) {
-				Generator.ldarg_0.end();                     // load arg-0 (this)
-				if (handleInnerStruct) {
-					Generator.DeclareLocal(TargetType);      // TargetType tmpStr
-					Generator
-						.castclass(typeof(ValueTypeHolder))  // (ValueTypeHolder)wrappedStruct
-						.callvirt(StructGetMethod)           // <stack>.get_Value()
-						.unbox_any(TargetType)               // unbox <stack>
-						.stloc(0);                           // localStr = <stack>
-				}
-				else {
-					Generator.castclass(TargetType);   // (TargetType)this
-				}
-			}
-			IList<MemberInfo> members = Members;
-			for (int i = 0, count = members.Count; i < count; ++i) {
-				MemberInfo method = members[i];
-				if (method == null)
-					continue;
-				if (method is FieldInfo field) {
-					if (!field.IsStatic) {
-						if (handleInnerStruct) {
-							Generator.ldloca_s(0);
-						}
-						else if (i != count - 1) {
-							Generator.dup.end();
-						}
-					}
-					Generator.ldarg_1.ldc_i4(i).ldelem_ref.end();
-					Generator.CastFromObject(field.FieldType);
-					Generator.stfld(field.IsStatic, field);          // (this|tmpStr).field = value-to-be-set;
-				}
-				else {
-					PropertyInfo property = (PropertyInfo)method;
-					MethodInfo setMethod = property.GetSetMethod(true) ?? throw new MemberAccessException(TargetType.FullName + "." + property.Name);
-					if (!setMethod.IsStatic) {
-						if (handleInnerStruct) {
-							Generator.ldloca_s(0);
-						}
-						else if (i != count - 1) {
-							Generator.dup.end();
-						}
-					}
-					Generator.ldarg_1.ldc_i4(i).ldelem_ref.end();
-					Generator.CastFromObject(property.PropertyType);
-					Generator.call(setMethod.IsStatic || IsTargetTypeStruct, setMethod);   // (this|tmpStr).set_Prop(value-to-be-set);
-				}
-			}
-			if (handleInnerStruct) {
-				StoreLocalToInnerStruct(0);   // ((ValueTypeHolder)this)).Value = tmpStr
-			}
-			//Generator.ldnull.end();   // load null
-			Generator.ret();
-			return Method.CreateDelegate(typeof(MultiSetter));
-		}
-		*/
-
 		protected internal override Delegate CreateDelegate()
 		{
 			bool handleInnerStruct = ShouldHandleInnerStruct;

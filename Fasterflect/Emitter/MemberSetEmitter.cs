@@ -52,21 +52,17 @@ namespace Fasterflect.Emitter
 		protected internal override Delegate CreateDelegate()
 		{
 			bool handleInnerStruct = ShouldHandleInnerStruct;
-			if (IsStatic) {
-				Gen.Emit(OpCodes.Ldarg_1); // load value-to-be-set             
-			}
-			else {
+			if (!IsStatic) {
 				Gen.Emit(OpCodes.Ldarg_0);        // load arg-0 (this)            
 				if (handleInnerStruct) {
 					Gen.DeclareLocal(TargetType); // TargetType tmpStr
 					LoadInnerStructToLocal(0);    // tmpStr = ((ValueTypeHolder)this)).Value;          
-					Gen.Emit(OpCodes.Ldarg_1);    // load value-to-be-set;
 				}
 				else {
 					Gen.Emit(OpCodes.Castclass, TargetType); // (TargetType)this
-					Gen.Emit(OpCodes.Ldarg_1);               // load value-to-be-set;   
 				}
 			}
+			Gen.Emit(OpCodes.Ldarg_1);               // load value-to-be-set;   
 
 			Type type = MemberInfo.Type();
 			if (type != typeof(object)) {
