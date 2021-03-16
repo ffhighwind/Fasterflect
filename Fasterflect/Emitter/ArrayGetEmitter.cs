@@ -30,9 +30,6 @@ namespace Fasterflect.Emitter
 			TargetType = targetType;
 		}
 
-		protected override Type TargetType { get; }
-		protected Type ElementType { get; }
-
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
 			return CreateDynamicMethod("get_ArrayIndex", TargetType, typeof(object), new[] { typeof(object), typeof(int) });

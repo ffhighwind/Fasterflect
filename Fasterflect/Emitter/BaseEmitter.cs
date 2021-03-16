@@ -30,8 +30,8 @@ namespace Fasterflect.Emitter
 		protected static readonly MethodInfo StructSetMethod =
 			typeof(ValueTypeHolder).GetMethod("set_Value", BindingFlags.Public | BindingFlags.Instance);
 
-		protected abstract Type TargetType { get; }
-		protected virtual bool IsStatic => false;
+		protected Type TargetType { get; set; }
+		protected bool IsStatic { get; set; }
 		/// <summary>
 		/// The CIL should handle inner struct only when the target type is 
 		/// a value type or the wrapper ValueTypeHolder type.  In addition, the call 
@@ -98,7 +98,6 @@ namespace Fasterflect.Emitter
 					Gen.Emit(OpCodes.Stloc_S, index);
 					return;
 			}
-
 		}
 
 		/// <summary>
@@ -147,8 +146,7 @@ namespace Fasterflect.Emitter
 			Gen.Emit(OpCodes.Ldloc, localPosition);
 			if (TargetType.IsValueType)
 				Gen.Emit(OpCodes.Box, TargetType);
-			Gen.Emit(OpCodes.Callvirt, StructSetMethod);
-		
+			Gen.Emit(OpCodes.Callvirt, StructSetMethod);		
 		}
 	}
 }

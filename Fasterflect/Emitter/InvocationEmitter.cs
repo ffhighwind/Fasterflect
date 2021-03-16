@@ -53,9 +53,7 @@ namespace Fasterflect.Emitter
 		}
 
 		protected MemberInfo MemberInfo { get; }
-		protected override bool IsStatic { get; }
 		protected bool IsGeneric { get; }
-		protected override Type TargetType { get; }
 		protected Type[] ParamTypes { get; }
 		protected bool HasNoParam => ParamTypes == Type.EmptyTypes;
 		protected bool HasRefParam => ParamTypes.Any(t => t.IsByRef);

@@ -36,11 +36,10 @@ namespace Fasterflect.Emitter
 				FieldInfo field = (FieldInfo) memberInfo;
 				IsStatic = field.IsStatic;
 			}
+			TargetType = MemberInfo.DeclaringType;
 		}
 
 		protected MemberInfo MemberInfo { get; }
-		protected override Type TargetType => MemberInfo.DeclaringType;
-		protected override bool IsStatic { get; }
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{

@@ -28,7 +28,6 @@ namespace Fasterflect.Emitter
 	internal class MapEmitter : BaseEmitter
 	{
 		protected Type SourceType { get; }
-		protected override Type TargetType { get; }
 		protected IList<MemberInfo> Sources { get; private set; }
 		protected IList<MemberInfo> Targets { get; private set; }
 

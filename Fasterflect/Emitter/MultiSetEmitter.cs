@@ -48,9 +48,7 @@ namespace Fasterflect.Emitter
 		{
 		}
 
-		protected override Type TargetType { get; }
 		protected IList<MemberInfo> Members { get; }
-		protected override bool IsStatic { get; }
 
 		protected internal override DynamicMethod CreateDynamicMethod()
 		{
